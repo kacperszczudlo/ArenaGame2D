@@ -21,5 +21,12 @@ MonoBehaviour:
   strengthWeight: 0
   agilityWeight: 0
   weaponDamageWeight: 1
-  progression: []
+  progression:
+  - levelName: 1
+    damagePercent: 0
+    hitChanceMod: 0
+    staminaCost: 20
+    manaCost: 20
+    difficulty: 20
   specialLogicID: 
+  animTriggerName: Jump

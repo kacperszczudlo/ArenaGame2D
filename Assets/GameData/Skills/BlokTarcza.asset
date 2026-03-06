@@ -25,6 +25,14 @@ MonoBehaviour:
   - levelName: 1
     damagePercent: 0
     hitChanceMod: 0
+    staminaCost: 32
+    manaCost: 32
+    difficulty: 80
+  - levelName: 1
+    damagePercent: 0
+    hitChanceMod: 0
     staminaCost: 0
     manaCost: 0
+    difficulty: 0
   specialLogicID: 
+  animTriggerName: Block

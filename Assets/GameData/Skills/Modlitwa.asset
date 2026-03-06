@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
   m_Name: Modlitwa
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: 
-  icon: {fileID: 0}
-  description: 
-  manaCost: 0
-  staminaCost: 0
-  baseDamage: 10
-  strengthScaling: 1
-  powerScaling: 1
-  damagePerAP: 5
-  accuracyBonusPerAP: 2
+  skillName: Modlitwa
+  icon: {fileID: 21300152, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
+  type: 0
+  requiresWeapon: 1
+  powerWeight: 0
+  knowledgeWeight: 0
+  strengthWeight: 0
+  agilityWeight: 0
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    damagePercent: 0
+    hitChanceMod: 0
+    staminaCost: 0
+    manaCost: 80
+    difficulty: 120
+  specialLogicID: 
+  animTriggerName: Fall

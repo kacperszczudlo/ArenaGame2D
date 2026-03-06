@@ -38,4 +38,8 @@ public class SkillData : ScriptableObject
 
     [Header("Logika Specjalna")]
     public string specialLogicID; // np. "druid_wrath"
+
+    [Header("Animacja")]
+    [Tooltip("Dok³adna nazwa Triggera w Animatorze, np. Attack1")]
+    public string animTriggerName;
 }

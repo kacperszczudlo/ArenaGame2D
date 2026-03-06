@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
   m_Name: UderzenieMieczem
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: 
-  icon: {fileID: 0}
+  skillName: Uderzenie Mieczem
+  icon: {fileID: 21300070, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   type: 0
   requiresWeapon: 1
   powerWeight: 0
@@ -21,5 +21,12 @@ MonoBehaviour:
   strengthWeight: 0
   agilityWeight: 0
   weaponDamageWeight: 1
-  progression: []
+  progression:
+  - levelName: 1
+    damagePercent: 150
+    hitChanceMod: 70
+    staminaCost: 25
+    manaCost: 0
+    difficulty: 0
   specialLogicID: 
+  animTriggerName: Attack3
