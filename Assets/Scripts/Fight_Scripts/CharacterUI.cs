@@ -1,44 +1,45 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class CharacterUI : MonoBehaviour
 {
-    [Header("Statystyki ¯ycia")]
-    public float maxHP = 1000f;
-    public float currentHP = 1000f;
+    private Combatant target;
 
-    [Header("Statystyki Zasobów")]
-    public float maxMana = 500f;
-    public float currentMana = 500f;
-    public float maxStamina = 300f;
-    public float currentStamina = 300f;
+    [Header("Informacje G³ówne")]
+    public Image avatarDisplay;
+    public TextMeshProUGUI nameText;
 
-    [Header("Referencje do pasków")]
+    [Header("Paski Zasobów")]
     public ResourceBar hpBar;
     public ResourceBar manaBar;
     public ResourceBar staminaBar;
 
-    void Start()
+    public void Setup(Combatant combatant)
     {
-        // Inicjalizacja pasków na 100% na starcie walki
-        if (hpBar != null) hpBar.SetMaxResource(maxHP);
-        if (manaBar != null) manaBar.SetMaxResource(maxMana);
-        if (staminaBar != null) staminaBar.SetMaxResource(maxStamina);
+        target = combatant;
 
-        RefreshAllBars();
+        if (nameText != null) nameText.text = target.combatantName;
+        if (avatarDisplay != null && target.avatarImage != null)
+        {
+            avatarDisplay.sprite = target.avatarImage;
+        }
+
+        // T³umaczymy Twoim paskom, jakie maj¹ byæ wartoœci MAKSYMALNE na start
+        if (hpBar != null) hpBar.SetMaxResource(target.maxHP);
+        if (manaBar != null) manaBar.SetMaxResource(target.maxMana);
+        if (staminaBar != null) staminaBar.SetMaxResource(target.maxStamina);
+
+        UpdateUI();
     }
 
-    public void RefreshAllBars()
+    public void UpdateUI()
     {
-        if (hpBar != null) hpBar.UpdateValue(currentHP);
-        if (manaBar != null) manaBar.UpdateValue(currentMana);
-        if (staminaBar != null) staminaBar.UpdateValue(currentStamina);
-    }
+        if (target == null) return;
 
-    // Funkcja do testowania - zadaje 100 obra¿eñ
-    [ContextMenu("Test Damage")]
-    public void TakeTestDamage()
-    {
-        currentHP -= 100;
-        RefreshAllBars();
+        // T³umaczymy paskom, jakie s¹ OBECNE wartoœci
+        if (hpBar != null) hpBar.UpdateValue(target.currentHP);
+        if (manaBar != null) manaBar.UpdateValue(target.currentMana);
+        if (staminaBar != null) staminaBar.UpdateValue(target.currentStamina);
     }
 }

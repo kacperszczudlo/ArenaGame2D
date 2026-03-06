@@ -2682,12 +2682,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7217ba2d87b5b3f40bd7f326727bb7fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterUI
-  maxHP: 1000
-  currentHP: 700
-  maxMana: 500
-  currentMana: 450
-  maxStamina: 300
-  currentStamina: 240
+  avatarDisplay: {fileID: 4867791918512729156}
+  nameText: {fileID: 273462177670402215}
   hpBar: {fileID: 2005341025198035267}
   manaBar: {fileID: 2313056373724981089}
   staminaBar: {fileID: 2644256113984988520}

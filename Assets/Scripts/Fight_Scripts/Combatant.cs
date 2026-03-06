@@ -4,15 +4,19 @@ public class Combatant : MonoBehaviour
 {
     [Header("Podstawowe Informacje")]
     public string combatantName;
-    public bool isPlayer; // Zaznaczysz to u Rycerza, a odznaczysz u potwora
+    public bool isPlayer;
+    public Sprite avatarImage; // ZDJÊCIE TWARZY
+
+    [Header("Po³¹czenie z UI")]
+    public CharacterUI myUI; // Referencja do panelu na dole ekranu
 
     [Header("Statystyki")]
     public int maxHP = 1000;
     public int currentHP;
     public int maxMana = 300;
     public int currentMana;
-    public int maxStamina;
-    public int currentStamina = 300;
+    public int maxStamina = 300; // DODANE: Maksymalna kondycja
+    public int currentStamina;
 
     [Header("Atrybuty (Do wzorów)")]
     public int strength = 20;
@@ -20,41 +24,40 @@ public class Combatant : MonoBehaviour
     public int agility = 18;
 
     [Header("Komponenty Wizualne")]
-    public Animator animator; // Tu podepniemy system animacji Unity
+    public Animator animator;
 
     void Start()
     {
-        // Na start walki odnawiamy ¿ycie i manê
+        // Na start walki odnawiamy zasoby
         currentHP = maxHP;
         currentMana = maxMana;
         currentStamina = maxStamina;
+
+        // Jeœli postaæ ma przypisany panel UI, ka¿emy mu siê ustawiæ
+        if (myUI != null)
+        {
+            myUI.Setup(this);
+        }
     }
 
-    // Funkcja wywo³ywana przez Kalkulator Walki, gdy postaæ obrywa
     public void TakeDamage(int amount)
     {
         currentHP -= amount;
-        Debug.Log($"<color=red>{combatantName} otrzymuje {amount} obra¿eñ!</color> Zosta³o HP: {currentHP}");
+        if (currentHP < 0) currentHP = 0; // ¯eby HP nie spad³o poni¿ej zera
 
-        if (animator != null)
-        {
-            animator.SetTrigger("Hit"); // Odtwarza animacjê otrzymania ciosu
-        }
+        Debug.Log($"<color=red>{combatantName} otrzymuje {amount} obra¿eñ!</color>");
 
-        if (currentHP <= 0)
-        {
-            Die();
-        }
+        if (animator != null) animator.SetTrigger("Hit");
+
+        // Aktualizujemy pasek zdrowia po otrzymaniu ciosu!
+        if (myUI != null) myUI.UpdateUI();
+
+        if (currentHP <= 0) Die();
     }
 
-    // Funkcja wywo³ywana, gdy postaæ u¿ywa skilla
     public void PlayAttackAnimation(string animationTriggerName)
     {
-        if (animator != null)
-        {
-            animator.SetTrigger(animationTriggerName);
-            Debug.Log($"{combatantName} wykonuje atak: {animationTriggerName}!");
-        }
+        if (animator != null) animator.SetTrigger(animationTriggerName);
     }
 
     void Die()
