@@ -55,4 +55,30 @@ public class SkillAPHandler : MonoBehaviour
             apSquares[i].sprite = (i < investedAP) ? activeSprite : inactiveSprite;
         }
     }
+
+    [Header("Dane Umiejêtnoœci")]
+    public SkillData currentSkill; // Tu zapiszemy wybrany skill
+    public Image mainIconDisplay; // Przeci¹gnij tu obrazek "Icon" ze swojego kó³ka
+
+    [Header("Baza Skilli (Do testów)")]
+    // TU PRZECI¥GNIESZ SWOJE 6 PLIKÓW SKILLI
+    public List<SkillData> testAvailableSkills;
+
+    // TEJ FUNKCJI BRAKOWA£O (Naprawia b³¹d w konsoli)
+    public void AssignSkill(SkillData data)
+    {
+        currentSkill = data;
+        if (mainIconDisplay != null)
+        {
+            mainIconDisplay.sprite = data.icon;
+            mainIconDisplay.color = Color.white; // Upewnij siê, ¿e ikona jest widoczna
+        }
+        Debug.Log("Przypisano skill: " + data.skillName);
+    }
+
+    // Tê funkcjê podepniemy pod Button g³ównej ikony w kó³ku
+    public void OpenSkillSelection()
+    {
+        SkillSelectionWindow.Instance.Open(this, testAvailableSkills);
+    }
 }

@@ -12,6 +12,7 @@ public struct SkillLevelData
     public float hitChanceMod;    // np. 100, 104...
     public int staminaCost;
     public int manaCost;
+    public int difficulty;
 }
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "RPG System/Skill")]
