@@ -14,19 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Magiczny cios
   icon: {fileID: 21300058, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
-  type: 0
-  requiresWeapon: 1
-  powerWeight: 0
-  knowledgeWeight: 0
+  category: 4
+  animTriggerName: Attack1
+  showCenterVFX: 0
+  effects:
+  - {fileID: 11400000, guid: e84ced94f57145241aca788746342b47, type: 2}
+  isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
+  knowledgeWeight: 0
+  powerWeight: 0
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    damagePercent: 28
-    hitChanceMod: 78
+    requiredCharacterLevel: 1
     staminaCost: 20
     manaCost: 20
-    difficulty: 0
-  specialLogicID: 
-  animTriggerName: Attack1
+    damageMultiplier: 1
+    hitChanceBonus: 0
+    statusEffectChance: 51.4
+    selfCastDifficulty: 120
+    effectCharges: 2
+    effectValue: 20

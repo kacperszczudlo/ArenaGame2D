@@ -14,26 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Furia
   icon: {fileID: 21300098, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
-  category: 0
-  type: 0
-  requiresWeapon: 1
+  category: 1
   animTriggerName: Jump
   showCenterVFX: 1
-  powerWeight: 0
-  knowledgeWeight: 0
+  effects: []
+  isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
+  knowledgeWeight: 0
+  powerWeight: 0
   weaponDamageWeight: 1
   progression:
   - levelName: 1
     requiredCharacterLevel: 1
     staminaCost: 20
     manaCost: 20
-    difficulty: 20
-    damagePercent: 0
-    hitChanceMod: 0
-    apDrain: 0
-    effectDurationRounds: 0
-    statusEffectChance: 0
-    statusEffectID: 
-  specialLogicID: 
+    damageMultiplier: 1
+    hitChanceBonus: 0
+    statusEffectChance: 10
+    selfCastDifficulty: 120
+    effectCharges: 2
+    effectValue: 20

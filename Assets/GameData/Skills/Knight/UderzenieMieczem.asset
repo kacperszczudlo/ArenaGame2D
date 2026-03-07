@@ -14,37 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Uderzenie Mieczem
   icon: {fileID: 21300070, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
-  category: 0
-  type: 0
-  requiresWeapon: 1
+  category: 4
   animTriggerName: Attack3
   showCenterVFX: 0
-  powerWeight: 0
-  knowledgeWeight: 0
+  effects: []
+  isPassive: 0
   strengthWeight: 0.7
   agilityWeight: 0.3
+  knowledgeWeight: 0
+  powerWeight: 0
   weaponDamageWeight: 1
   progression:
   - levelName: 1
     requiredCharacterLevel: 1
     staminaCost: 20
     manaCost: 0
-    difficulty: 0
-    damagePercent: 10
-    hitChanceMod: 70
-    apDrain: 0
-    effectDurationRounds: 0
-    statusEffectChance: 0
-    statusEffectID: 
+    damageMultiplier: 1
+    hitChanceBonus: 0
+    statusEffectChance: 10
+    selfCastDifficulty: 120
+    effectCharges: 2
+    effectValue: 20
   - levelName: 2
     requiredCharacterLevel: 1
     staminaCost: 40
     manaCost: 0
-    difficulty: 0
-    damagePercent: 10
-    hitChanceMod: 150
-    apDrain: 0
-    effectDurationRounds: 0
-    statusEffectChance: 0
-    statusEffectID: 
-  specialLogicID: 
+    damageMultiplier: 1
+    hitChanceBonus: 0
+    statusEffectChance: 10
+    selfCastDifficulty: 120
+    effectCharges: 2
+    effectValue: 20

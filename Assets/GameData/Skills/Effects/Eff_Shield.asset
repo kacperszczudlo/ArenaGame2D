@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5841686842a21254987ec26c5c8e4218, type: 3}
   m_Name: Eff_Shield
   m_EditorClassIdentifier: Assembly-CSharp::EffectApplyStatus
-  effectName: 
-  type: 0
-  duration: 0
+  effectName: "Blok Tarcz\u0105"
+  type: 2
+  duration: 1
   value: 0
-  charges: 0
+  charges: 2
   customIcon: {fileID: 0}
-  alwaysSucceeds: 0
+  alwaysSucceeds: 1

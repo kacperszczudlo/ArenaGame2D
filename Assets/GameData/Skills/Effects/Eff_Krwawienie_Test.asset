@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5841686842a21254987ec26c5c8e4218, type: 3}
   m_Name: Eff_Krwawienie_Test
   m_EditorClassIdentifier: Assembly-CSharp::EffectApplyStatus
-  effectName: 
+  effectName: Krwawienie
   type: 0
-  duration: 0
-  value: 0
+  duration: 3
+  value: 20
   charges: 0
   customIcon: {fileID: 0}
   alwaysSucceeds: 0
