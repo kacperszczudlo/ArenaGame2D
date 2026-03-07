@@ -1,34 +1,52 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems; // Potrzebne do wykrywania najechania (Hover)
+using UnityEngine.EventSystems;
 
 public class SkillItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Image iconImage;
     public TextMeshProUGUI nameText;
 
-    private SkillData data;
+    private CharacterSkill mySkill; // Zmienione z SkillData na CharacterSkill
 
     // Funkcja ustawiaj¹ca dane skilla w prefabie
-    public void Setup(SkillData skillData)
+    public void Setup(CharacterSkill cSkill)
     {
-        data = skillData;
-        iconImage.sprite = data.icon;
-        nameText.text = data.skillName;
+        mySkill = cSkill;
+        iconImage.sprite = mySkill.data.icon;
+
+        if (nameText != null)
+            nameText.text = mySkill.data.skillName;
+
+        Button btn = GetComponent<Button>();
+
+        // WYSZARZANIE I BLOKOWANIE SKILLA
+        if (!mySkill.isUnlocked)
+        {
+            iconImage.color = new Color(0.3f, 0.3f, 0.3f, 1f); // Ciemnoszary
+            if (btn != null) btn.interactable = false; // Wy³¹cza klikanie
+        }
+        else
+        {
+            iconImage.color = Color.white; // Normalny kolor
+            if (btn != null) btn.interactable = true; // W³¹cza klikanie
+        }
     }
 
     // Klikniêcie w ikonê
     public void OnClick()
     {
-        SkillSelectionWindow.Instance.Select(data);
+        if (mySkill.isUnlocked)
+        {
+            SkillSelectionWindow.Instance.Select(mySkill);
+        }
     }
 
     // Najechanie myszk¹ (Wyœwietlamy koszty)
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Wywo³ujemy funkcjê w oknie, która poka¿e koszty na dole
-        SkillSelectionWindow.Instance.ShowDetails(data);
+        SkillSelectionWindow.Instance.ShowDetails(mySkill);
     }
 
     // Zjechanie myszk¹ (Przywracamy nazwê)

@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic; // Potrzebne do List<>
+using System.Collections.Generic;
 
 public class BattleManager : MonoBehaviour
 {
@@ -9,68 +9,129 @@ public class BattleManager : MonoBehaviour
     public Combatant enemy;
 
     [Header("UI Gracza")]
-    public List<SkillAPHandler> attackSlots; // Lista WSZYSTKICH 5 kó³ek ataku
+    public List<SkillAPHandler> attackSlots;
 
-    [Header("Pozycje na arenie")]
-    public Transform playerStartPos; // Gdzie Rycerz stoi domyœlnie
-    public Transform enemyMeleePos;  // Punkt tu¿ przed przeciwnikiem, sk¹d bijemy
+    [Header("UI Walki")]
+    public TMPro.TextMeshProUGUI roundText;
+    private int currentRound = 1;
+
+    private Vector3 playerOriginalPos;
+    private Vector3 enemyOriginalPos;
+
+    void Start()
+    {
+        currentRound = 1;
+        UpdateRoundUI();
+        if (player != null) playerOriginalPos = player.transform.position;
+        if (enemy != null) enemyOriginalPos = enemy.transform.position;
+    }
 
     public void TestEndTurn()
     {
-        // Uruchamiamy sekwencjê rundy w tle, ¿eby gra mog³a "czekaæ" na animacje
+        // Teraz ca³a logika rundy siedzi w Routine
         StartCoroutine(ExecuteTurnRoutine());
+    }
+
+    void UpdateRoundUI()
+    {
+        if (roundText != null) roundText.text = "Runda: " + currentRound;
     }
 
     IEnumerator ExecuteTurnRoutine()
     {
-        Debug.Log("<b>--- START RUNDY ---</b>");
+        // 1. START RUNDY I TICKI STATUSÓW (Twoja zasada "Efekty z poprzedniej rundy")
+        player.ProcessStatuses();
+        enemy.ProcessStatuses();
 
-        // Sprawdzamy po kolei ka¿de z 5 kó³ek
+        // Czekamy chwilê, ¿eby gracz zobaczy³ cyferki z trucizny/podpalenia
+        yield return new WaitForSeconds(0.8f);
+
+        // 2. ZBIERAMY I SORTUJEMY AKCJE GRACZA
+        List<SkillAPHandler> usedSkills = new List<SkillAPHandler>();
         foreach (SkillAPHandler slot in attackSlots)
         {
-            // Warunek: Kó³ko ma przypisany skill ORAZ gracz da³ min. 1 PA
-            if (slot.currentSkill != null && slot.currentPA > 0)
-            {
-                Debug.Log($"Rycerz u¿ywa: {slot.currentSkill.skillName} (PA: {slot.currentPA})");
-
-                // 1. Podbiegamy do wroga (zajmie to 0.3 sekundy)
-                yield return StartCoroutine(MoveCharacter(player.transform, enemyMeleePos.position, 0.3f));
-
-                // 2. Odpalamy animacjê z karty umiejêtnoœci
-                player.PlayAttackAnimation(slot.currentSkill.animTriggerName);
-
-                // CZEKAMY pó³ sekundy, ¿eby miecz "trafi³" (zanim zadamy obra¿enia)
-                yield return new WaitForSeconds(0.5f);
-
-                // 3. Zadajemy testowe obra¿enia
-                enemy.TakeDamage(100);
-
-                // CZEKAMY kolejn¹ sekundê, ¿eby Rycerz dokoñczy³ wymach mieczem
-                yield return new WaitForSeconds(1.0f);
-
-                // 4. Wracamy na pozycjê startow¹
-                yield return StartCoroutine(MoveCharacter(player.transform, playerStartPos.position, 0.3f));
-
-                // Ma³a pauza przed nastêpnym kó³kiem
-                yield return new WaitForSeconds(0.2f);
-            }
+            if (slot.currentSkill != null && slot.currentSkill.data != null && slot.currentPA > 0)
+                usedSkills.Add(slot);
         }
 
-        Debug.Log("<b>--- KONIEC RUNDY ---</b>");
+        // Sortowanie: Uroki -> Dystans -> Zwarcie
+        usedSkills.Sort((a, b) => a.currentSkill.data.category.CompareTo(b.currentSkill.data.category));
+
+        bool isAtMeleeRange = false;
+
+        // 3. WYKONANIE AKCJI
+        foreach (SkillAPHandler slot in usedSkills)
+        {
+            CharacterSkill charSkill = slot.currentSkill;
+            SkillData skillData = charSkill.data;
+            SkillLevelData levelData = skillData.GetLevelData(charSkill.currentLevel);
+
+            player.ConsumeResources(levelData?.manaCost ?? 0, levelData?.staminaCost ?? 0);
+
+            // Podbieganie
+            if (skillData.category == SkillCategory.MeleePhysical && !isAtMeleeRange)
+            {
+                float distanceToStop = enemy.meleeStoppingDistance;
+                Vector3 targetMeleePos = enemyOriginalPos + new Vector3(-distanceToStop, 0, 0);
+                yield return StartCoroutine(MoveCharacter(player.transform, targetMeleePos, 0.3f));
+                isAtMeleeRange = true;
+            }
+
+            player.PlayAttackAnimation(skillData.animTriggerName);
+            yield return new WaitForSeconds(0.5f);
+
+            // Obliczenia
+            AttackResult result = DamageCalculator.ProcessAttack(player, enemy, charSkill, slot.currentPA, 0);
+
+            if (result.isHit)
+            {
+                if (skillData.category == SkillCategory.PositiveCharm)
+                {
+                    // UROK POZYTYWNY: Efekt na Graczu
+                    if (skillData.showCenterVFX) player.PlaySkillEffect(skillData.icon);
+                    player.Heal(result.damageDealt, result.chanceText);
+                }
+                else
+                {
+                    // WSZYSTKO INNE: Efekt na Wrogu
+                    if (skillData.showCenterVFX) enemy.PlaySkillEffect(skillData.icon);
+
+                    if (skillData.category == SkillCategory.NegativeCharm && result.damageDealt <= 0)
+                        enemy.ShowFloatingText(skillData.skillName, DamagePopup.PopupType.Buff, null, result.chanceText);
+                    else
+                        enemy.TakeDamage(result.damageDealt, result.isCritical, result.chanceText);
+                }
+            }
+            else
+            {
+                Combatant target = (skillData.category == SkillCategory.PositiveCharm) ? player : enemy;
+                target.ShowFloatingText("Pud³o", DamagePopup.PopupType.Miss, null, result.chanceText);
+            }
+
+            yield return new WaitForSeconds(1.0f);
+        }
+
+        // 4. POWRÓT I KONIEC RUNDY
+        if (isAtMeleeRange)
+        {
+            yield return StartCoroutine(MoveCharacter(player.transform, playerOriginalPos, 0.4f));
+        }
+
+        currentRound++;
+        UpdateRoundUI();
+        yield return new WaitForSeconds(0.2f);
     }
 
-    // P³ynne przesuwanie postaci (z punktu A do B w czasie)
     IEnumerator MoveCharacter(Transform character, Vector3 targetPos, float duration)
     {
         Vector3 startPos = character.position;
         float elapsed = 0f;
-
         while (elapsed < duration)
         {
             character.position = Vector3.Lerp(startPos, targetPos, elapsed / duration);
             elapsed += Time.deltaTime;
-            yield return null; // Czekamy do nastêpnej klatki gry
+            yield return null;
         }
-        character.position = targetPos; // Upewniamy siê, ¿e dotar³ równo na miejsce
+        character.position = targetPos;
     }
 }

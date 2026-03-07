@@ -8,34 +8,51 @@ public class SkillAPHandler : MonoBehaviour
     public List<Image> apSquares; // Tu przeci¹gnij obrazki kwadracików
     public Sprite activeSprite;   // Grafika "naklikanego" kafelka
     public Sprite inactiveSprite; // Grafika pustego kafelka
-
-    // ZMIANA: Zamieniliœmy private investedAP na public currentPA, 
-    // ¿eby BattleManager wiedzia³, ile punktów wydano na ten atak!
     public int currentPA = 0;
 
     [Header("Dane Umiejêtnoœci")]
-    public SkillData currentSkill;
+    public CharacterSkill currentSkill; // Korzystamy z nowej klasy
     public Image mainIconDisplay;
 
-    [Header("Baza Skilli (Do testów)")]
-    public List<SkillData> testAvailableSkills;
+    // JEDNA, POPRAWNA funkcja do przypisywania skilli
+    public void AssignSkill(CharacterSkill cSkill)
+    {
+        currentSkill = cSkill;
+        if (mainIconDisplay != null && cSkill.data != null)
+        {
+            mainIconDisplay.sprite = cSkill.data.icon;
+            mainIconDisplay.color = Color.white;
+            Debug.Log("Przypisano skill: " + cSkill.data.skillName);
+        }
+    }
+
+    public void OpenSkillSelection()
+    {
+        // Kó³ko szuka na scenie BattleManagera, bierze od niego Gracza (Rycerza) i jego osobiste skille!
+        BattleManager manager = Object.FindFirstObjectByType<BattleManager>();
+        if (manager != null && manager.player != null)
+        {
+            SkillSelectionWindow.Instance.Open(this, manager.player.mySkills);
+        }
+        else
+        {
+            Debug.LogWarning("Nie znaleziono BattleManagera lub Gracza na scenie!");
+        }
+    }
 
     // Funkcja wywo³ywana klikniêciem w kwadracik
     public void OnSquareClicked(int index)
     {
         int targetLevel = index + 1;
 
-        // Jeœli klikamy dok³adnie w ten sam poziom, który ju¿ mamy zaznaczony
         if (targetLevel == currentPA)
         {
-            // Cofamy o 1 punkt (czyli np. z 1 na 0)
             if (CombatAPManager.Instance != null) CombatAPManager.Instance.RefundAP(1);
             currentPA--;
         }
         else if (targetLevel > currentPA)
         {
             int cost = targetLevel - currentPA;
-            // Zabezpieczenie na wypadek braku mened¿era na scenie
             if (CombatAPManager.Instance == null || CombatAPManager.Instance.TrySpendAP(cost))
             {
                 currentPA = targetLevel;
@@ -65,21 +82,5 @@ public class SkillAPHandler : MonoBehaviour
         {
             apSquares[i].sprite = (i < currentPA) ? activeSprite : inactiveSprite;
         }
-    }
-
-    public void AssignSkill(SkillData data)
-    {
-        currentSkill = data;
-        if (mainIconDisplay != null)
-        {
-            mainIconDisplay.sprite = data.icon;
-            mainIconDisplay.color = Color.white;
-        }
-        Debug.Log("Przypisano skill: " + data.skillName);
-    }
-
-    public void OpenSkillSelection()
-    {
-        SkillSelectionWindow.Instance.Open(this, testAvailableSkills);
     }
 }

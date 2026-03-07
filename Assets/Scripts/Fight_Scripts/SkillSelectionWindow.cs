@@ -7,59 +7,70 @@ public class SkillSelectionWindow : MonoBehaviour
     public static SkillSelectionWindow Instance;
     public Transform gridContainer;
     public GameObject skillItemPrefab;
-    public TextMeshProUGUI detailsText; // Tu przeci¹gnij tekst z do³u okna
+    public TextMeshProUGUI detailsText;
 
     private SkillAPHandler activeSlot;
 
     void Awake() { Instance = this; gameObject.SetActive(false); }
 
-    public void Open(SkillAPHandler caller, List<SkillData> availableSkills)
+    // Przyjmuje List<CharacterSkill> zamiast List<SkillData>
+    public void Open(SkillAPHandler caller, List<CharacterSkill> availableSkills)
     {
         activeSlot = caller;
         gameObject.SetActive(true);
-        detailsText.text = "Wybierz umiejêtnoœæ"; // Tekst domyœlny
+        detailsText.text = "Wybierz umiejêtnoœæ";
 
         foreach (Transform child in gridContainer) Destroy(child.gameObject);
 
-        foreach (SkillData skill in availableSkills)
+        foreach (CharacterSkill skill in availableSkills)
         {
+            // Zabezpieczenie przed pustymi polami w Inspektorze
+            if (skill == null || skill.data == null) continue;
+
             GameObject item = Instantiate(skillItemPrefab, gridContainer);
             SkillItemUI ui = item.GetComponent<SkillItemUI>();
             ui.Setup(skill);
         }
     }
 
-    // Wywo³ywane przez SkillItemUI podczas najechania myszk¹
-    public void ShowDetails(SkillData data)
+    // Odbiera CharacterSkill zamiast SkillData
+    public void ShowDetails(CharacterSkill cSkill)
     {
+        SkillData data = cSkill.data;
+
         if (data.progression != null && data.progression.Count > 0)
         {
-            int mana = data.progression[0].manaCost;
-            int stamina = data.progression[0].staminaCost;
+            // Bierzemy poziom od POSTACI (cSkill), a nie z pliku danych
+            int levelIndex = cSkill.currentLevel - 1;
+            if (levelIndex >= data.progression.Count) levelIndex = data.progression.Count - 1;
+            else if (levelIndex < 0) levelIndex = 0;
 
-            System.Collections.Generic.List<string> costs = new System.Collections.Generic.List<string>();
+            int mana = data.progression[levelIndex].manaCost;
+            int stamina = data.progression[levelIndex].staminaCost;
 
-            // Mana dodawana jako pierwsza (bêdzie wy¿ej)
+            List<string> costs = new List<string>();
+
             if (mana > 0) costs.Add($"{mana} Many");
-
-            // Kondycja dodawana jako druga (bêdzie ni¿ej)
             if (stamina > 0) costs.Add($"{stamina} Kondycji");
 
-            // Jeœli s¹ jakiekolwiek koszty, ³¹czymy je znakiem nowej linii (\n)
+            // Informacja, czy skill jest zablokowany
+            string lockStatus = cSkill.isUnlocked ? "" : "<color=red>[ZABLOKOWANE]</color>\n";
+
             if (costs.Count > 0)
             {
-                detailsText.text = "Wymagania:\n" + string.Join("\n", costs);
-                detailsText.color = Color.yellow;
+                detailsText.text = $"{lockStatus}Wymagania (Poz. {cSkill.currentLevel}):\n" + string.Join("\n", costs);
+                detailsText.color = cSkill.isUnlocked ? Color.yellow : new Color(0.7f, 0.7f, 0.7f);
             }
             else
             {
-                detailsText.text = "Brak kosztów (Darmowe)";
-                detailsText.color = Color.green;
+                detailsText.text = $"{lockStatus}Brak kosztów (Poz. {cSkill.currentLevel})";
+                detailsText.color = cSkill.isUnlocked ? Color.green : new Color(0.7f, 0.7f, 0.7f);
             }
         }
         else
         {
-            detailsText.text = data.skillName + "\n(Brak wpisanych kosztów!)";
+            string lockStatus = cSkill.isUnlocked ? "" : "<color=red>[ZABLOKOWANE]</color>\n";
+            detailsText.text = $"{lockStatus}{data.skillName}\n(Brak wpisanych kosztów!)";
             detailsText.color = Color.white;
         }
     }
@@ -70,11 +81,13 @@ public class SkillSelectionWindow : MonoBehaviour
         detailsText.color = Color.white;
     }
 
-    public void Select(SkillData skill)
+    // Wybiera CharacterSkill
+    public void Select(CharacterSkill skill)
     {
         activeSlot.AssignSkill(skill);
         gameObject.SetActive(false);
     }
+
     public void CloseWindow()
     {
         gameObject.SetActive(false);
