@@ -39,28 +39,42 @@ public static class DamageCalculator
                 break;
         }
 
-        // 2. WZÓR NA POWODZENIE ATAKU (Twoja formu³a)
-        // Wzór: (40 + stats + poziom) * PA_Mod * modU
+        // 2. WZÓR NA POWODZENIE ATAKU
+        float hitChance = 0;
 
-        float PA_AttackMod = 1.0f + (allocatedPA * 0.2f);
-        float PA_DefenseMod = 1.0f + (defenderPA * 0.2f);
-
-        // Upewnij siê, ¿e w Combatant.cs masz zmienn¹ 'public int currentLevel'
-        float attackPower = (40f + attackerStat + attacker.currentLevel) * PA_AttackMod * modU;
-        float defensePower = (40f + defenderStat + defender.currentLevel) * PA_DefenseMod;
-
-        // Szansa procentowa (Twoje porównanie wartoœci)
-        float hitChance = (attackPower / (attackPower + defensePower)) * 100f + hitChanceModU;
-
-        if (data.category == SkillCategory.NegativeCharm && attacker.currentLevel > defender.currentLevel)
+        if (data.category == SkillCategory.PositiveCharm)
         {
-            hitChance += (attacker.currentLevel - defender.currentLevel) * 2f;
+            // --- NOWA LOGIKA DLA BUFFÓW (Tarcza itp.) ---
+            // Sprawdzamy PA gracza przeciwko trudnoœci wpisanej w poziom skilla
+            float playerPower = allocatedPA * 20f;
+
+            // Jeœli nie przypisa³eœ levelData, dajemy domyœln¹ trudnoœæ 100, ¿eby nie wywali³o b³êdu
+            float difficulty = (levelData != null) ? levelData.selfCastDifficulty : 100f;
+
+            hitChance = (playerPower / difficulty) * 100f;
+        }
+        else
+        {
+            // --- LOGIKA DLA ATAKÓW ---
+            float PA_AttackMod = 1.0f + (allocatedPA * 0.2f);
+            float PA_DefenseMod = 1.0f + (defenderPA * 0.2f);
+
+            float attackPower = (40f + attackerStat + attacker.currentLevel) * PA_AttackMod * modU;
+            float defensePower = (40f + defenderStat + defender.currentLevel) * PA_DefenseMod;
+
+            hitChance = (attackPower / (attackPower + defensePower)) * 100f + hitChanceModU;
+
+            if (data.category == SkillCategory.NegativeCharm && attacker.currentLevel > defender.currentLevel)
+            {
+                hitChance += (attacker.currentLevel - defender.currentLevel) * 2f;
+            }
         }
 
-        // USUNIÊTO CLAMP - teraz mo¿e byæ 100%
-        if (data.category == SkillCategory.PositiveCharm) hitChance = 100f;
-        else hitChance = Mathf.Max(0f, hitChance); // Tylko ¿eby nie by³o ujemne
+        // Zabezpieczenie: szansa nie mo¿e byæ ujemna
+        hitChance = Mathf.Max(0f, hitChance);
 
+        // Zapisujemy mno¿nik (potrzebny do BattleManagera, ¿eby wiedzieæ czy status wejdzie)
+        result.hitChanceMultiplier = Mathf.Clamp01(hitChance / 100f);
         result.chanceText = Mathf.RoundToInt(hitChance) + "%";
 
         // 3. SPRAWDZENIE TRAFIENIA
@@ -122,4 +136,5 @@ public class AttackResult
     public int damageDealt;
     public bool isCritical;
     public string chanceText;
+    public float hitChanceMultiplier;
 }

@@ -1,11 +1,19 @@
 using UnityEngine;
 
+public enum StatusType { DamageOverTime, HealOverTime, Shield }
+
 [System.Serializable]
 public class StatusEffect
 {
     public string effectName;
-    public int duration;      // Ile rund trwa
-    public int value;         // Ile obra¿eñ/leczenia na rundê
-    public bool isDamage;     // True = bije (ogieñ), False = leczy (regencacja)
-    public Sprite icon;       // Ikonka do wyœwietlenia nad HP
+    public StatusType type;
+    public int duration;
+    public int value;
+    public int remainingHits;
+    public bool isDamage;
+    public Sprite icon;
+
+    public StatusEffect() { }
+
+    
 }

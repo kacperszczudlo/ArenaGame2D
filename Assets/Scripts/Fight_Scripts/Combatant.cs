@@ -212,16 +212,28 @@ public class Combatant : MonoBehaviour
 
     public void TakeDamage(int amount, bool isCritical = false, string chanceText = "")
     {
-        currentHP -= amount;
-        if (currentHP < 0) currentHP = 0;
+        int finalDamage = amount;
 
+        for (int i = activeStatuses.Count - 1; i >= 0; i--)
+        {
+            if (activeStatuses[i].type == StatusType.Shield && activeStatuses[i].remainingHits > 0)
+            {
+                float reduction = activeStatuses[i].value / 100f;
+                finalDamage = Mathf.RoundToInt(finalDamage * (1f - reduction));
+                activeStatuses[i].remainingHits--;
+                if (activeStatuses[i].remainingHits <= 0) activeStatuses.RemoveAt(i);
+                RefreshStatusUI();
+                break;
+            }
+        }
+
+        currentHP -= finalDamage;
+        if (currentHP < 0) currentHP = 0;
         if (animator != null) animator.SetTrigger("Hit");
         if (myUI != null) myUI.UpdateUI();
 
-        DamagePopup.PopupType type = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
-
-        ShowFloatingText("-" + amount.ToString(), type, null, chanceText);
-
+        DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
+        ShowFloatingText("-" + finalDamage, pType, null, chanceText);
         if (currentHP <= 0) Die();
     }
 
@@ -246,19 +258,35 @@ public class Combatant : MonoBehaviour
     }
     public void ProcessStatuses()
     {
-        if (activeStatuses.Count == 0) return;
+        // Tworzymy listê do usuniêcia, ¿eby nie psuæ pêtli w trakcie dzia³ania
+        List<StatusEffect> expired = new List<StatusEffect>();
 
-        for (int i = activeStatuses.Count - 1; i >= 0; i--)
+        foreach (var status in activeStatuses)
         {
-            var status = activeStatuses[i];
+            // 1. Logika obra¿eñ/leczenia (DOT/HOT)
+            if (status.type == StatusType.DamageOverTime)
+                TakeDamage(status.value, false, "Krwawienie");
+            else if (status.type == StatusType.HealOverTime)
+                Heal(status.value);
 
-            if (status.isDamage)
-                TakeDamage(status.value, false, status.effectName);
-            else
-                Heal(status.value, status.effectName);
-
+            // 2. TWOJA ZASADA: Ka¿dy status (w tym tarcza) traci 1 rundê co turê
             status.duration--;
-            if (status.duration <= 0) activeStatuses.RemoveAt(i);
+
+            // 3. Sprawdzamy czy status wygas³ (czas siê skoñczy³ lub tarcza zosta³a zu¿yta)
+            if (status.duration <= 0)
+            {
+                expired.Add(status);
+            }
+            else if (status.type == StatusType.Shield && status.remainingHits <= 0)
+            {
+                expired.Add(status);
+            }
+        }
+
+        // Usuwamy wygas³e statusy i odœwie¿amy UI
+        foreach (var status in expired)
+        {
+            activeStatuses.Remove(status);
         }
 
         RefreshStatusUI();
@@ -267,26 +295,40 @@ public class Combatant : MonoBehaviour
     public void RefreshStatusUI()
     {
         if (statusIconsContainer == null) return;
-
-        // Czyœcimy stare ikonki
         foreach (Transform child in statusIconsContainer) Destroy(child.gameObject);
-
-        // Tworzymy nowe ikonki dla aktywnych statusów
         foreach (var status in activeStatuses)
         {
             if (statusIconPrefab != null)
             {
                 GameObject iconGo = Instantiate(statusIconPrefab, statusIconsContainer);
-                // Tutaj powinieneœ mieæ skrypt na prefabie, który ustawia Sprite i tekst duration
-                // Przyk³ad: iconGo.GetComponent<StatusIconUI>().Setup(status);
+                iconGo.GetComponent<StatusIconUI>().Setup(status);
             }
         }
     }
 
     public void AddStatusEffect(StatusEffect newEffect)
     {
-        // Mo¿esz dodaæ logikê sprawdzaj¹c¹, czy status ju¿ istnieje, by go odœwie¿yæ
-        activeStatuses.Add(newEffect);
+        // Szukamy, czy ju¿ mamy taki status (po nazwie), ¿eby go zsumowaæ
+        StatusEffect existing = activeStatuses.Find(s => s.effectName == newEffect.effectName);
+
+        if (existing != null)
+        {
+            if (newEffect.type == StatusType.DamageOverTime)
+            {
+                existing.duration += newEffect.duration; // Sumujemy rundy krwawienia
+            }
+            else if (newEffect.type == StatusType.Shield)
+            {
+                existing.remainingHits = newEffect.remainingHits; // Odœwie¿amy tarcze
+                existing.duration = newEffect.duration;
+            }
+        }
+        else
+        {
+            activeStatuses.Add(newEffect);
+        }
+
+        // TO JEST NAJWA¯NIEJSZE - bez tego ikonka siê nie pojawi!
         RefreshStatusUI();
     }
 }
