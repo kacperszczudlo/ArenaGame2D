@@ -7,7 +7,9 @@ public static class StatusRegistry
     {
         { StatusType.Shield, new LogicShield() },
         { StatusType.DamageOverTime, new LogicDOT() },
-        { StatusType.HealOverTime, new LogicHOT() }
+        { StatusType.HealOverTime, new LogicHOT() },
+        { StatusType.Blessing, new LogicBlessing() }, // <--- DODANE
+        { StatusType.Fury, new LogicFury() }
     };
 
     public static StatusLogic GetLogic(StatusType type)

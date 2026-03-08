@@ -17,21 +17,103 @@ MonoBehaviour:
   category: 0
   animTriggerName: Fall
   showCenterVFX: 1
-  effects: []
+  effects:
+  - {fileID: 11400000, guid: ad6ff4edf9d440d4c80e5cc9ceee5dd9, type: 2}
   isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
-  knowledgeWeight: 1
+  knowledgeWeight: 0
   powerWeight: 0
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
+    requiredCharacterLevel: 9
+    staminaCost: 0
+    manaCost: 60
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 60
+    effectCharges: 1
+    effectValue: 10
+    effectDuration: 2
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 2
+    requiredCharacterLevel: 10
+    staminaCost: 0
+    manaCost: 65
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 60
+    effectCharges: 1
+    effectValue: 15
+    effectDuration: 2
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 3
+    requiredCharacterLevel: 11
+    staminaCost: 0
+    manaCost: 70
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 60
+    effectCharges: 1
+    effectValue: 20
+    effectDuration: 3
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 4
+    requiredCharacterLevel: 12
+    staminaCost: 0
+    manaCost: 75
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 60
+    effectCharges: 1
+    effectValue: 25
+    effectDuration: 3
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 5
+    requiredCharacterLevel: 13
     staminaCost: 0
     manaCost: 80
-    damageMultiplier: 1
+    damageMultiplier: 0
     hitChanceBonus: 0
-    statusEffectChance: 10
-    selfCastDifficulty: 120
+    statusEffectChance: 100
+    selfCastDifficulty: 40
     effectCharges: 2
-    effectValue: 20
+    effectValue: 35
+    effectDuration: 4
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 6
+    requiredCharacterLevel: 14
+    staminaCost: 0
+    manaCost: 85
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 40
+    effectCharges: 2
+    effectValue: 45
+    effectDuration: 4
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 7
+    requiredCharacterLevel: 15
+    staminaCost: 0
+    manaCost: 90
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 20
+    effectCharges: 3
+    effectValue: 60
+    effectDuration: 5
+    effectMultiplier: 0
+    effectHitChanceMod: 0

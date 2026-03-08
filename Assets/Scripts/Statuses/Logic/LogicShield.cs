@@ -2,26 +2,38 @@ using UnityEngine;
 
 public class LogicShield : StatusLogic
 {
-    public override int OnTakeDamage(Combatant owner, StatusEffect effect, int incomingDamage)
+    public override int OnTakeDamage(Combatant owner, StatusEffect effect, int incomingDamage, bool isDot, SkillCategory category)
     {
-        // Jeœli mamy ³adunki tarczy i w ogóle s¹ jakieœ obra¿enia do zablokowania
+        // Tarcza ignoruje truciznê i ataki psychiczne
+        if (isDot || category == SkillCategory.NegativeCharm)
+        {
+            return incomingDamage;
+        }
+
         if (effect.remainingHits > 0 && incomingDamage > 0)
         {
-            float reduction = effect.value / 100f;
-            int finalDamage = Mathf.RoundToInt(incomingDamage * (1f - reduction));
+            effect.remainingHits--; // Zu¿ywamy ³adunek bloku
 
-            effect.remainingHits--;
+            // --- OBLICZANIE REDUKCJI PROCENTOWEJ ---
+            float blockPercent = Mathf.Clamp(effect.value, 0f, 100f); // Max 100%
+            float damageMultiplier = 1f - (blockPercent / 100f);
 
-            // Mo¿emy tu zostawiæ wyœwietlanie napisu o bloku!
-            owner.ShowFloatingText("Blok!", DamagePopup.PopupType.NormalDamage);
+            int reducedDamage = Mathf.RoundToInt(incomingDamage * damageMultiplier);
 
-            return finalDamage;
+            // --- NOWOŒÆ: Odtwarzamy efekt wizualny (VFX) z ikonk¹ zamiast tekstu! ---
+            if (effect.icon != null)
+            {
+                owner.PlaySkillEffect(effect.icon);
+            }
+
+            // Zwracamy ZMNIEJSZONE obra¿enia dalej do systemu
+            return reducedDamage;
         }
         return incomingDamage;
     }
 
     public override bool IsExpired(StatusEffect effect)
     {
-        return effect.duration <= 0 || effect.remainingHits <= 0;
+        return effect.remainingHits <= 0 || effect.duration <= 0;
     }
 }

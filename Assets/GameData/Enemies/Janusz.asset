@@ -12,24 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
   m_Name: Janusz
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyName: "Nowy Wr\xF3g"
+  enemyName: Disstream
   avatarImage: {fileID: 0}
-  maxHP: 800
-  maxMana: 50
-  maxStamina: 50
-  strength: 10
-  agility: 10
+  level: 20
+  maxHP: 10000
+  maxMana: 800
+  maxStamina: 800
+  strength: 200
+  agility: 200
   knowledge: 10
   power: 10
-  physicalArmor: 5
+  physicalArmor: 100
   magicResistance: 0
   critChance: 5
-  weaponDamage: 10
+  weaponDamage: 100
   meleeStoppingDistance: 2.2
   enemySkills:
   - data: {fileID: 11400000, guid: 18b94cdaeb0d56d4fbefaebfda59d6f3, type: 2}
     currentLevel: 1
     isUnlocked: 1
   - data: {fileID: 11400000, guid: 721f98a4140ce214b929868900e3a48c, type: 2}
+    currentLevel: 2
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 51c43c4343b6b2c4f8fb4367407184f0, type: 2}
     currentLevel: 2
     isUnlocked: 1

@@ -1,7 +1,6 @@
 using UnityEngine;
 
-public enum StatusType { DamageOverTime, HealOverTime, Shield }
-
+public enum StatusType { DamageOverTime, HealOverTime, Shield, Blessing, Fury }
 [System.Serializable]
 public class StatusEffect
 {
@@ -12,6 +11,8 @@ public class StatusEffect
     public int remainingHits;
     public bool isDamage;
     public Sprite icon;
+    public float multiplier;
+    public float hitChanceMod;
 
     public StatusEffect() { }
 

@@ -6,7 +6,7 @@ public abstract class StatusLogic
     public virtual void OnTurnStart(Combatant owner, StatusEffect effect) { }
 
     // Co status robi, gdy postaæ dostaje cios (np. Tarcza go redukuje)
-    public virtual int OnTakeDamage(Combatant owner, StatusEffect effect, int incomingDamage)
+    public virtual int OnTakeDamage(Combatant owner, StatusEffect effect, int incomingDamage, bool isDot, SkillCategory category)
     {
         return incomingDamage;
     }

@@ -64,6 +64,19 @@ public class Combatant : MonoBehaviour
     public Transform statusIconsContainer; // Tu przeci¹gnij Horizontal Layout Group
     public GameObject statusIconPrefab;
 
+    [Header("Punkty Obrony w Bie¿¹cej Rundzie")]
+    public int defenseMeleePA = 0;    // Obrona w zwarciu (fizyczna)
+    public int defenseRangedPA = 0;   // Obrona przed dystansem (fiz/mag)
+    public int defenseMentalPA = 0;   // Obrona przed urokami (psychiczna)
+
+    // Funkcja do czyszczenia obrony po zakoñczeniu rundy
+    public void ResetDefensePA()
+    {
+        defenseMeleePA = 0;
+        defenseRangedPA = 0;
+        defenseMentalPA = 0;
+    }
+
     void Start()
     {
         // 1. Najpierw decydujemy sk¹d bierzemy dane
@@ -92,6 +105,7 @@ public class Combatant : MonoBehaviour
         var data = PlayerDataManager.Instance;
 
         // POBIERANIE ZSUMOWANYCH STATYSTYK
+        currentLevel = data.currentLevel;
         maxHP = data.TotalMaxHP;
         currentHP = maxHP;
 
@@ -147,6 +161,7 @@ public class Combatant : MonoBehaviour
         combatantName = data.enemyName;
         avatarImage = data.avatarImage;
         meleeStoppingDistance = data.meleeStoppingDistance;
+        currentLevel = data.level;
 
         maxHP = data.maxHP;
         currentHP = maxHP;
@@ -188,6 +203,19 @@ public class Combatant : MonoBehaviour
         if (myUI != null) myUI.UpdateUI();
     }
 
+    public void RegenerateResources()
+    {
+        // Liczymy 5% z maksymalnej wartoœci
+        int manaRegen = Mathf.RoundToInt(maxMana * 0.05f);
+        int staminaRegen = Mathf.RoundToInt(maxStamina * 0.05f);
+
+        // Dodajemy, ale upewniamy siê, ¿e nie przekroczymy maksimum
+        currentMana = Mathf.Min(maxMana, currentMana + manaRegen);
+        currentStamina = Mathf.Min(maxStamina, currentStamina + staminaRegen);
+
+        if (myUI != null) myUI.UpdateUI();
+    }
+
     public void PlayAttackAnimation(string animationTriggerName)
     {
         if (animator != null) animator.SetTrigger(animationTriggerName);
@@ -201,25 +229,38 @@ public class Combatant : MonoBehaviour
 
     public void Heal(int amount, string chanceText = "", Sprite icon = null)
     {
-        currentHP += amount;
-        if (currentHP > maxHP) currentHP = maxHP;
+        // Jeœli faktycznie jest jakieœ leczenie (np. mikstura albo skill lecz¹cy)
+        if (amount > 0)
+        {
+            currentHP += amount;
+            if (currentHP > maxHP) currentHP = maxHP;
 
-        if (myUI != null) myUI.UpdateUI();
+            if (myUI != null) myUI.UpdateUI();
 
-        ShowFloatingText("+" + amount.ToString(), DamagePopup.PopupType.Heal, icon, chanceText);
+            ShowFloatingText("+" + amount.ToString(), DamagePopup.PopupType.Heal, icon, chanceText);
+        }
+        else
+        {
+            // Jeœli leczenie wynosi 0 (czyli rzucamy czysty Buff, np. Tarcza, Furia, Modlitwa)
+            // Zamiast g³upiego "+0", wyœwietlamy fajny tekst!
+            ShowFloatingText("Wzmocnienie!", DamagePopup.PopupType.Heal, icon, chanceText);
+        }
     }
 
-    public void TakeDamage(int amount, bool isCritical = false, string chanceText = "")
+    // Zmieniamy sygnaturê, by przyjmowa³a isDot i category
+    public void TakeDamage(int damage, bool isCritical = false, string chanceText = "", bool isDot = false, SkillCategory category = SkillCategory.MeleePhysical)
     {
-        int finalDamage = amount;
+        int finalDamage = damage;
 
-        // 1. PRZEPUSZCZAMY OBRA¯ENIA PRZEZ STATUSY (Tarcza je ³apie i redukuje)
-        for (int i = activeStatuses.Count - 1; i >= 0; i--)
+        // 1. Przepuszczamy obra¿enia przez statusy (Tarcza, Modlitwa)
+        // U¿ywamy .ToArray(), ¿eby móc bezpiecznie modyfikowaæ listê w trakcie pêtli
+        foreach (var s in activeStatuses.ToArray())
         {
-            StatusLogic logic = StatusRegistry.GetLogic(activeStatuses[i].type);
+            StatusLogic logic = StatusRegistry.GetLogic(s.type);
             if (logic != null)
             {
-                finalDamage = logic.OnTakeDamage(this, activeStatuses[i], finalDamage);
+                // Wysy³amy nasze nowe informacje do Tarczy/Modlitwy!
+                finalDamage = logic.OnTakeDamage(this, s, finalDamage, isDot, category);
             }
         }
 
@@ -227,11 +268,14 @@ public class Combatant : MonoBehaviour
         activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
         RefreshStatusUI();
 
+        // Jeœli po przejœciu przez tarcze zosta³o 0 obra¿eñ (zablokowane/unikniête), wychodzimy!
+        if (finalDamage <= 0) return;
+
         // 3. OBLICZAMY RESZTÊ JAK ZWYKLE
         currentHP -= finalDamage;
         if (currentHP < 0) currentHP = 0;
 
-        if (animator != null) animator.SetTrigger("Hit"); // Uwa¿aj na nazwê triggera!
+        if (animator != null) animator.SetTrigger("Hit");
         if (myUI != null) myUI.UpdateUI();
 
         DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
@@ -293,18 +337,22 @@ public class Combatant : MonoBehaviour
 
     public void AddStatusEffect(StatusEffect newEffect)
     {
-        // Szukamy, czy ju¿ mamy taki status (po nazwie), ¿eby go zsumowaæ
         StatusEffect existing = activeStatuses.Find(s => s.effectName == newEffect.effectName);
 
         if (existing != null)
         {
             if (newEffect.type == StatusType.DamageOverTime)
             {
-                existing.duration += newEffect.duration; // Sumujemy rundy krwawienia
+                existing.remainingHits += newEffect.remainingHits;
+
+                // NAPRAWA UI: Aktualizujemy cyferkê na ikonce po do³o¿eniu stacków!
+                existing.duration = existing.remainingHits;
+
+                if (newEffect.value > existing.value) existing.value = newEffect.value;
             }
-            else if (newEffect.type == StatusType.Shield)
+            else if (newEffect.type == StatusType.Shield || newEffect.type == StatusType.Blessing)
             {
-                existing.remainingHits = newEffect.remainingHits; // Odœwie¿amy tarcze
+                existing.remainingHits = newEffect.remainingHits;
                 existing.duration = newEffect.duration;
             }
         }
@@ -312,8 +360,54 @@ public class Combatant : MonoBehaviour
         {
             activeStatuses.Add(newEffect);
         }
-
-        // TO JEST NAJWA¯NIEJSZE - bez tego ikonka siê nie pojawi!
         RefreshStatusUI();
+    }
+
+    public int GetCombatPhysicalArmor()
+    {
+        int arm = physicalArmor;
+        foreach (var s in activeStatuses)
+        {
+            if (s.type == StatusType.Fury) arm -= s.value;
+            // Modlitwa tu NIE DZIA£A. Pancerz fizyczny zostaje bez zmian (czyli ³ucznik bije normalnie).
+        }
+        return arm;
+    }
+
+    public int GetCombatMagicResistance()
+    {
+        int res = magicResistance;
+        foreach (var s in activeStatuses)
+        {
+            if (s.type == StatusType.Blessing) res += s.value; // Modlitwa dodaje Obronê Magiczn¹!
+            if (s.type == StatusType.Fury) res -= s.value;
+        }
+        return res;
+    }
+
+    public float GetCombatDamageMultiplier()
+    {
+        float mult = 1.0f;
+        foreach (var s in activeStatuses)
+        {
+            // ZAMIAST na sztywno "+1.5f", dodajemy to, co wpisa³eœ w 'Effect Multiplier'!
+            if (s.type == StatusType.Fury) mult += s.multiplier;
+        }
+        return mult;
+    }
+
+    public float GetCombatHitChanceMultiplier()
+    {
+        float mult = 1.0f;
+        foreach (var s in activeStatuses)
+        {
+            // Przerabiamy wpisane -10 na u³amek. 
+            // Wzór: 1 + (-10 / 100) = 0.9.  Zatem celnoœæ zostanie pomno¿ona przez 0.9!
+            if (s.type == StatusType.Fury)
+            {
+                mult *= (1f + (s.hitChanceMod / 100f));
+            }
+        }
+        return mult;
     }
 }

@@ -27,6 +27,9 @@ public class SkillLevelData
     [Header("Ustawienia Efektów (np. Tarcza)")]
     public int effectCharges = 2; // Tu wpiszesz 2 dla poziomu 1, a 4 dla poziomu 7
     public int effectValue = 20;   // Opcjonalnie: si³a krwawienia/leczenia na tym poziomie
+    public int effectDuration = 3;
+    public float effectMultiplier = 1.5f;
+    public float effectHitChanceMod = -20f; // mod celnosci
 }
 
 [CreateAssetMenu(fileName = "New Skill", menuName = "RPG System/Skill")]

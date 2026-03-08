@@ -7,6 +7,7 @@ public class EnemyData : ScriptableObject
     [Header("Podstawowe Informacje")]
     public string enemyName = "Nowy Wróg";
     public Sprite avatarImage;
+    public int level = 1;
 
     [Header("Atrybuty")]
     public int maxHP = 100;

@@ -27,22 +27,93 @@ MonoBehaviour:
   weaponDamageWeight: 0
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
+    requiredCharacterLevel: 3
+    staminaCost: 20
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 80
+    effectCharges: 1
+    effectValue: 40
+    effectDuration: 1
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 2
+    requiredCharacterLevel: 4
+    staminaCost: 24
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 60
+    effectCharges: 1
+    effectValue: 45
+    effectDuration: 1
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 3
+    requiredCharacterLevel: 5
+    staminaCost: 28
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 80
+    effectCharges: 2
+    effectValue: 40
+    effectDuration: 1
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 4
+    requiredCharacterLevel: 6
     staminaCost: 32
-    manaCost: 32
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 80
+    effectCharges: 2
+    effectValue: 45
+    effectDuration: 1
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 5
+    requiredCharacterLevel: 7
+    staminaCost: 36
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 100
+    effectCharges: 3
+    effectValue: 55
+    effectDuration: 1
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 6
+    requiredCharacterLevel: 8
+    staminaCost: 40
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 100
+    effectCharges: 3
+    effectValue: 65
+    effectDuration: 1
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 7
+    requiredCharacterLevel: 9
+    staminaCost: 48
+    manaCost: 0
     damageMultiplier: 0
     hitChanceBonus: 0
     statusEffectChance: 100
     selfCastDifficulty: 120
-    effectCharges: 2
-    effectValue: 20
-  - levelName: 7
-    requiredCharacterLevel: 1
-    staminaCost: 32
-    manaCost: 32
-    damageMultiplier: 0
-    hitChanceBonus: 0
-    statusEffectChance: 100
-    selfCastDifficulty: 20
     effectCharges: 4
-    effectValue: 20
+    effectValue: 75
+    effectDuration: 1
+    effectMultiplier: 0
+    effectHitChanceMod: 0

@@ -13,6 +13,7 @@ public class PlayerDataManager : MonoBehaviour
     public static PlayerDataManager Instance { get; private set; }
 
     [Header("Podstawowe Statystyki (Zale¿ne od Klasy i Poziomu)")]
+    public int currentLevel = 1;
     public int baseMaxHP = 100;
     public int baseMaxMana = 50;
     public int baseMaxStamina = 50;

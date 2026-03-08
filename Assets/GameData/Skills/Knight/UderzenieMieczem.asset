@@ -19,29 +19,100 @@ MonoBehaviour:
   showCenterVFX: 0
   effects: []
   isPassive: 0
-  strengthWeight: 0.7
-  agilityWeight: 0.3
+  strengthWeight: 1.4
+  agilityWeight: 0.6
   knowledgeWeight: 0
   powerWeight: 0
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
+    requiredCharacterLevel: 18
     staminaCost: 20
     manaCost: 0
-    damageMultiplier: 1
-    hitChanceBonus: 0
-    statusEffectChance: 10
-    selfCastDifficulty: 120
-    effectCharges: 2
-    effectValue: 20
+    damageMultiplier: 1.4
+    hitChanceBonus: 1
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
   - levelName: 2
-    requiredCharacterLevel: 1
+    requiredCharacterLevel: 19
+    staminaCost: 24
+    manaCost: 0
+    damageMultiplier: 1.6
+    hitChanceBonus: 1.02
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 3
+    requiredCharacterLevel: 20
+    staminaCost: 28
+    manaCost: 0
+    damageMultiplier: 1.8
+    hitChanceBonus: 1.04
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 4
+    requiredCharacterLevel: 21
+    staminaCost: 32
+    manaCost: 0
+    damageMultiplier: 2
+    hitChanceBonus: 1.06
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 5
+    requiredCharacterLevel: 22
+    staminaCost: 36
+    manaCost: 0
+    damageMultiplier: 2.2
+    hitChanceBonus: 1.08
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 6
+    requiredCharacterLevel: 23
+    staminaCost: 38
+    manaCost: 0
+    damageMultiplier: 2.4
+    hitChanceBonus: 1.1
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 7
+    requiredCharacterLevel: 24
     staminaCost: 40
     manaCost: 0
-    damageMultiplier: 1
-    hitChanceBonus: 0
-    statusEffectChance: 10
-    selfCastDifficulty: 120
-    effectCharges: 2
-    effectValue: 20
+    damageMultiplier: 2.6
+    hitChanceBonus: 1.1
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0

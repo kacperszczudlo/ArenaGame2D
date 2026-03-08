@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Furia
   icon: {fileID: 21300098, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
-  category: 1
+  category: 0
   animTriggerName: Jump
   showCenterVFX: 1
-  effects: []
+  effects:
+  - {fileID: 11400000, guid: b58e04b6c1756e14f8c5068aa07aad4b, type: 2}
   isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
@@ -26,12 +27,93 @@ MonoBehaviour:
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
-    staminaCost: 20
-    manaCost: 20
-    damageMultiplier: 1
+    requiredCharacterLevel: 15
+    staminaCost: 10
+    manaCost: 40
+    damageMultiplier: 0
     hitChanceBonus: 0
-    statusEffectChance: 10
+    statusEffectChance: 100
     selfCastDifficulty: 120
-    effectCharges: 2
-    effectValue: 20
+    effectCharges: 0
+    effectValue: 10
+    effectDuration: 5
+    effectMultiplier: 0.2
+    effectHitChanceMod: -10
+  - levelName: 2
+    requiredCharacterLevel: 16
+    staminaCost: 12
+    manaCost: 42
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 100
+    effectCharges: 0
+    effectValue: 30
+    effectDuration: 5
+    effectMultiplier: 0.3
+    effectHitChanceMod: -12
+  - levelName: 3
+    requiredCharacterLevel: 17
+    staminaCost: 14
+    manaCost: 44
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 80
+    effectCharges: 0
+    effectValue: 40
+    effectDuration: 4
+    effectMultiplier: 0.4
+    effectHitChanceMod: -14
+  - levelName: 4
+    requiredCharacterLevel: 18
+    staminaCost: 16
+    manaCost: 46
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 60
+    effectCharges: 0
+    effectValue: 50
+    effectDuration: 4
+    effectMultiplier: 0.5
+    effectHitChanceMod: -16
+  - levelName: 5
+    requiredCharacterLevel: 19
+    staminaCost: 18
+    manaCost: 48
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 40
+    effectCharges: 0
+    effectValue: 60
+    effectDuration: 3
+    effectMultiplier: 0.6
+    effectHitChanceMod: -18
+  - levelName: 6
+    requiredCharacterLevel: 20
+    staminaCost: 20
+    manaCost: 50
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 40
+    effectCharges: 0
+    effectValue: 80
+    effectDuration: 2
+    effectMultiplier: 0.8
+    effectHitChanceMod: -20
+  - levelName: 7
+    requiredCharacterLevel: 21
+    staminaCost: 22
+    manaCost: 52
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 100
+    selfCastDifficulty: 20
+    effectCharges: 0
+    effectValue: 100
+    effectDuration: 1
+    effectMultiplier: 1
+    effectHitChanceMod: -22
