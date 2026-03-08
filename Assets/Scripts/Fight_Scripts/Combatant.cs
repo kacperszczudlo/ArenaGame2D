@@ -111,7 +111,6 @@ public class Combatant : MonoBehaviour
         critChance = data.TotalCritChance;
         weaponDamage = data.weaponDamage;
 
-        // POBIERANIE UMIEJÊTNOŒCI (Na razie ukryte, do pod³¹czenia w nastêpnym kroku z kó³kami na ekranie!)
 
         // --- POBIERANIE UMIEJÊTNOŒCI Z SERWERA ---
         mySkills.Clear();
@@ -214,26 +213,30 @@ public class Combatant : MonoBehaviour
     {
         int finalDamage = amount;
 
+        // 1. PRZEPUSZCZAMY OBRA¯ENIA PRZEZ STATUSY (Tarcza je ³apie i redukuje)
         for (int i = activeStatuses.Count - 1; i >= 0; i--)
         {
-            if (activeStatuses[i].type == StatusType.Shield && activeStatuses[i].remainingHits > 0)
+            StatusLogic logic = StatusRegistry.GetLogic(activeStatuses[i].type);
+            if (logic != null)
             {
-                float reduction = activeStatuses[i].value / 100f;
-                finalDamage = Mathf.RoundToInt(finalDamage * (1f - reduction));
-                activeStatuses[i].remainingHits--;
-                if (activeStatuses[i].remainingHits <= 0) activeStatuses.RemoveAt(i);
-                RefreshStatusUI();
-                break;
+                finalDamage = logic.OnTakeDamage(this, activeStatuses[i], finalDamage);
             }
         }
 
+        // 2. ZU¯YTE TARCZE DO KOSZA
+        activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
+        RefreshStatusUI();
+
+        // 3. OBLICZAMY RESZTÊ JAK ZWYKLE
         currentHP -= finalDamage;
         if (currentHP < 0) currentHP = 0;
-        if (animator != null) animator.SetTrigger("Hit");
+
+        if (animator != null) animator.SetTrigger("Hit"); // Uwa¿aj na nazwê triggera!
         if (myUI != null) myUI.UpdateUI();
 
         DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
         ShowFloatingText("-" + finalDamage, pType, null, chanceText);
+
         if (currentHP <= 0) Die();
     }
 
@@ -258,37 +261,19 @@ public class Combatant : MonoBehaviour
     }
     public void ProcessStatuses()
     {
-        // Tworzymy listê do usuniêcia, ¿eby nie psuæ pêtli w trakcie dzia³ania
-        List<StatusEffect> expired = new List<StatusEffect>();
-
-        foreach (var status in activeStatuses)
+        // 1. Odpalamy logikê na pocz¹tku tury (np. Krwawienie zadaje ból)
+        for (int i = activeStatuses.Count - 1; i >= 0; i--)
         {
-            // 1. Logika obra¿eñ/leczenia (DOT/HOT)
-            if (status.type == StatusType.DamageOverTime)
-                TakeDamage(status.value, false, "Krwawienie");
-            else if (status.type == StatusType.HealOverTime)
-                Heal(status.value);
+            var status = activeStatuses[i];
+            StatusLogic logic = StatusRegistry.GetLogic(status.type);
 
-            // 2. TWOJA ZASADA: Ka¿dy status (w tym tarcza) traci 1 rundê co turê
-            status.duration--;
+            if (logic != null) logic.OnTurnStart(this, status);
 
-            // 3. Sprawdzamy czy status wygas³ (czas siê skoñczy³ lub tarcza zosta³a zu¿yta)
-            if (status.duration <= 0)
-            {
-                expired.Add(status);
-            }
-            else if (status.type == StatusType.Shield && status.remainingHits <= 0)
-            {
-                expired.Add(status);
-            }
+            status.duration--; // Odejmujemy rundê
         }
 
-        // Usuwamy wygas³e statusy i odœwie¿amy UI
-        foreach (var status in expired)
-        {
-            activeStatuses.Remove(status);
-        }
-
+        // 2. Usuwamy statusy, które wygas³y (Koniec rund, albo Tarcza straci³a ³adunki)
+        activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
         RefreshStatusUI();
     }
 
