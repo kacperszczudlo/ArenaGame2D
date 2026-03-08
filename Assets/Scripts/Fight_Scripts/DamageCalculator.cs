@@ -85,8 +85,10 @@ public static class DamageCalculator
         }
         result.isHit = true;
 
-        // 4. OBLICZANIE OBRA¯EÑ
-        // Wewn¹trz DamageCalculator.cs, podmieñ sekcjê obliczania finalDamage:
+       // --- LOGIKA KRYTYKÓW ---
+        // Pobieramy szansê z atakuj¹cego 
+        float critChance = attacker.critChance; 
+        result.isCritical = Random.Range(0f, 100f) <= critChance;
 
         // 4. OBLICZANIE OBRA¯EÑ BAZOWYCH
         float baseStatDmg = (data.strengthWeight * attacker.strength) +
@@ -111,9 +113,19 @@ public static class DamageCalculator
         // 5. KRYTYKI (na samym koñcu, po rozrzucie)
         if (result.isCritical)
         {
-            if (hitChance >= 80f) reducedDamage *= 2.0f;
-            else if (hitChance <= 20f) reducedDamage *= 3.0f;
-            else reducedDamage *= 1.5f;
+            // Losujemy wartoœæ od 0 do 100, aby okreœliæ si³ê krytyka
+            float critSeverityRoll = Random.Range(0f, 100f);
+
+            // 20% szans na potê¿ny krytyk (x3)
+            if (critSeverityRoll <= 20f)
+            {
+                reducedDamage *= 3.0f;
+            }
+            // Pozosta³e 80% szans na standardowy krytyk (x2)
+            else
+            {
+                reducedDamage *= 2.0f;
+            }
         }
 
         // Jeœli to czysty Debuff (NegativeCharm) i nie ustawiliœmy mu wag obra¿eñ, 

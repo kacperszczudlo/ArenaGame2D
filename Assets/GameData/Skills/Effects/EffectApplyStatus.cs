@@ -14,10 +14,18 @@ public class EffectApplyStatus : SkillEffect
     public override void Execute(Combatant user, Combatant target, AttackResult result, float chance, Sprite skillIcon)
     {
         if (!result.isHit) return;
-
         // 1. Losowanie szansy (zostaje bez zmian)
+
+        Debug.Log($"<color=orange>[TEST SZANSY] Próbujê na³o¿yæ: {effectName} | Otrzymana szansa z Managera: {chance}% | Czy AlwaysSucceeds: {alwaysSucceeds}</color>");
         float roll = Random.Range(0f, 100f);
-        if (!alwaysSucceeds && roll > chance) return;
+        if (!alwaysSucceeds && roll > chance)
+        {
+            Debug.Log($"<color=yellow>Status {effectName} nie wszed³ (Roll: {roll} > Szansa: {chance}%)</color>");
+            return;
+        }
+
+        
+        
 
         // 2. Pobieramy dane z aktualnego poziomu skilla!
         // Szukamy poziomu skilla u u¿ytkownika (user), który wywo³a³ ten efekt

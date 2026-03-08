@@ -87,13 +87,33 @@ public class BattleManager : MonoBehaviour
 
                 // 3. Odpalanie modularnych efektów (Z przekazaniem ikonki!)
                 SkillLevelData currentLevelData = skillData.GetLevelData(slot.currentSkill.currentLevel);
-                float chanceFromLevel = currentLevelData != null ? currentLevelData.statusEffectChance : 100f;
+
+                // Pobieramy Twoje np. 9% z tabelki (jeœli nie znajdzie, daje 100)
+                float baseChance = currentLevelData != null ? currentLevelData.statusEffectChance : 100f;
+                float finalChance = 0f;
+
+                if (skillData.category == SkillCategory.PositiveCharm)
+                {
+                    // LOGIKA DLA BUFFÓW (Tarcza)
+                    // Trudnoœæ zale¿na od wpakowanych PA (np. 120 trudnoœci vs 6 PA)
+                    finalChance = 100f * result.hitChanceMultiplier;
+                }
+                else
+                {
+                    // LOGIKA DLA ATAKÓW (Magiczny Cios + Krwawienie)
+                    // Bierzemy szansê z tabeli poziomu (Twoje 9%). 
+                    // Mno¿ymy przez hitChanceMultiplier, ¿eby mniejsza iloœæ PA zmniejsza³a te¿ szansê na efekt.
+                    //finalChance = baseChance * result.hitChanceMultiplier;
+                    finalChance = baseChance;
+                }
 
                 foreach (SkillEffect effect in skillData.effects)
                 {
                     if (effect != null)
-                        // Przekazujemy skillData.icon jako ostatni argument
-                        effect.Execute(player, enemy, result, chanceFromLevel, skillData.icon);
+                    {
+                        // Przekazujemy odpowiedni¹ szansê!
+                        effect.Execute(player, enemy, result, finalChance, skillData.icon);
+                    }
                 }
             }
             else
