@@ -62,9 +62,23 @@ public class EffectApplyStatus : SkillEffect
         }
 
         // KTO DOSTAJE STATUS? (Wymieniamy tu wszystkie buffy, ¿eby Furia i Modlitwa na pewno sz³y na nas!)
+        // KTO DOSTAJE STATUS?
         bool goesToUser = (type == StatusType.Shield || type == StatusType.Blessing || type == StatusType.Fury || type == StatusType.HealOverTime);
         Combatant finalTarget = goesToUser ? user : target;
 
+        // --- NAPRAWA: Zabezpieczenie przed na³o¿eniem trucizny przy Uniku ---
+        if (!goesToUser)
+        {
+            // Sprawdzamy, czy cel ma aktywn¹ Modlitwê (Cudowny Unik)
+            StatusEffect dodge = finalTarget.activeStatuses.Find(s => s.type == StatusType.Blessing && s.remainingHits > 0);
+            if (dodge != null)
+            {
+                Debug.Log($"<color=cyan>Status {se.effectName} zablokowany, bo atak zosta³ unikniêty!</color>");
+                return; // Przerywamy! Trucizna nie wchodzi do krwiobiegu.
+            }
+        }
+
+        // Jeœli nie by³o uniku, nak³adamy status normalnie
         finalTarget.AddStatusEffect(se);
     }
 }

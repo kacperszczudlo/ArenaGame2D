@@ -60,6 +60,11 @@ public class Combatant : MonoBehaviour
     [Header("Komponenty Wizualne")]
     public Animator animator;
 
+    [Header("Nazwy Animacji (Triggery)")]
+    [Tooltip("Wpisz tu nazwy triggerów z Animatora. Zostaw puste, jeœli postaæ nie ma takich animacji.")]
+    public string hitAnimTrigger = "Hit";
+    public string deathAnimTrigger = "Death";
+
     [Header("Status UI")]
     public Transform statusIconsContainer; // Tu przeci¹gnij Horizontal Layout Group
     public GameObject statusIconPrefab;
@@ -68,6 +73,8 @@ public class Combatant : MonoBehaviour
     public int defenseMeleePA = 0;    // Obrona w zwarciu (fizyczna)
     public int defenseRangedPA = 0;   // Obrona przed dystansem (fiz/mag)
     public int defenseMentalPA = 0;   // Obrona przed urokami (psychiczna)
+    //flaga dla animacji smierci
+    public bool isDead = false;
 
     // Funkcja do czyszczenia obrony po zakoñczeniu rundy
     public void ResetDefensePA()
@@ -223,8 +230,14 @@ public class Combatant : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return; // Jeœli ju¿ umar³, ignorujemy kolejne komendy!
+        isDead = true;
+
         Debug.Log($"<b>{combatantName} pada na ziemiê!</b>");
-        if (animator != null) animator.SetTrigger("Die");
+        if (animator != null && !string.IsNullOrEmpty(deathAnimTrigger))
+        {
+            animator.SetTrigger(deathAnimTrigger);
+        }
     }
 
     public void Heal(int amount, string chanceText = "", Sprite icon = null)
@@ -281,7 +294,18 @@ public class Combatant : MonoBehaviour
         DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
         ShowFloatingText("-" + finalDamage, pType, null, chanceText);
 
-        if (currentHP <= 0) Die();
+        if (currentHP <= 0)
+        {
+            Die(); // Jeœli umar³, zagraj TYLKO œmieræ
+        }
+        else
+        {
+            // Zamiast sztywnego "Hit", u¿ywamy naszej zmiennej!
+            if (animator != null && !string.IsNullOrEmpty(hitAnimTrigger))
+            {
+                animator.SetTrigger(hitAnimTrigger);
+            }
+        }
     }
 
     public void ShowFloatingText(string text, DamagePopup.PopupType type, Sprite icon = null, string chanceText = "")
