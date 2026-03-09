@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: Janusz
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Disstream
+  avatarImage: {fileID: 0}
+  level: 20
+  maxHP: 10000
+  maxMana: 800
+  maxStamina: 800
+  strength: 200
+  agility: 200
+  knowledge: 10
+  power: 10
+  physicalArmor: 100
+  magicResistance: 0
+  critChance: 5
+  weaponDamage: 100
+  meleeStoppingDistance: 2.2
+  enemySkills:
+  - data: {fileID: 11400000, guid: 18b94cdaeb0d56d4fbefaebfda59d6f3, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 721f98a4140ce214b929868900e3a48c, type: 2}
+    currentLevel: 2
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 51c43c4343b6b2c4f8fb4367407184f0, type: 2}
+    currentLevel: 2
+    isUnlocked: 1

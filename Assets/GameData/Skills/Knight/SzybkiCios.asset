@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
+  m_Name: SzybkiCios
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: Szybki Cios
+  icon: {fileID: 21300064, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
+  category: 4
+  animTriggerName: Attack2
+  showCenterVFX: 0
+  effects: []
+  isPassive: 0
+  strengthWeight: 1.4
+  agilityWeight: 0.6
+  knowledgeWeight: 0
+  powerWeight: 0
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    requiredCharacterLevel: 1
+    staminaCost: 10
+    manaCost: 0
+    damageMultiplier: 0.8
+    hitChanceBonus: 1.2
+    statusEffectChance: 0
+    selfCastDifficulty: 120
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 2
+    requiredCharacterLevel: 2
+    staminaCost: 12
+    manaCost: 0
+    damageMultiplier: 0.9
+    hitChanceBonus: 1.3
+    statusEffectChance: 0
+    selfCastDifficulty: 120
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 3
+    requiredCharacterLevel: 3
+    staminaCost: 14
+    manaCost: 0
+    damageMultiplier: 1
+    hitChanceBonus: 1.4
+    statusEffectChance: 0
+    selfCastDifficulty: 120
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 4
+    requiredCharacterLevel: 4
+    staminaCost: 16
+    manaCost: 0
+    damageMultiplier: 1.1
+    hitChanceBonus: 1.5
+    statusEffectChance: 0
+    selfCastDifficulty: 120
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 5
+    requiredCharacterLevel: 5
+    staminaCost: 18
+    manaCost: 0
+    damageMultiplier: 1.2
+    hitChanceBonus: 1.6
+    statusEffectChance: 0
+    selfCastDifficulty: 120
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 6
+    requiredCharacterLevel: 6
+    staminaCost: 19
+    manaCost: 0
+    damageMultiplier: 1.3
+    hitChanceBonus: 1.7
+    statusEffectChance: 0
+    selfCastDifficulty: 120
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 7
+    requiredCharacterLevel: 7
+    staminaCost: 20
+    manaCost: 0
+    damageMultiplier: 1.4
+    hitChanceBonus: 1.8
+    statusEffectChance: 0
+    selfCastDifficulty: 120
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0

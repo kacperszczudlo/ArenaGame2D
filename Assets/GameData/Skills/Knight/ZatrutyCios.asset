@@ -1,0 +1,119 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
+  m_Name: ZatrutyCios
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: Zatruty cios
+  icon: {fileID: 21300058, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
+  category: 4
+  animTriggerName: Attack1
+  showCenterVFX: 0
+  effects:
+  - {fileID: 11400000, guid: bb8f18e499a8dbb44b345931eed77520, type: 2}
+  isPassive: 0
+  strengthWeight: 0.5
+  agilityWeight: 0.5
+  knowledgeWeight: 0
+  powerWeight: 0
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    requiredCharacterLevel: 6
+    staminaCost: 20
+    manaCost: 2
+    damageMultiplier: 0.9
+    hitChanceBonus: 1
+    statusEffectChance: 20
+    selfCastDifficulty: 0
+    effectCharges: 2
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0.1
+    effectHitChanceMod: 0
+  - levelName: 2
+    requiredCharacterLevel: 7
+    staminaCost: 22
+    manaCost: 3
+    damageMultiplier: 1
+    hitChanceBonus: 1.02
+    statusEffectChance: 22
+    selfCastDifficulty: 0
+    effectCharges: 2
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0.1
+    effectHitChanceMod: 0
+  - levelName: 3
+    requiredCharacterLevel: 8
+    staminaCost: 24
+    manaCost: 4
+    damageMultiplier: 1.1
+    hitChanceBonus: 1.04
+    statusEffectChance: 23
+    selfCastDifficulty: 0
+    effectCharges: 2
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0.1
+    effectHitChanceMod: 0
+  - levelName: 4
+    requiredCharacterLevel: 9
+    staminaCost: 26
+    manaCost: 5
+    damageMultiplier: 1.2
+    hitChanceBonus: 1.08
+    statusEffectChance: 24
+    selfCastDifficulty: 0
+    effectCharges: 3
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0.1
+    effectHitChanceMod: 0
+  - levelName: 5
+    requiredCharacterLevel: 10
+    staminaCost: 27
+    manaCost: 5
+    damageMultiplier: 1.3
+    hitChanceBonus: 1.1
+    statusEffectChance: 26
+    selfCastDifficulty: 0
+    effectCharges: 3
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0.1
+    effectHitChanceMod: 0
+  - levelName: 6
+    requiredCharacterLevel: 11
+    staminaCost: 28
+    manaCost: 6
+    damageMultiplier: 1.4
+    hitChanceBonus: 1.12
+    statusEffectChance: 28
+    selfCastDifficulty: 0
+    effectCharges: 3
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0.1
+    effectHitChanceMod: 0
+  - levelName: 7
+    requiredCharacterLevel: 12
+    staminaCost: 30
+    manaCost: 7
+    damageMultiplier: 1.6
+    hitChanceBonus: 1.15
+    statusEffectChance: 32
+    selfCastDifficulty: 0
+    effectCharges: 3
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0.1
+    effectHitChanceMod: 0

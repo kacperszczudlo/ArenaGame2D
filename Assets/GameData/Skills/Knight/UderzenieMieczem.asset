@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
+  m_Name: UderzenieMieczem
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: Uderzenie Mieczem
+  icon: {fileID: 21300070, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
+  category: 4
+  animTriggerName: Attack3
+  showCenterVFX: 0
+  effects: []
+  isPassive: 0
+  strengthWeight: 1.4
+  agilityWeight: 0.6
+  knowledgeWeight: 0
+  powerWeight: 0
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    requiredCharacterLevel: 18
+    staminaCost: 20
+    manaCost: 0
+    damageMultiplier: 1.4
+    hitChanceBonus: 1
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 2
+    requiredCharacterLevel: 19
+    staminaCost: 24
+    manaCost: 0
+    damageMultiplier: 1.6
+    hitChanceBonus: 1.02
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 3
+    requiredCharacterLevel: 20
+    staminaCost: 28
+    manaCost: 0
+    damageMultiplier: 1.8
+    hitChanceBonus: 1.04
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 4
+    requiredCharacterLevel: 21
+    staminaCost: 32
+    manaCost: 0
+    damageMultiplier: 2
+    hitChanceBonus: 1.06
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 5
+    requiredCharacterLevel: 22
+    staminaCost: 36
+    manaCost: 0
+    damageMultiplier: 2.2
+    hitChanceBonus: 1.08
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 6
+    requiredCharacterLevel: 23
+    staminaCost: 38
+    manaCost: 0
+    damageMultiplier: 2.4
+    hitChanceBonus: 1.1
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
+  - levelName: 7
+    requiredCharacterLevel: 24
+    staminaCost: 40
+    manaCost: 0
+    damageMultiplier: 2.6
+    hitChanceBonus: 1.1
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
