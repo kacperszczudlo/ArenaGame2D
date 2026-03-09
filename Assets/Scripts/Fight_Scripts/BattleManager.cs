@@ -4,7 +4,23 @@ using System.Collections.Generic;
 
 public class BattleManager : MonoBehaviour
 {
-    [Header("Aktorzy")]
+    [Header("Prefaby Postaci (Walizki)")]
+    public GameObject playerPrefab;
+    public GameObject enemyPrefab;
+
+    [Header("Znaczniki (Miejsca na arenie)")]
+    public Transform playerSpawnPoint;
+    public Transform enemySpawnPoint;
+
+    [Header("Panele UI (Do podpiêcia postaciom)")]
+    public CharacterUI playerUI;
+    public CharacterUI enemyUI;
+
+    [Header("Kontenery Statusów (UI)")]
+    public Transform playerStatusContainer;
+    public Transform enemyStatusContainer;
+
+    [Header("Aktorzy (Przypisz¹ siê sami!)")]
     public Combatant player;
     public Combatant enemy;
 
@@ -27,13 +43,40 @@ public class BattleManager : MonoBehaviour
     {
         currentRound = 1;
         UpdateRoundUI();
-        if (player != null) playerOriginalPos = player.transform.position;
-        if (enemy != null) enemyOriginalPos = enemy.transform.position;
+
+        // --- NOWOŒÆ: Wywo³ujemy zrzucenie postaci na ring! ---
+        SpawnCombatants();
+    }
+
+    void SpawnCombatants()
+    {
+        // 1. TWORZYMY GRACZA
+        if (playerPrefab != null && playerSpawnPoint != null)
+        {
+            GameObject pGo = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
+            player = pGo.GetComponent<Combatant>();
+            playerOriginalPos = playerSpawnPoint.position;
+
+            if (playerUI != null) player.myUI = playerUI;
+            // --- NOWOŒÆ: Podpinamy kontener na statusy ---
+            if (playerStatusContainer != null) player.statusIconsContainer = playerStatusContainer;
+        }
+
+        // 2. TWORZYMY WROGA
+        if (enemyPrefab != null && enemySpawnPoint != null)
+        {
+            GameObject eGo = Instantiate(enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
+            enemy = eGo.GetComponent<Combatant>();
+            enemyOriginalPos = enemySpawnPoint.position;
+
+            if (enemyUI != null) enemy.myUI = enemyUI;
+            // --- NOWOŒÆ: Podpinamy kontener na statusy ---
+            if (enemyStatusContainer != null) enemy.statusIconsContainer = enemyStatusContainer;
+        }
     }
 
     public void TestEndTurn()
     {
-        // Teraz ca³a logika rundy siedzi w Routine
         StartCoroutine(ExecuteTurnRoutine());
     }
 
@@ -60,8 +103,6 @@ public class BattleManager : MonoBehaviour
 
         List<CombatAction> roundActions = new List<CombatAction>();
         int actionCounter = 0;
-
-        
 
         // 1. ZBIERANIE DECYZJI GRACZA
         foreach (var slot in attackSlots)
@@ -120,8 +161,6 @@ public class BattleManager : MonoBehaviour
             if (a.actor.isPlayer != b.actor.isPlayer)
                 return a.actor.isPlayer ? -1 : 1;
 
-            // NOWOŒÆ: Jeœli to ta sama kategoria ataków (np. 5 uderzeñ mieczem pod rz¹d), 
-            // sortuj po oryginalnym indeksie z Twoich slotów!
             return a.originalIndex.CompareTo(b.originalIndex);
         });
 
@@ -129,8 +168,6 @@ public class BattleManager : MonoBehaviour
         bool playerAtMelee = false;
         bool enemyAtMelee = false;
 
-        // Zmieniamy foreach na pêtlê for, ¿eby móc podgl¹daæ nastêpn¹ akcjê!
-        // Zmieniamy foreach na pêtlê for, ¿eby móc podgl¹daæ nastêpn¹ akcjê!
         for (int i = 0; i < roundActions.Count; i++)
         {
             var action = roundActions[i];
@@ -143,18 +180,15 @@ public class BattleManager : MonoBehaviour
             int mCost = levelData?.manaCost ?? 0;
             int sCost = levelData?.staminaCost ?? 0;
 
-            // Zmienna sprawdzaj¹ca, czy mamy na to hajs
             bool hasResources = action.actor.currentMana >= mCost && action.actor.currentStamina >= sCost;
 
             if (!hasResources)
             {
-                // BRAK ZASOBÓW: Wyœwietlamy napis i czekamy chwilê (nie u¿ywamy ju¿ 'continue!')
                 action.actor.ShowFloatingText("Brak zasobów!", DamagePopup.PopupType.Miss);
                 yield return new WaitForSeconds(0.8f);
             }
             else
             {
-                // S¥ ZASOBY: Odpalamy pe³n¹ sekwencjê ataku
                 action.actor.ConsumeResources(mCost, sCost);
 
                 // --- INTELIGENTNE PODBIEGANIE ---
@@ -178,7 +212,7 @@ public class BattleManager : MonoBehaviour
 
                 // ATAK
                 action.actor.PlayAttackAnimation(skillData.animTriggerName);
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.5f); // <--- ZWIÊKSZ TO, JEŒLI POTRZEBUJESZ D£U¯SZEJ PAUZY NA ANIMACJE
 
                 AttackResult result = DamageCalculator.ProcessAttack(action.actor, action.target, action.skill, action.paInvested);
 
@@ -193,8 +227,6 @@ public class BattleManager : MonoBehaviour
                         action.target.TakeDamage(result.damageDealt, result.isCritical, result.chanceText, false, skillData.category);
 
                     float baseChance = levelData != null ? levelData.statusEffectChance : 100f;
-
-                    // NAPRAWA: Jeœli to normalny atak (nie urok na siebie), bierzemy CZYST¥ szansê z Inspektora!
                     float finalChance = (skillData.category == SkillCategory.PositiveCharm)
                         ? (100f * result.hitChanceMultiplier)
                         : baseChance;
@@ -203,7 +235,6 @@ public class BattleManager : MonoBehaviour
                     {
                         if (effect != null)
                         {
-                            // --- ZMIANA: Dodaliœmy 'levelData' do wysy³anych informacji! ---
                             effect.Execute(action.actor, action.target, result, finalChance, levelData, skillData.icon);
                         }
                     }
@@ -218,7 +249,6 @@ public class BattleManager : MonoBehaviour
             }
 
             // --- INTELIGENTNY POWRÓT NA MIEJSCE ---
-            // (Teraz jest POZA blokiem if-else, wiêc zawsze siê wykona, odsy³aj¹c goœcia do bazy!)
             if (skillData.category == SkillCategory.MeleePhysical)
             {
                 bool shouldReturn = false;
@@ -238,7 +268,6 @@ public class BattleManager : MonoBehaviour
 
                 if (shouldReturn)
                 {
-                    // Upewniamy siê, ¿e wraca TYLKO wtedy, kiedy faktycznie jest na œrodku (flaga == true)
                     if (action.actor.isPlayer && playerAtMelee)
                     {
                         yield return StartCoroutine(MoveCharacter(player.transform, playerOriginalPos, 0.4f));
@@ -257,13 +286,11 @@ public class BattleManager : MonoBehaviour
         player.ResetDefensePA();
         enemy.ResetDefensePA();
 
-        // Zwróæ uwagê, ¿e nie ma tu ju¿ ClearAll() dla UI, tak jak ustaliliœmy!
-
         currentRound++;
         UpdateRoundUI();
     }
 
-        IEnumerator MoveCharacter(Transform character, Vector3 targetPos, float duration)
+    IEnumerator MoveCharacter(Transform character, Vector3 targetPos, float duration)
     {
         Vector3 startPos = character.position;
         float elapsed = 0f;
@@ -275,8 +302,6 @@ public class BattleManager : MonoBehaviour
         }
         character.position = targetPos;
     }
-
-    
 }
 
 public class CombatAction

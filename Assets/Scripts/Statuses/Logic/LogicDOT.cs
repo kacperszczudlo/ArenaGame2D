@@ -24,7 +24,6 @@ public class LogicDOT : StatusLogic
             effect.duration = effect.remainingHits;
         }
     }
-
     public override bool IsExpired(StatusEffect effect)
     {
         return effect.remainingHits <= 0;
