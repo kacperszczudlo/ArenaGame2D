@@ -1,27 +1,20 @@
 using UnityEngine;
-
-public class Menu : MonoBehaviour 
+using UnityEngine.SceneManagement;
+using System.Collections;
+public class MenuMain : MonoBehaviour 
 {
-    [Header("UI Elements")]
-    [SerializeField] private GameObject equipmentWindow; 
-    
-    public void OpenWindow()
-    { 
-
-        if (equipmentWindow != null)
-        {
-            equipmentWindow.SetActive(true); 
-        }
-
+    public void PlayGame()
+    {
+        SceneManager.LoadScene("MainScene");
     }
 
-    public void CloseWindow()
-    { 
+    public void QuitGame()
+    {
 
-        if (equipmentWindow != null)
-        {
-            equipmentWindow.SetActive(false); 
-        }
-
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }

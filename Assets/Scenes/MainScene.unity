@@ -514,7 +514,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1037195262}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_TargetAssemblyTypeName: Equipment, Assembly-CSharp
         m_MethodName: CloseWindow
         m_Mode: 1
         m_Arguments:
@@ -17634,7 +17634,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0a0943476b2f7cf08ffeaf89babc62b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Menu
+  m_EditorClassIdentifier: Assembly-CSharp::Equipment
   equipmentWindow: {fileID: 156238310}
 --- !u!1 &1169441886
 GameObject:
@@ -18279,7 +18279,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1037195262}
-        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
+        m_TargetAssemblyTypeName: Equipment, Assembly-CSharp
         m_MethodName: OpenWindow
         m_Mode: 1
         m_Arguments:
@@ -18310,7 +18310,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 776136188158623729, guid: 23a2358056ec8610ca74019c216c22f5, type: 3}
+  m_Sprite: {fileID: 7291476259713365250, guid: 585a137232a36b143acfbd22912772fe, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -18648,7 +18648,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 8046378803494223309, guid: f94b746220d0cfcd3be162b4008aa0f6, type: 3}
+  m_Sprite: {fileID: 8215116142658401957, guid: ebb5dbc7e110642458d3e93afc1bc2b3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
