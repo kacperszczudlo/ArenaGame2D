@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: Modlitwa
   icon: {fileID: 21300152, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 0
-  animTriggerName: Fall
+  animTriggerName: Pray
   showCenterVFX: 1
   effects:
   - {fileID: 11400000, guid: ad6ff4edf9d440d4c80e5cc9ceee5dd9, type: 2}

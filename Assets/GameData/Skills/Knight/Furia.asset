@@ -15,7 +15,7 @@ MonoBehaviour:
   skillName: Furia
   icon: {fileID: 21300098, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 0
-  animTriggerName: Jump
+  animTriggerName: Fury
   showCenterVFX: 1
   effects:
   - {fileID: 11400000, guid: b58e04b6c1756e14f8c5068aa07aad4b, type: 2}
