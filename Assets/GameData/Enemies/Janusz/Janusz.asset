@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: Janusz
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Janusz
+  avatarImage: {fileID: 8215116142658401957, guid: ebb5dbc7e110642458d3e93afc1bc2b3, type: 3}
+  enemyVisualPrefab: {fileID: 4026878321933279897, guid: ea6eedaae273b284c8fb731edd16c658, type: 3}
+  level: 1
+  maxHP: 450
+  maxMana: 200
+  maxStamina: 150
+  strength: 10
+  agility: 10
+  knowledge: 10
+  power: 10
+  physicalArmor: 0
+  magicResistance: 0
+  critChance: 2
+  weaponDamage: 20
+  meleeStoppingDistance: 2.2
+  enemySkills:
+  - data: {fileID: 11400000, guid: 8c2b10769cda3ad49880d14c981075fd, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 721f98a4140ce214b929868900e3a48c, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 18b94cdaeb0d56d4fbefaebfda59d6f3, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  aiBrain: {fileID: 11400000, guid: 9a9dcd5f90dce104daf7682e8c438cdd, type: 2}
+  goldReward: 100
+  expReward: 100
