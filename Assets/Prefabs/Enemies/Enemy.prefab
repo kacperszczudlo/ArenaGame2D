@@ -330,7 +330,7 @@ MonoBehaviour:
   isPlayer: 0
   avatarImage: {fileID: -1132740108, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   currentLevel: 20
-  enemyTemplate: {fileID: 11400000, guid: bf8e08bb0905e904383bbf82d0aeeb0c, type: 2}
+  enemyTemplate: {fileID: 0}
   myUI: {fileID: 0}
   meleeStoppingDistance: 2.2
   skillEffectPrefab: {fileID: 838608833497081286, guid: d4df2d28995df7a449d9d05916764e2d, type: 3}
@@ -361,7 +361,7 @@ MonoBehaviour:
   weaponDamage: 70
   critChance: 5
   animator: {fileID: 2762669269983190633}
-  hitAnimTrigger: Hit
+  hitAnimTrigger: Hurt
   deathAnimTrigger: Death
   statusIconsContainer: {fileID: 0}
   statusIconPrefab: {fileID: 3491941059615648702, guid: ab51c8a7237db874fb03b71c2b9bfbd2, type: 3}
@@ -369,6 +369,7 @@ MonoBehaviour:
   defenseRangedPA: 0
   defenseMentalPA: 0
   isDead: 0
+  myBrain: {fileID: 0}
 --- !u!1 &5112459337268042306
 GameObject:
   m_ObjectHideFlags: 0

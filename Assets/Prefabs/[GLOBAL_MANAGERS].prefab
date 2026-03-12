@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5591046114039923796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9060952191518578038}
+  - component: {fileID: 2897052082919525363}
+  - component: {fileID: 2363783279404089748}
+  m_Layer: 0
+  m_Name: '[GLOBAL_MANAGERS]'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9060952191518578038
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5591046114039923796}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.16332, y: 2.3585, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2897052082919525363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5591046114039923796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bdc2f1d1950a1f459384b1969a11b15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerDataManager
+  currentLevel: 1
+  baseMaxHP: 220
+  baseMaxMana: 200
+  baseMaxStamina: 250
+  baseStrength: 15
+  baseAgility: 10
+  baseKnowledge: 10
+  basePower: 10
+  basePhysicalArmor: 0
+  baseMagicResistance: 0
+  baseCritChance: 2
+  bonusMaxHP: 0
+  bonusStrength: 0
+  bonusAgility: 0
+  bonusKnowledge: 0
+  bonusPower: 0
+  bonusPhysicalArmor: 0
+  bonusMagicResistance: 0
+  bonusCritChance: 0
+  weaponDamage: 20
+  unlockedSkills:
+  - skill: {fileID: 11400000, guid: 8c2b10769cda3ad49880d14c981075fd, type: 2}
+    currentLevel: 1
+  - skill: {fileID: 11400000, guid: 51c43c4343b6b2c4f8fb4367407184f0, type: 2}
+    currentLevel: 0
+  - skill: {fileID: 11400000, guid: 18b94cdaeb0d56d4fbefaebfda59d6f3, type: 2}
+    currentLevel: 0
+  - skill: {fileID: 11400000, guid: b05eadd42e973914f9fb9aa6c69c50b2, type: 2}
+    currentLevel: 0
+  - skill: {fileID: 11400000, guid: 913e85fa4a03b374088df583a1418864, type: 2}
+    currentLevel: 0
+  - skill: {fileID: 11400000, guid: 721f98a4140ce214b929868900e3a48c, type: 2}
+    currentLevel: 0
+--- !u!114 &2363783279404089748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5591046114039923796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fe5d3f9009cbec4fb38410c943ecc1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  currentPlayerPrefab: {fileID: 0}
+  currentEnemyToFight: {fileID: 0}
+  globalGold: 0

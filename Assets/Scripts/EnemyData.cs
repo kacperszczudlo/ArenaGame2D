@@ -7,6 +7,7 @@ public class EnemyData : ScriptableObject
     [Header("Podstawowe Informacje")]
     public string enemyName = "Nowy Wróg";
     public Sprite avatarImage;
+    public GameObject enemyVisualPrefab;
     public int level = 1;
 
     [Header("Atrybuty")]
@@ -31,4 +32,12 @@ public class EnemyData : ScriptableObject
     [Header("Ksiêga Umiejêtnoœci")]
     [Tooltip("Lista skilli, których mo¿e u¿ywaæ przeciwnik")]
     public List<CharacterSkill> enemySkills;
+
+
+    [Header("Sztuczna Inteligencja")]
+    public EnemyAIBrain aiBrain;
+
+    [Header("Nagrody za pokonanie")]
+    public int goldReward = 0;
+    public int expReward = 0;
 }
