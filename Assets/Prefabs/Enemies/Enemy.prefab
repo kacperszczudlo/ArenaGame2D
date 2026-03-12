@@ -330,7 +330,7 @@ MonoBehaviour:
   isPlayer: 0
   avatarImage: {fileID: -1132740108, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   currentLevel: 20
-  enemyTemplate: {fileID: 11400000, guid: bf8e08bb0905e904383bbf82d0aeeb0c, type: 2}
+  enemyTemplate: {fileID: 0}
   myUI: {fileID: 0}
   meleeStoppingDistance: 2.2
   skillEffectPrefab: {fileID: 838608833497081286, guid: d4df2d28995df7a449d9d05916764e2d, type: 3}

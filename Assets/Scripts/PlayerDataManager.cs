@@ -6,14 +6,18 @@ public class PlayerSkillSaveData
 {
     public SkillData skill;
     public int currentLevel = 1;
+
 }
 
 public class PlayerDataManager : MonoBehaviour
 {
     public static PlayerDataManager Instance { get; private set; }
 
-    [Header("Podstawowe Statystyki (Zale¿ne od Klasy i Poziomu)")]
+    [Header("Doœwiadczenie i Poziom")]
     public int currentLevel = 1;
+    public int currentExperience = 0;
+
+    [Header("Podstawowe Statystyki (Zale¿ne od Klasy i Poziomu)")]
     public int baseMaxHP = 100;
     public int baseMaxMana = 50;
     public int baseMaxStamina = 50;

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Janusz
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Janusz
-  avatarImage: {fileID: 0}
+  avatarImage: {fileID: 8215116142658401957, guid: ebb5dbc7e110642458d3e93afc1bc2b3, type: 3}
+  enemyVisualPrefab: {fileID: 4026878321933279897, guid: ea6eedaae273b284c8fb731edd16c658, type: 3}
   level: 1
   maxHP: 450
   maxMana: 200
@@ -38,3 +39,5 @@ MonoBehaviour:
     currentLevel: 1
     isUnlocked: 1
   aiBrain: {fileID: 11400000, guid: 9a9dcd5f90dce104daf7682e8c438cdd, type: 2}
+  goldReward: 100
+  expReward: 100

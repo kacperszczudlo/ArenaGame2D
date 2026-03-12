@@ -1735,8 +1735,8 @@ Transform:
   m_GameObject: {fileID: 538530750}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.58, y: 6.66, z: 0}
-  m_LocalScale: {x: 1.3697, y: 1.3697, z: 1.3697}
+  m_LocalPosition: {x: 0.13, y: 6.93, z: 0}
+  m_LocalScale: {x: 1.3697, y: 1.4328432, z: 1.3697}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3784,8 +3784,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ec47b9daf3b8b4eb8dfa9a61b028f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
-  playerPrefab: {fileID: 5169767090919104140, guid: 878db1372efdcc24b878521734ac7f38, type: 3}
-  enemyPrefab: {fileID: 4026878321933279897, guid: ea6eedaae273b284c8fb731edd16c658, type: 3}
   playerSpawnPoint: {fileID: 1852710903}
   enemySpawnPoint: {fileID: 178653049}
   playerUI: {fileID: 1973789979}
@@ -5207,83 +5205,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1745958818}
   m_CullTransparentMesh: 1
---- !u!1 &1788668258
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1788668260}
-  - component: {fileID: 1788668259}
-  m_Layer: 0
-  m_Name: '[GAME_MANAGER]'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1788668259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1788668258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5bdc2f1d1950a1f459384b1969a11b15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerDataManager
-  currentLevel: 1
-  baseMaxHP: 220
-  baseMaxMana: 200
-  baseMaxStamina: 250
-  baseStrength: 15
-  baseAgility: 10
-  baseKnowledge: 10
-  basePower: 10
-  basePhysicalArmor: 0
-  baseMagicResistance: 0
-  baseCritChance: 2
-  bonusMaxHP: 0
-  bonusStrength: 0
-  bonusAgility: 0
-  bonusKnowledge: 0
-  bonusPower: 0
-  bonusPhysicalArmor: 0
-  bonusMagicResistance: 0
-  bonusCritChance: 0
-  weaponDamage: 20
-  unlockedSkills:
-  - skill: {fileID: 11400000, guid: 8c2b10769cda3ad49880d14c981075fd, type: 2}
-    currentLevel: 1
-  - skill: {fileID: 11400000, guid: 51c43c4343b6b2c4f8fb4367407184f0, type: 2}
-    currentLevel: 0
-  - skill: {fileID: 11400000, guid: 18b94cdaeb0d56d4fbefaebfda59d6f3, type: 2}
-    currentLevel: 0
-  - skill: {fileID: 11400000, guid: b05eadd42e973914f9fb9aa6c69c50b2, type: 2}
-    currentLevel: 0
-  - skill: {fileID: 11400000, guid: 913e85fa4a03b374088df583a1418864, type: 2}
-    currentLevel: 0
-  - skill: {fileID: 11400000, guid: 721f98a4140ce214b929868900e3a48c, type: 2}
-    currentLevel: 0
---- !u!4 &1788668260
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1788668258}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.16332, y: 2.3585, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1797642962
 GameObject:
   m_ObjectHideFlags: 0
@@ -5798,6 +5719,5 @@ SceneRoots:
   - {fileID: 1542702509}
   - {fileID: 1431591114}
   - {fileID: 1267071344}
-  - {fileID: 1788668260}
   - {fileID: 1852710903}
   - {fileID: 178653049}

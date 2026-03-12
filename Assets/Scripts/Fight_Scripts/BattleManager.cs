@@ -1,12 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
-    [Header("Prefaby Postaci (Walizki)")]
-    public GameObject playerPrefab;
-    public GameObject enemyPrefab;
 
     [Header("Znaczniki (Miejsca na arenie)")]
     public Transform playerSpawnPoint;
@@ -51,27 +49,44 @@ public class BattleManager : MonoBehaviour
     void SpawnCombatants()
     {
         // 1. TWORZYMY GRACZA
-        if (playerPrefab != null && playerSpawnPoint != null)
+        GameObject pPrefab = GameManager.Instance.currentPlayerPrefab;
+        if (pPrefab != null && playerSpawnPoint != null)
         {
-            GameObject pGo = Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
+            GameObject pGo = Instantiate(pPrefab, playerSpawnPoint.position, Quaternion.identity);
             player = pGo.GetComponent<Combatant>();
             playerOriginalPos = playerSpawnPoint.position;
 
+            // Podpinamy UI
             if (playerUI != null) player.myUI = playerUI;
-            // --- NOWOŒÆ: Podpinamy kontener na statusy ---
             if (playerStatusContainer != null) player.statusIconsContainer = playerStatusContainer;
+
+            // Upewniamy siê, ¿e za³adowa³ swoje statystyki z PlayerDataManagera
+            player.LoadDataFromManager();
+        }
+        else
+        {
+            Debug.LogError("B³¹d! GameManager nie przekaza³ prefaba gracza!");
         }
 
-        // 2. TWORZYMY WROGA
-        if (enemyPrefab != null && enemySpawnPoint != null)
+        // 2. TWORZYMY WROGA (Pobieramy duszê i cia³o z GameManagera!)
+        EnemyData enemyData = GameManager.Instance.currentEnemyToFight;
+        if (enemyData != null && enemyData.enemyVisualPrefab != null && enemySpawnPoint != null)
         {
-            GameObject eGo = Instantiate(enemyPrefab, enemySpawnPoint.position, Quaternion.identity);
+            // Klonujemy UNIKALNE cia³o wroga (zapisane w jego pliku)
+            GameObject eGo = Instantiate(enemyData.enemyVisualPrefab, enemySpawnPoint.position, Quaternion.identity);
             enemy = eGo.GetComponent<Combatant>();
             enemyOriginalPos = enemySpawnPoint.position;
 
+            // Podpinamy UI
             if (enemyUI != null) enemy.myUI = enemyUI;
-            // --- NOWOŒÆ: Podpinamy kontener na statusy ---
             if (enemyStatusContainer != null) enemy.statusIconsContainer = enemyStatusContainer;
+
+            // WSTRZYKUJEMY DUSZÊ! (Statystyki, poziom, skille i Mózg AI)
+            enemy.LoadEnemyData(enemyData);
+        }
+        else
+        {
+            Debug.LogError("B³¹d! GameManager nie przekaza³ wroga do walki, albo wróg nie ma przypisanego 'Enemy Visual Prefab'!");
         }
     }
 
@@ -263,6 +278,16 @@ public class BattleManager : MonoBehaviour
         }
 
         // 5. CZYSZCZENIE RUNDY
+        if (player.currentHP <= 0)
+        {
+            StartCoroutine(EndBattleRoutine(false)); // Gracz przegra³
+            yield break; // Zatrzymujemy ca³kowicie tê korutynê
+        }
+        else if (enemy.currentHP <= 0)
+        {
+            StartCoroutine(EndBattleRoutine(true)); // Gracz wygra³
+            yield break; // Zatrzymujemy ca³kowicie tê korutynê
+        }
         player.ResetDefensePA();
         enemy.ResetDefensePA();
 
@@ -285,6 +310,44 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
         character.position = targetPos;
+    }
+    // --- FUNKCJA ZAKOÑCZENIA BITWY ---
+    IEnumerator EndBattleRoutine(bool playerWon)
+    {
+        // Czekamy 2 sekundy, ¿eby gracz nacieszy³ siê widokiem pokonanego wroga (lub pop³aka³ nad swoim cia³em)
+        yield return new WaitForSeconds(2.0f);
+
+        if (playerWon)
+        {
+            Debug.Log("<color=green>ZWYCIÊSTWO! Nagrody wêdruj¹ do worka.</color>");
+            EnemyData defeatedEnemy = GameManager.Instance.currentEnemyToFight;
+
+            // 1. Dodajemy nagrody do tymczasowego "worka" w GameManagerze
+            if (defeatedEnemy != null)
+            {
+                GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
+                GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+            }
+
+            // 2. Przechodzimy do kolejnego etapu turnieju
+            GameManager.Instance.currentTournamentIndex++;
+        }
+        else
+        {
+            Debug.Log("<color=red>PORA¯KA! Ale zachowujesz zebrane wczeœniej ³upy!</color>");
+
+            GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
+
+            // --- NOWOŒÆ: Przekazujemy Exp do PlayerDataManagera! ---
+            PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
+
+            GameManager.Instance.pendingGold = 0;
+            GameManager.Instance.pendingXP = 0;
+            GameManager.Instance.currentTournamentIndex = 0;
+        }
+
+        // Pakujemy walizki i wracamy do Lobby!
+        SceneManager.LoadScene("ArenaLobby");
     }
 }
 
