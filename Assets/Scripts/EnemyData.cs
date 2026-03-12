@@ -31,4 +31,8 @@ public class EnemyData : ScriptableObject
     [Header("Ksiêga Umiejêtnoœci")]
     [Tooltip("Lista skilli, których mo¿e u¿ywaæ przeciwnik")]
     public List<CharacterSkill> enemySkills;
+
+
+    [Header("Sztuczna Inteligencja")]
+    public EnemyAIBrain aiBrain; // <--- O TUTAJ! Miejsce na wpiêcie mózgu
 }

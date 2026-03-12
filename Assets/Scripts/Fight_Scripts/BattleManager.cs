@@ -87,9 +87,7 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator ExecuteTurnRoutine()
     {
-        // Odzyskiwanie zasobów na pocz¹tku rundy (5%)
-        player.RegenerateResources();
-        enemy.RegenerateResources();
+        
 
         player.ProcessStatuses();
         enemy.ProcessStatuses();
@@ -120,37 +118,19 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        // 2. MÓZG WROGA (3 TAKTYKI JANUSZA)
+        // 2. MÓZG WROGA (Teraz u¿ywamy wpiêtego modu³u AI!)
         if (enemy.currentHP > 0)
         {
-            enemy.ResetDefensePA();
-            int tacticRoll = Random.Range(1, 4);
-            Debug.Log($"<color=orange>Wróg wybiera Taktykê nr: {tacticRoll}</color>");
-
-            if (tacticRoll == 1)
+            if (enemy.myBrain != null)
             {
-                if (enemy.mySkills.Count >= 2)
-                {
-                    roundActions.Add(new CombatAction { actor = enemy, target = player, skill = enemy.mySkills[0], paInvested = 3, originalIndex = actionCounter++ });
-                    roundActions.Add(new CombatAction { actor = enemy, target = player, skill = enemy.mySkills[1], paInvested = 3, originalIndex = actionCounter++ });
-                }
-                enemy.defenseMeleePA = 5; enemy.defenseRangedPA = 0; enemy.defenseMentalPA = 0;
-            }
-            else if (tacticRoll == 2)
-            {
-                if (enemy.mySkills.Count >= 3)
-                    roundActions.Add(new CombatAction { actor = enemy, target = player, skill = enemy.mySkills[2], paInvested = 2, originalIndex = actionCounter++ });
-
-                enemy.defenseMeleePA = 3; enemy.defenseRangedPA = 0; enemy.defenseMentalPA = 1;
+                // Mened¿er po prostu mówi: "Masz tu dane, pomyœl sam i daj mi listê ataków!"
+                List<CombatAction> enemyActions = enemy.myBrain.DecideTurn(enemy, player, ref actionCounter);
+                roundActions.AddRange(enemyActions);
             }
             else
             {
-                if (enemy.mySkills.Count >= 2)
-                    roundActions.Add(new CombatAction { actor = enemy, target = player, skill = enemy.mySkills[1], paInvested = 4, originalIndex = actionCounter++ });
-
-                enemy.defenseMeleePA = 5; enemy.defenseRangedPA = 1; enemy.defenseMentalPA = 0;
+                Debug.LogWarning($"<color=yellow>UWAGA: {enemy.combatantName} nie ma podpiêtego Mózgu (AI Brain) w pliku EnemyData! Stoi i gapi siê w niebo.</color>");
             }
-            Debug.Log($"<color=red>Wróg ustawi³ obronê: Zwarcie {enemy.defenseMeleePA}, Dystans {enemy.defenseRangedPA}, Umys³ {enemy.defenseMentalPA}</color>");
         }
 
         // 3. SORTOWANIE (Teraz z poszanowaniem kolejki gracza!)
@@ -285,6 +265,10 @@ public class BattleManager : MonoBehaviour
         // 5. CZYSZCZENIE RUNDY
         player.ResetDefensePA();
         enemy.ResetDefensePA();
+
+        // Odzyskiwanie zasobów na pocz¹tku rundy (5%)
+        player.RegenerateResources();
+        enemy.RegenerateResources();
 
         currentRound++;
         UpdateRoundUI();

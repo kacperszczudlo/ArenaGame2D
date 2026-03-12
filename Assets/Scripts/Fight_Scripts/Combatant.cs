@@ -76,6 +76,9 @@ public class Combatant : MonoBehaviour
     //flaga dla animacji smierci
     public bool isDead = false;
 
+    [Header("Mózg AI (Tylko dla wroga)")]
+    public EnemyAIBrain myBrain;
+
     // Funkcja do czyszczenia obrony po zakoñczeniu rundy
     public void ResetDefensePA()
     {
@@ -186,6 +189,8 @@ public class Combatant : MonoBehaviour
         magicResistance = data.magicResistance;
         critChance = data.critChance;
         weaponDamage = data.weaponDamage;
+
+        myBrain = data.aiBrain; // Kopiujemy mózg z szablonu do g³owy wroga na arenie!
 
         // Kopiujemy skille
         mySkills.Clear();

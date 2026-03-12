@@ -333,7 +333,7 @@ Transform:
   m_GameObject: {fileID: 5169767090919104140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 1, z: 0}
+  m_LocalPosition: {x: -6.9800267, y: -0.06554374, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -485,7 +485,7 @@ MonoBehaviour:
   weaponDamage: 33
   critChance: 5
   animator: {fileID: 5318956785748362251}
-  hitAnimTrigger: Hit
+  hitAnimTrigger: Hurt
   deathAnimTrigger: Death
   statusIconsContainer: {fileID: 0}
   statusIconPrefab: {fileID: 3491941059615648702, guid: ab51c8a7237db874fb03b71c2b9bfbd2, type: 3}
@@ -493,6 +493,7 @@ MonoBehaviour:
   defenseRangedPA: 0
   defenseMentalPA: 0
   isDead: 0
+  myBrain: {fileID: 0}
 --- !u!1 &5232643401850976152
 GameObject:
   m_ObjectHideFlags: 0
