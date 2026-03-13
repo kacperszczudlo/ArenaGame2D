@@ -314,40 +314,58 @@ public class BattleManager : MonoBehaviour
     // --- FUNKCJA ZAKOÑCZENIA BITWY ---
     IEnumerator EndBattleRoutine(bool playerWon)
     {
-        // Czekamy 2 sekundy, ¿eby gracz nacieszy³ siê widokiem pokonanego wroga (lub pop³aka³ nad swoim cia³em)
         yield return new WaitForSeconds(2.0f);
+        EnemyData defeatedEnemy = GameManager.Instance.currentEnemyToFight;
 
         if (playerWon)
         {
-            Debug.Log("<color=green>ZWYCIÊSTWO! Nagrody wêdruj¹ do worka.</color>");
-            EnemyData defeatedEnemy = GameManager.Instance.currentEnemyToFight;
+            Debug.Log("<color=green>ZWYCIÊSTWO!</color>");
 
-            // 1. Dodajemy nagrody do tymczasowego "worka" w GameManagerze
-            if (defeatedEnemy != null)
+            // SPRAWDZAMY CZY TO TURNIEJ CZY MAPA:
+            if (GameManager.Instance.isTournamentBattle)
             {
-                GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
-                GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+                // ZASADY TURNIEJU: £upy id¹ do worka (ryzykujemy dalej)
+                if (defeatedEnemy != null)
+                {
+                    GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
+                    GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+                }
+                GameManager.Instance.currentTournamentIndex++;
             }
-
-            // 2. Przechodzimy do kolejnego etapu turnieju
-            GameManager.Instance.currentTournamentIndex++;
+            else
+            {
+                // ZASADY MAPY (Random Encounter): £upy id¹ od razu na sta³e do kieszeni!
+                if (defeatedEnemy != null)
+                {
+                    GameManager.Instance.globalGold += defeatedEnemy.goldReward;
+                    PlayerDataManager.Instance.currentExperience += defeatedEnemy.expReward;
+                }
+            }
         }
         else
         {
-            Debug.Log("<color=red>PORA¯KA! Ale zachowujesz zebrane wczeœniej ³upy!</color>");
+            Debug.Log("<color=red>PORA¯KA!</color>");
 
-            GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
+            if (GameManager.Instance.isTournamentBattle)
+            {
+                // ZASADY TURNIEJU: Wrzucamy to co mieliœmy w worku do g³ównej puli i resetujemy turniej
+                GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
+                PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
 
-            // --- NOWOŒÆ: Przekazujemy Exp do PlayerDataManagera! ---
-            PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
-
-            GameManager.Instance.pendingGold = 0;
-            GameManager.Instance.pendingXP = 0;
-            GameManager.Instance.currentTournamentIndex = 0;
+                GameManager.Instance.pendingGold = 0;
+                GameManager.Instance.pendingXP = 0;
+                GameManager.Instance.currentTournamentIndex = 0;
+            }
+            else
+            {
+                // ZASADY MAPY: Gracz zgin¹³ w lesie. 
+                // Mo¿esz tu w przysz³oœci dodaæ karê (np. utrata 10% z³ota) albo po prostu go odrodziæ.
+                Debug.Log("Zgin¹³eœ na mapie! Zostajesz przeniesiony do bezpiecznego miejsca.");
+            }
         }
 
-        // Pakujemy walizki i wracamy do Lobby!
-        SceneManager.LoadScene("ArenaLobby");
+        // --- MAGIA: Wracamy tam, sk¹d przyszliœmy! ---
+        SceneManager.LoadScene(GameManager.Instance.sceneToLoadAfterBattle);
     }
 }
 

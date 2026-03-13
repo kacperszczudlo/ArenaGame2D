@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: Archer
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: "\u0141ucznik"
+  avatarImage: {fileID: 0}
+  enemyVisualPrefab: {fileID: 1999682254439131401, guid: 6c84b7ba735289d43a5e0c0488fcd130, type: 3}
+  level: 1
+  maxHP: 100
+  maxMana: 50
+  maxStamina: 50
+  strength: 10
+  agility: 10
+  knowledge: 10
+  power: 10
+  physicalArmor: 5
+  magicResistance: 0
+  critChance: 5
+  weaponDamage: 10
+  meleeStoppingDistance: 1.5
+  enemySkills:
+  - data: {fileID: 11400000, guid: c4c20607ad0ef8f49a00b213ea5d5e2b, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: c4c20607ad0ef8f49a00b213ea5d5e2b, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: c4c20607ad0ef8f49a00b213ea5d5e2b, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  aiBrain: {fileID: 11400000, guid: 9a9dcd5f90dce104daf7682e8c438cdd, type: 2}
+  goldReward: 0
+  expReward: 0

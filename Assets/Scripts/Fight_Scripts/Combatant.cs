@@ -293,7 +293,7 @@ public class Combatant : MonoBehaviour
         currentHP -= finalDamage;
         if (currentHP < 0) currentHP = 0;
 
-        if (animator != null) animator.SetTrigger("Hit");
+        //if (animator != null) animator.SetTrigger("Hit");
         if (myUI != null) myUI.UpdateUI();
 
         DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;

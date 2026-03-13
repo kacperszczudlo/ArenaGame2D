@@ -18,7 +18,7 @@ MonoBehaviour:
   level: 1
   maxHP: 450
   maxMana: 200
-  maxStamina: 150
+  maxStamina: 250
   strength: 10
   agility: 10
   knowledge: 10

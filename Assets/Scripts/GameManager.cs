@@ -7,6 +7,11 @@ public class GameManager : MonoBehaviour
     [Header("Przejœcia miêdzy scenami")]
     public GameObject currentPlayerPrefab; // Zaktualizowane: Cia³o wybrane przez gracza
     public EnemyData currentEnemyToFight;  // Kogo idziemy biæ?
+    public Vector3 lastMapPosition; // Zapamiêta koordynaty X, Y, Z przed wejœciem w krzaki!
+
+    [Header("Kontekst Walki")]
+    public string sceneToLoadAfterBattle = "ArenaLobby"; // Gdzie mamy wróciæ po walce?
+    public bool isTournamentBattle = true;
 
     [Header("Globalne Zasoby")]
     public int globalGold = 0;
