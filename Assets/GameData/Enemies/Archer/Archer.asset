@@ -50,6 +50,9 @@ MonoBehaviour:
   - data: {fileID: 11400000, guid: b84c92ab65836414fa924f895263f515, type: 2}
     currentLevel: 1
     isUnlocked: 1
+  - data: {fileID: 11400000, guid: 416e0a07a19ea5d4083df9a661696b08, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
   aiBrain: {fileID: 11400000, guid: 60e7f23a362a7074f947f8aebee489bf, type: 2}
   goldReward: 0
   expReward: 0
