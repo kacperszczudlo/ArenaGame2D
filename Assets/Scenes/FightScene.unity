@@ -254,7 +254,7 @@ PrefabInstance:
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentEnemyToFight
       value: 
-      objectReference: {fileID: 11400000, guid: 7c5f5b60633b7ac4494154e35c3421c2, type: 2}
+      objectReference: {fileID: 11400000, guid: edcb2f7cd36b6de4abe699266f1b9ad2, type: 2}
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentPlayerPrefab
       value: 
@@ -342,7 +342,7 @@ Transform:
   m_GameObject: {fileID: 178653048}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 1, z: 0}
+  m_LocalPosition: {x: 5, y: 1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

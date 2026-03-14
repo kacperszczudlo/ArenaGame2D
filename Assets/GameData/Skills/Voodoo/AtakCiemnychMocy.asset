@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
+  m_Name: AtakCiemnychMocy
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "Atak z nik\u0105d"
+  icon: {fileID: -3420583558904034331, guid: dd114cf18e85fbe4499d21a29caca66a, type: 3}
+  category: 2
+  projectilePrefab: {fileID: 1362683062058433046, guid: 088bf36739bf2224c927a3b85f2a8249, type: 3}
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
+  animTriggerName: Attack1
+  showCenterVFX: 0
+  effects: []
+  isPassive: 0
+  strengthWeight: 0
+  agilityWeight: 0
+  knowledgeWeight: 1
+  powerWeight: 1
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    requiredCharacterLevel: 0
+    staminaCost: 1
+    manaCost: 1
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 0
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 0
+    effectMultiplier: 0
+    effectHitChanceMod: 0
