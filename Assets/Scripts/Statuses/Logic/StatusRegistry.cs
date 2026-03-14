@@ -8,8 +8,11 @@ public static class StatusRegistry
         { StatusType.Shield, new LogicShield() },
         { StatusType.DamageOverTime, new LogicDOT() },
         { StatusType.HealOverTime, new LogicHOT() },
-        { StatusType.Blessing, new LogicBlessing() }, // <--- DODANE
-        { StatusType.Fury, new LogicFury() }
+        { StatusType.Blessing, new LogicBlessing() },
+        { StatusType.Fury, new LogicFury() },
+        { StatusType.Freeze, new LogicFreeze() },
+        { StatusType.Blindness, new LogicBlindness() },
+        { StatusType.Poison, new LogicPoison() }
     };
 
     public static StatusLogic GetLogic(StatusType type)

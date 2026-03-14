@@ -102,11 +102,11 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator ExecuteTurnRoutine()
     {
-        
 
-        player.ProcessStatuses();
-        enemy.ProcessStatuses();
-        yield return new WaitForSeconds(0.8f);
+
+        yield return StartCoroutine(player.ProcessStatusesRoutine());
+        yield return StartCoroutine(enemy.ProcessStatusesRoutine());
+        yield return new WaitForSeconds(0.4f);
 
         if (defenseMeleeUI != null) player.defenseMeleePA = defenseMeleeUI.currentPA;
         if (defenseRangedUI != null) player.defenseRangedPA = defenseRangedUI.currentPA;
@@ -207,8 +207,32 @@ public class BattleManager : MonoBehaviour
 
                 // ATAK
                 action.actor.PlayAttackAnimation(skillData.animTriggerName);
-                yield return new WaitForSeconds(0.5f); // <--- ZWIÊKSZ TO, JEŒLI POTRZEBUJESZ D£U¯SZEJ PAUZY NA ANIMACJE
 
+                // --- NOWOŒÆ: OBS£UGA STRZA£ I POCISKÓW ---
+                // Sprawdzamy, czy skill ma przypisan¹ strza³ê (nie jest puste okienko w Inspektorze)
+                if (skillData.projectilePrefab != null)
+                {
+                    // Czekamy 0.4 sekundy, ¿eby zgraæ to z animacj¹ wystrza³u z ³uku (mo¿esz to modyfikowaæ!)
+                    yield return new WaitForSeconds(0.4f);
+
+                    // Tworzymy strza³ê na scenie
+                    GameObject projGo = Instantiate(skillData.projectilePrefab);
+                    Projectile projScript = projGo.GetComponent<Projectile>();
+
+                    if (projScript != null)
+                    {
+                        // WYSTRZA£: Mened¿er PAUZUJE bitwê, dopóki strza³a nie doleci do klatki piersiowej wroga!
+                        float arrowSpeed = 25f; // Szybkoœæ strza³y
+                        yield return StartCoroutine(projScript.FlyToTarget(action.actor.centerSpawnPoint.position, action.target.centerSpawnPoint.position, skillData.projectileColor, arrowSpeed));
+                    }
+                }
+                else
+                {
+                    // Zwyk³y atak (np. miecz, sypanie piachem) - stara, sztywna pauza na animacjê
+                    yield return new WaitForSeconds(0.5f);
+                }
+
+                // OBLICZANIE OBRA¯EÑ (Teraz dzieje siê to DOPIERO w momencie uderzenia strza³y/miecza!)
                 AttackResult result = DamageCalculator.ProcessAttack(action.actor, action.target, action.skill, action.paInvested);
 
                 if (result.isHit)
@@ -294,6 +318,7 @@ public class BattleManager : MonoBehaviour
         // Odzyskiwanie zasobów na pocz¹tku rundy (5%)
         player.RegenerateResources();
         enemy.RegenerateResources();
+        RefreshPlayerAP();
 
         currentRound++;
         UpdateRoundUI();
@@ -311,6 +336,9 @@ public class BattleManager : MonoBehaviour
         }
         character.position = targetPos;
     }
+
+
+    
     // --- FUNKCJA ZAKOÑCZENIA BITWY ---
     IEnumerator EndBattleRoutine(bool playerWon)
     {
@@ -367,6 +395,55 @@ public class BattleManager : MonoBehaviour
         // --- MAGIA: Wracamy tam, sk¹d przyszliœmy! ---
         SceneManager.LoadScene(GameManager.Instance.sceneToLoadAfterBattle);
     }
+    public void RefreshPlayerAP()
+    {
+        if (CombatAPManager.Instance == null) return;
+
+        // 1. Obliczamy nowy, maksymalny limit PA (Bazowe - Kara z debuffów)
+        int apPenalty = player.GetCombatAPReduction();
+        int baseMaxAP = CombatAPManager.Instance.maxAP; // Pobieramy oryginalne 15 (lub ile tam masz)
+        int effectiveMaxAP = Mathf.Max(0, baseMaxAP - apPenalty);
+
+        // 2. Liczymy, ile gracz ma obecnie "naklikane" w UI (Ataki + Obrony)
+        int allocatedAP = 0;
+        foreach (var slot in attackSlots) allocatedAP += slot.currentPA;
+        if (defenseMeleeUI != null) allocatedAP += defenseMeleeUI.currentPA;
+        if (defenseRangedUI != null) allocatedAP += defenseRangedUI.currentPA;
+        if (defenseMentalUI != null) allocatedAP += defenseMentalUI.currentPA;
+
+        // 3. Jeœli masz rozdane wiêcej ni¿ wynosi nowy limit - KRADNIEMY!
+        int toRemove = allocatedAP - effectiveMaxAP;
+        if (toRemove > 0)
+        {
+            // A) Kradniemy ze skilli ataku (od prawego do lewego)
+            for (int j = attackSlots.Count - 1; j >= 0; j--)
+            {
+                var slot = attackSlots[j];
+                while (slot.currentPA > 0 && toRemove > 0)
+                {
+                    slot.currentPA--;
+                    toRemove--;
+                    slot.UpdateVisuals(); // Gasi kó³ko na ekranie!
+                }
+                if (toRemove <= 0) break;
+            }
+
+            // B) Jeœli dalej trzeba ukraœæ (kó³ka ataku puste), kradniemy z obron! (Umys³ -> Dystans -> Zwarcie)
+            if (toRemove > 0 && defenseMentalUI != null) { int drain = Mathf.Min(defenseMentalUI.currentPA, toRemove); defenseMentalUI.currentPA -= drain; toRemove -= drain; defenseMentalUI.UpdateVisuals(); }
+            if (toRemove > 0 && defenseRangedUI != null) { int drain = Mathf.Min(defenseRangedUI.currentPA, toRemove); defenseRangedUI.currentPA -= drain; toRemove -= drain; defenseRangedUI.UpdateVisuals(); }
+            if (toRemove > 0 && defenseMeleeUI != null) { int drain = Mathf.Min(defenseMeleeUI.currentPA, toRemove); defenseMeleeUI.currentPA -= drain; toRemove -= drain; defenseMeleeUI.UpdateVisuals(); }
+
+            allocatedAP = effectiveMaxAP; // Zrównaliœmy do limitu
+            Debug.Log($"<color=orange>Kl¹twa Œlepoty/Mrozu brutalnie odciê³a przypisane PA!</color>");
+        }
+
+        // 4. Przypisujemy wolne punkty z powrotem do puli Gracza (To naprawia blokadê klikania!)
+        CombatAPManager.Instance.currentAP = effectiveMaxAP - allocatedAP;
+
+        // 5. Aktualizujemy tekst na œrodku ekranu!
+        CombatAPManager.Instance.UpdateAPText(effectiveMaxAP);
+    }
+
 }
 
 public class CombatAction

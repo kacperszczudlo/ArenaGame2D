@@ -76,7 +76,7 @@ public class SkillAPHandler : MonoBehaviour
         UpdateVisuals();
     }
 
-    void UpdateVisuals()
+    public void UpdateVisuals()
     {
         for (int i = 0; i < apSquares.Count; i++)
         {

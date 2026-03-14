@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
-  m_Name: SzybkaStrzala
+  m_Name: Strzala_ognia
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: szybkastrzala
+  skillName: "Podpalona strza\u0142a"
   icon: {fileID: 0}
   category: 3
-  projectilePrefab: {fileID: 0}
-  projectileColor: {r: 1, g: 1, b: 1, a: 1}
-  animTriggerName: Attack2
+  projectilePrefab: {fileID: 4052815569465071598, guid: 5e40f3c3b43bdbf4d87b4a7d24039cc9, type: 3}
+  projectileColor: {r: 1, g: 0.02821736, b: 0, a: 1}
+  animTriggerName: Attack1
   showCenterVFX: 0
-  effects: []
+  effects:
+  - {fileID: 11400000, guid: 084d6ea2aa2870044b521dc1fe21a3bc, type: 2}
   isPassive: 0
   strengthWeight: 1
   agilityWeight: 1
@@ -31,12 +32,12 @@ MonoBehaviour:
     requiredCharacterLevel: 0
     staminaCost: 0
     manaCost: 0
-    damageMultiplier: 1
-    hitChanceBonus: 1
-    statusEffectChance: 0
+    damageMultiplier: 2
+    hitChanceBonus: 2
+    statusEffectChance: 100
     selfCastDifficulty: 0
-    effectCharges: 0
+    effectCharges: 3
     effectValue: 0
     effectDuration: 0
-    effectMultiplier: 0
+    effectMultiplier: 1
     effectHitChanceMod: 0

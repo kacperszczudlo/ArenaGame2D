@@ -40,6 +40,10 @@ public class SkillData : ScriptableObject
     public Sprite icon;
     public SkillCategory category = SkillCategory.MeleePhysical;
 
+    [Header("Efekty Wizualne Lec¹cego Pocisku")]
+    public GameObject projectilePrefab; // Tu wrzucimy "bia³¹ strza³ê"
+    public Color projectileColor = Color.white; // Tu zmienimy kolor na zielony/czerwony/niebieski!
+
     [Header("Animacja")]
     public string animTriggerName;
     public bool showCenterVFX = false;

@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
   m_Name: Archer
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyName: "\u0141ucznik"
+  enemyName: "\u0141ucznik z przysz\u0142o\u015Bci"
   avatarImage: {fileID: 0}
   enemyVisualPrefab: {fileID: 1999682254439131401, guid: 6c84b7ba735289d43a5e0c0488fcd130, type: 3}
   level: 1
-  maxHP: 100
-  maxMana: 50
-  maxStamina: 50
+  maxHP: 1000
+  maxMana: 1000
+  maxStamina: 1000
   strength: 10
   agility: 10
   knowledge: 10
@@ -29,15 +29,27 @@ MonoBehaviour:
   weaponDamage: 10
   meleeStoppingDistance: 1.5
   enemySkills:
-  - data: {fileID: 11400000, guid: 5e990651103baab499d088a0b6214afd, type: 2}
+  - data: {fileID: 11400000, guid: c4c20607ad0ef8f49a00b213ea5d5e2b, type: 2}
     currentLevel: 1
     isUnlocked: 1
-  - data: {fileID: 11400000, guid: c4c20607ad0ef8f49a00b213ea5d5e2b, type: 2}
+  - data: {fileID: 11400000, guid: 3aefad504480d9c4b935dffe2e302c6b, type: 2}
     currentLevel: 1
     isUnlocked: 1
   - data: {fileID: 11400000, guid: d68e9c9650adef2429254044d4d97778, type: 2}
     currentLevel: 1
     isUnlocked: 1
-  aiBrain: {fileID: 11400000, guid: 9a9dcd5f90dce104daf7682e8c438cdd, type: 2}
+  - data: {fileID: 11400000, guid: 6a1dae597c9a1f24db83947b6c83e91e, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: c9020ac8c5a132a4590d3b08bd741f90, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 5e990651103baab499d088a0b6214afd, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: b84c92ab65836414fa924f895263f515, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  aiBrain: {fileID: 11400000, guid: 60e7f23a362a7074f947f8aebee489bf, type: 2}
   goldReward: 0
   expReward: 0

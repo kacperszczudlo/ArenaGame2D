@@ -1,5 +1,6 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Combatant : MonoBehaviour
 {
@@ -204,6 +205,14 @@ public class Combatant : MonoBehaviour
 
     public void ConsumeResources(int manaAmount, int staminaAmount)
     {
+        var poison = activeStatuses.Find(s => s.type == StatusType.Poison);
+        if (poison != null)
+        {
+            // Dodajemy karê z poziomu umiejêtnoœci (odczytujemy 'value')
+            manaAmount += poison.value;
+            staminaAmount += poison.value;
+        }
+
         currentMana -= manaAmount;
         if (currentMana < 0) currentMana = 0;
 
@@ -211,7 +220,6 @@ public class Combatant : MonoBehaviour
         if (currentStamina < 0) currentStamina = 0;
 
         Debug.Log($"<color=blue>{combatantName} zu¿ywa {manaAmount} Many i {staminaAmount} Kondycji.</color>");
-
         if (myUI != null) myUI.UpdateUI();
     }
 
@@ -227,6 +235,8 @@ public class Combatant : MonoBehaviour
 
         if (myUI != null) myUI.UpdateUI();
     }
+
+    
 
     public void PlayAttackAnimation(string animationTriggerName)
     {
@@ -332,20 +342,32 @@ public class Combatant : MonoBehaviour
             vfx.GetComponent<SkillEffectVFX>().Setup(icon);
         }
     }
-    public void ProcessStatuses()
+    public IEnumerator ProcessStatusesRoutine()
     {
-        // 1. Odpalamy logikê na pocz¹tku tury (np. Krwawienie zadaje ból)
         for (int i = activeStatuses.Count - 1; i >= 0; i--)
         {
             var status = activeStatuses[i];
             StatusLogic logic = StatusRegistry.GetLogic(status.type);
 
-            if (logic != null) logic.OnTurnStart(this, status);
+            if (logic != null)
+            {
+                logic.OnTurnStart(this, status);
 
-            status.duration--; // Odejmujemy rundê
+                // Jeœli status coœ fizycznie zrobi³ (Ogieñ zjad³ HP, Mróz zjad³ staminê), 
+                // zatrzymujemy kod na 0.7 sekundy, ¿eby gracz zd¹¿y³ przeczytaæ napis!
+                if (status.type == StatusType.DamageOverTime || status.type == StatusType.Freeze)
+                {
+                    yield return new WaitForSeconds(0.7f);
+                }
+            }
+
+            // Pamiêtaj: w DoT czas odjêliœmy w jego logice (remainingHits), reszcie odejmujemy tutaj
+            if (status.type != StatusType.DamageOverTime)
+            {
+                status.duration--;
+            }
         }
 
-        // 2. Usuwamy statusy, które wygas³y (Koniec rund, albo Tarcza straci³a ³adunki)
         activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
         RefreshStatusUI();
     }
@@ -372,24 +394,52 @@ public class Combatant : MonoBehaviour
         {
             if (newEffect.type == StatusType.DamageOverTime)
             {
+                // Krwawienie i Ogieñ siê kumuluj¹ (dodajemy stacki)
                 existing.remainingHits += newEffect.remainingHits;
-
-                // NAPRAWA UI: Aktualizujemy cyferkê na ikonce po do³o¿eniu stacków!
                 existing.duration = existing.remainingHits;
-
                 if (newEffect.value > existing.value) existing.value = newEffect.value;
             }
             else if (newEffect.type == StatusType.Shield || newEffect.type == StatusType.Blessing)
             {
+                // Tarcze i Modlitwy po prostu siê odœwie¿aj¹
                 existing.remainingHits = newEffect.remainingHits;
                 existing.duration = newEffect.duration;
+            }
+            else if (newEffect.type == StatusType.Freeze || newEffect.type == StatusType.Blindness || newEffect.type == StatusType.Poison)
+            {
+                // --- NOWOŒÆ: KL¥TWY (MROZ, ŒLEPOTA, TRUCIZNA) ---
+                // Resetujemy czas trwania z powrotem do maksimum (np. do 3 rund)!
+                existing.duration = newEffect.duration;
+
+                // Opcjonalnie: Jeœli rzuci³eœ MOCNIEJSZ¥ wersjê skilla (np. poziom 2), nadpisujemy s³absz¹ karê!
+                if (newEffect.value > existing.value) existing.value = newEffect.value;
+                if (newEffect.multiplier > existing.multiplier) existing.multiplier = newEffect.multiplier;
+                if (newEffect.hitChanceMod < existing.hitChanceMod) existing.hitChanceMod = newEffect.hitChanceMod;
+
+                Debug.Log($"<color=cyan>Odœwie¿ono czas trwania statusu {existing.effectName} do {existing.duration} rund!</color>");
             }
         }
         else
         {
+            // Jeœli cel nie mia³ jeszcze tego statusu, po prostu go dodajemy
             activeStatuses.Add(newEffect);
         }
+
         RefreshStatusUI();
+    }
+
+    public int GetCombatAPReduction()
+    {
+        int reduction = 0;
+        foreach (var s in activeStatuses)
+        {
+            // Sprawdzamy, które statusy obni¿aj¹ PA
+            if (s.type == StatusType.Freeze || s.type == StatusType.Blindness)
+            {
+                reduction += s.value; // Pobieramy 'effectValue' z poziomu skilla!
+            }
+        }
+        return reduction;
     }
 
     public int GetCombatPhysicalArmor()
@@ -419,10 +469,12 @@ public class Combatant : MonoBehaviour
         float mult = 1.0f;
         foreach (var s in activeStatuses)
         {
-            // ZAMIAST na sztywno "+1.5f", dodajemy to, co wpisa³eœ w 'Effect Multiplier'!
             if (s.type == StatusType.Fury) mult += s.multiplier;
+
+            // --- TRUCIZNA: Zadajesz o 30% mniejsze obra¿enia! ---
+            if (s.type == StatusType.Poison) mult += s.multiplier;
         }
-        return mult;
+        return Mathf.Max(0.1f, mult); // Zabezpieczenie, ¿eby nie leczyæ wroga ujemnym dmg
     }
 
     public float GetCombatHitChanceMultiplier()
@@ -436,7 +488,16 @@ public class Combatant : MonoBehaviour
             {
                 mult *= (1f + (s.hitChanceMod / 100f));
             }
+
+            if (s.type == StatusType.Blindness)
+            {
+                mult *= (1f + (s.hitChanceMod / 100f));
+            }
         }
         return mult;
     }
+
+
+
+
 }

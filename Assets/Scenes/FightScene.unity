@@ -259,6 +259,10 @@ PrefabInstance:
       propertyPath: currentPlayerPrefab
       value: 
       objectReference: {fileID: 5169767090919104140, guid: 878db1372efdcc24b878521734ac7f38, type: 3}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: baseMaxHP
+      value: 10000
+      objectReference: {fileID: 0}
     - target: {fileID: 5591046114039923796, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: m_Name
       value: '[GLOBAL_MANAGERS]'
@@ -2399,6 +2403,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CombatAPManager
   maxAP: 15
   currentAP: 8
+  effectiveMaxAP: 0
   currentText: {fileID: 1797642964}
   maxText: {fileID: 1745958820}
 --- !u!1 &705956657 stripped

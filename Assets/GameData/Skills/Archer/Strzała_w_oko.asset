@@ -10,33 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
-  m_Name: SzybkaStrzala
+  m_Name: "Strza\u0142a_w_oko"
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: szybkastrzala
+  skillName: "Strza\u0142a w oko"
   icon: {fileID: 0}
   category: 3
-  projectilePrefab: {fileID: 0}
-  projectileColor: {r: 1, g: 1, b: 1, a: 1}
+  projectilePrefab: {fileID: 4052815569465071598, guid: 5e40f3c3b43bdbf4d87b4a7d24039cc9, type: 3}
+  projectileColor: {r: 0.10615635, g: 0.9716981, b: 0, a: 1}
   animTriggerName: Attack2
   showCenterVFX: 0
-  effects: []
+  effects:
+  - {fileID: 11400000, guid: 3de92caac02c09d44bb8751598d9b2a0, type: 2}
   isPassive: 0
-  strengthWeight: 1
-  agilityWeight: 1
+  strengthWeight: 0
+  agilityWeight: 0
   knowledgeWeight: 0
   powerWeight: 0
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 0
-    staminaCost: 0
-    manaCost: 0
-    damageMultiplier: 1
+    requiredCharacterLevel: 1
+    staminaCost: 1
+    manaCost: 1
+    damageMultiplier: 0.001
     hitChanceBonus: 1
-    statusEffectChance: 0
+    statusEffectChance: 100
     selfCastDifficulty: 0
     effectCharges: 0
-    effectValue: 0
-    effectDuration: 0
+    effectValue: 6
+    effectDuration: 5
     effectMultiplier: 0
-    effectHitChanceMod: 0
+    effectHitChanceMod: -50
