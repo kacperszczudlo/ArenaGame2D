@@ -399,7 +399,7 @@ public class Combatant : MonoBehaviour
                 existing.duration = existing.remainingHits;
                 if (newEffect.value > existing.value) existing.value = newEffect.value;
             }
-            else if (newEffect.type == StatusType.Shield || newEffect.type == StatusType.Blessing)
+            else if (newEffect.type == StatusType.Shield || newEffect.type == StatusType.Blessing || newEffect.type == StatusType.FireShield || newEffect.type == StatusType.Fury)
             {
                 // Tarcze i Modlitwy po prostu siê odœwie¿aj¹
                 existing.remainingHits = newEffect.remainingHits;

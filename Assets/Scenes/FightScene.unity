@@ -254,49 +254,57 @@ PrefabInstance:
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentEnemyToFight
       value: 
-      objectReference: {fileID: 11400000, guid: 9e1dd784b98ffdf4dab026e4108e1d36, type: 2}
+      objectReference: {fileID: 11400000, guid: fddfa401c95eda148a791c31ff08a6d2, type: 2}
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentPlayerPrefab
       value: 
       objectReference: {fileID: 5169767090919104140, guid: 878db1372efdcc24b878521734ac7f38, type: 3}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: baseMaxHP
-      value: 270
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusMaxHP
-      value: 30
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: baseAgility
-      value: 15
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: baseStrength
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusAgility
-      value: 3
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentLevel
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: weaponDamage
-      value: 26
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusStrength
-      value: 3
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusPhysicalArmor
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusMagicResistance
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[1].currentLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: unlockedSkills.Array.data[2].currentLevel
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5591046114039923796, guid: 89eef89b8374497479804057ebea81b7, type: 3}
@@ -3909,6 +3917,7 @@ MonoBehaviour:
   defenseRangedUI: {fileID: 958026115}
   defenseMentalUI: {fileID: 717423519}
   roundText: {fileID: 1386188859}
+  currentRound: 1
 --- !u!4 &1267071344
 Transform:
   m_ObjectHideFlags: 0

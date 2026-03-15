@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5841686842a21254987ec26c5c8e4218, type: 3}
-  m_Name: Eff_Zakazenie
+  m_Name: Eff_Inkantacja
   m_EditorClassIdentifier: Assembly-CSharp::EffectApplyStatus
-  effectName: "Zaka\u017Cenie"
-  type: 0
-  duration: 2
-  value: 20
+  effectName: Inkantacja
+  type: 4
+  duration: 0
+  value: 0
   charges: 0
   multiplier: 0
-  customIcon: {fileID: 21300000, guid: bcdba771b9ffa8842976a21e3c633d91, type: 3}
-  alwaysSucceeds: 0
+  customIcon: {fileID: 21300000, guid: a4a1113e2256f70409098841a82b9486, type: 3}
+  alwaysSucceeds: 1
   hitChanceMod: 0

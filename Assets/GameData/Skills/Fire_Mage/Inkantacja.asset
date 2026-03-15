@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Inkantacja
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Inkantacja
-  icon: {fileID: -8717017754119436831, guid: 54f1fe4fc9e01cb478814d730116c926, type: 3}
+  icon: {fileID: 21300000, guid: a4a1113e2256f70409098841a82b9486, type: 3}
   category: 0
   projectilePrefab: {fileID: 0}
   projectileColor: {r: 1, g: 1, b: 1, a: 1}
   animTriggerName: MentalAttack
   showCenterVFX: 1
   effects:
-  - {fileID: 11400000, guid: b58e04b6c1756e14f8c5068aa07aad4b, type: 2}
+  - {fileID: 11400000, guid: 8466f92d0b3cd5d4096b1d6ec83a0978, type: 2}
   isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
@@ -29,9 +29,9 @@ MonoBehaviour:
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 0
-    staminaCost: 0
-    manaCost: 0
+    requiredCharacterLevel: 1
+    staminaCost: 40
+    manaCost: 40
     damageMultiplier: 0
     hitChanceBonus: 0
     statusEffectChance: 100
@@ -39,5 +39,5 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 0
     effectDuration: 6
-    effectMultiplier: 3
+    effectMultiplier: 0.5
     effectHitChanceMod: 0

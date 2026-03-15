@@ -12,7 +12,8 @@ public static class StatusRegistry
         { StatusType.Fury, new LogicFury() },
         { StatusType.Freeze, new LogicFreeze() },
         { StatusType.Blindness, new LogicBlindness() },
-        { StatusType.Poison, new LogicPoison() }
+        { StatusType.Poison, new LogicPoison() },
+        { StatusType.FireShield, new LogicFireShield() }
     };
 
     public static StatusLogic GetLogic(StatusType type)

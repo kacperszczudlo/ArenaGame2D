@@ -10,34 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
-  m_Name: Podpalenie
+  m_Name: Bariera_Ognia
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: Podpalenie
-  icon: {fileID: 21300000, guid: 7351a0f9ec9f4254282330d1f6902fc2, type: 3}
-  category: 4
+  skillName: Bariera Ognia
+  icon: {fileID: 21300000, guid: 4ba0a0c27b4c6ea45ad09abf5b43f711, type: 3}
+  category: 0
   projectilePrefab: {fileID: 0}
   projectileColor: {r: 1, g: 1, b: 1, a: 1}
-  animTriggerName: PhysicAttack
-  showCenterVFX: 0
+  animTriggerName: MentalAttack
+  showCenterVFX: 1
   effects:
-  - {fileID: 11400000, guid: 0c6bface2f408c9458b6ced94e5bd42e, type: 2}
+  - {fileID: 11400000, guid: 5f96fdef7cb53b14e9f77298d421c5ca, type: 2}
   isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
-  knowledgeWeight: 1
-  powerWeight: 2
+  knowledgeWeight: 0
+  powerWeight: 0
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
-    staminaCost: 1
-    manaCost: 1
-    damageMultiplier: 1
-    hitChanceBonus: 1
+    requiredCharacterLevel: 0
+    staminaCost: 0
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
     statusEffectChance: 100
-    selfCastDifficulty: 0
-    effectCharges: 3
+    selfCastDifficulty: 20
+    effectCharges: 0
     effectValue: 0
-    effectDuration: 0
-    effectMultiplier: 0.1
+    effectDuration: 3
+    effectMultiplier: 0.5
     effectHitChanceMod: 0

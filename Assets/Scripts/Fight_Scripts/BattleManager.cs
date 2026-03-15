@@ -247,10 +247,33 @@ public class BattleManager : MonoBehaviour
                     if (skillData.showCenterVFX) mainTarget.PlaySkillEffect(skillData.icon);
 
                     if (skillData.category == SkillCategory.PositiveCharm)
+                    {
                         action.actor.Heal(result.damageDealt, result.chanceText);
+                    }
                     else
+                    {
+                        // 1. G£ÓWNY CEL DOSTAJE OBRA¯ENIA
                         action.target.TakeDamage(result.damageDealt, result.isCritical, result.chanceText, false, skillData.category);
 
+                        // --- 2. TARCZA OGNIA: ODBICIE RYKOSZETU! ---
+                        // Sprawdzamy czy cel uderzenia mia³ na sobie Tarczê Ognia
+                        StatusEffect fireShield = action.target.activeStatuses.Find(s => s.type == StatusType.FireShield);
+
+                        // Jeœli ma tarczê i w ogóle dosta³ jakieœ obra¿enia
+                        if (fireShield != null && result.damageDealt > 0)
+                        {
+                            // Liczymy odbicie
+                            int reflectedDamage = Mathf.RoundToInt(result.damageDealt * fireShield.multiplier);
+                            if (reflectedDamage > 0)
+                            {
+                                // 3. ATAKUJ¥CY DOSTAJE RYKOSZETEM (z u¿yciem poprawnej nazwy CriticalDamage!)
+                                action.actor.TakeDamage(reflectedDamage, false, "", true, SkillCategory.RangedMagic);
+                                action.actor.ShowFloatingText($"Odbicie: {reflectedDamage}", DamagePopup.PopupType.CriticalDamage);
+                            }
+                        }
+                    }
+
+                    // --- ODPALANIE EFEKTÓW (Nak³adanie statusów itp.) ---
                     float baseChance = levelData != null ? levelData.statusEffectChance : 100f;
                     float finalChance = (skillData.category == SkillCategory.PositiveCharm)
                         ? (100f * result.hitChanceMultiplier)
@@ -260,7 +283,9 @@ public class BattleManager : MonoBehaviour
                     {
                         if (effect != null)
                         {
-                            effect.Execute(action.actor, action.target, result, finalChance, levelData, skillData.icon);
+                            // FIX: U¿ywamy 'mainTarget' zamiast 'action.target'! 
+                            // Dziêki temu buffy trafiaj¹ na rzucaj¹cego, a kl¹twy na wroga.
+                            effect.Execute(action.actor, mainTarget, result, finalChance, levelData, skillData.icon);
                         }
                     }
                 }

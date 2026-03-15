@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5841686842a21254987ec26c5c8e4218, type: 3}
-  m_Name: Effect_Status
+  m_Name: Eff_TarczaOgnia
   m_EditorClassIdentifier: Assembly-CSharp::EffectApplyStatus
-  effectName: 
-  type: 0
+  effectName: Tarcza Ognia
+  type: 8
   duration: 0
   value: 0
   charges: 0
   multiplier: 0
-  customIcon: {fileID: 0}
-  alwaysSucceeds: 0
+  customIcon: {fileID: 21300000, guid: 4ba0a0c27b4c6ea45ad09abf5b43f711, type: 3}
+  alwaysSucceeds: 1
   hitChanceMod: 0
