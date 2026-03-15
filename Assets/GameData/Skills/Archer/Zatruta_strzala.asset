@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Zatruta_strzala
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: "Zatruta strza\u0142a"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 95916d24a5a199b4abc0cbff6abca015, type: 3}
   category: 3
   projectilePrefab: {fileID: 4052815569465071598, guid: 5e40f3c3b43bdbf4d87b4a7d24039cc9, type: 3}
   projectileColor: {r: 0.42779446, g: 1, b: 0, a: 1}
-  animTriggerName: Attack2
+  animTriggerName: Attack1
   showCenterVFX: 0
   effects:
   - {fileID: 11400000, guid: 40a302503607bfa40b829c51eea3464b, type: 2}

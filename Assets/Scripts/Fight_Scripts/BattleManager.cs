@@ -32,7 +32,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("UI Walki")]
     public TMPro.TextMeshProUGUI roundText;
-    private int currentRound = 1;
+    public int currentRound = 1;
+    public static BattleManager Instance;
 
     private Vector3 playerOriginalPos;
     private Vector3 enemyOriginalPos;
@@ -44,6 +45,11 @@ public class BattleManager : MonoBehaviour
 
         // --- NOWOŒÆ: Wywo³ujemy zrzucenie postaci na ring! ---
         SpawnCombatants();
+    }
+    void Awake()
+    {
+        // 3. Przypisz instancjê przy starcie
+        Instance = this;
     }
 
     void SpawnCombatants()

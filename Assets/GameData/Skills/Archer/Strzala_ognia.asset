@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Strzala_ognia
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: "Podpalona strza\u0142a"
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: da1e967e5e1af4a469f01e4980ed57a7, type: 3}
   category: 3
   projectilePrefab: {fileID: 4052815569465071598, guid: 5e40f3c3b43bdbf4d87b4a7d24039cc9, type: 3}
   projectileColor: {r: 1, g: 0.02821736, b: 0, a: 1}
