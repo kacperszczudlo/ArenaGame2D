@@ -410,7 +410,8 @@ public class Combatant : MonoBehaviour
 
     public void AddStatusEffect(StatusEffect newEffect)
     {
-        StatusEffect existing = activeStatuses.Find(s => s.effectName == newEffect.effectName);
+        // Kuloodporne: Szukamy istniej¹cego statusu po Nazwie ORAZ po jego Typie!
+        StatusEffect existing = activeStatuses.Find(s => s.effectName == newEffect.effectName && s.type == newEffect.type);
 
         if (existing != null)
         {
@@ -443,8 +444,23 @@ public class Combatant : MonoBehaviour
         }
         else
         {
-            // Jeœli cel nie mia³ jeszcze tego statusu, po prostu go dodajemy
-            activeStatuses.Add(newEffect);
+            // --- FIX: Kopiujemy WSZYSTKO, ³¹cznie z obrazkiem! ---
+            StatusEffect clonedEffect = new StatusEffect
+            {
+                effectName = newEffect.effectName,
+                type = newEffect.type,
+                duration = newEffect.duration,
+                remainingHits = newEffect.remainingHits,
+                value = newEffect.value,
+                multiplier = newEffect.multiplier,
+                hitChanceMod = newEffect.hitChanceMod,
+
+                // Tego brakowa³o! Kopiujemy ikonkê, ¿eby UI mia³o co narysowaæ:
+                icon = newEffect.icon
+            };
+
+            // Dodajemy naszego klona do krwi postaci
+            activeStatuses.Add(clonedEffect);
         }
 
         RefreshStatusUI();
