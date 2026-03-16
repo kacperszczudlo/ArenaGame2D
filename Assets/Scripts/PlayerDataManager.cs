@@ -33,6 +33,9 @@ public class PlayerDataManager : MonoBehaviour
 
     [Header("Bonusy z Ekwipunku / Buffów")]
     public int bonusMaxHP = 0;          // np. Pierœcieñ ¯ycia +20 HP
+    public int bonusMaxMana = 0;
+    public int bonusMaxStamina = 0;
+
     public int bonusStrength = 0;
     public int bonusAgility = 0;
     public int bonusKnowledge = 0;
@@ -42,13 +45,15 @@ public class PlayerDataManager : MonoBehaviour
     public int bonusMagicResistance = 2;// Amulet
     public int bonusCritChance = 10;    // Ostry miecz daje +10% do Crita
 
-    public int weaponDamage = 15;       // Si³a samej broni
+    public int weaponDamage = 20;       // Si³a samej broni
 
     [Header("Odblokowane Umiejêtnoœci")]
     public List<PlayerSkillSaveData> unlockedSkills = new List<PlayerSkillSaveData>();
 
     // --- ZSUMOWANE W£AŒCIWOŒCI (To z nich korzysta Kalkulator Walki!) ---
     public int TotalMaxHP => baseMaxHP + bonusMaxHP;
+    public int TotalMaxMana => baseMaxMana + bonusMaxMana;
+    public int TotalMaxStamina => baseMaxStamina + bonusMaxStamina;
     public int TotalStrength => baseStrength + bonusStrength;
     public int TotalAgility => baseAgility + bonusAgility;
     public int TotalKnowledge => baseKnowledge + bonusKnowledge;

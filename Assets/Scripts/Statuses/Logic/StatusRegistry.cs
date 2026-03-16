@@ -13,7 +13,8 @@ public static class StatusRegistry
         { StatusType.Freeze, new LogicFreeze() },
         { StatusType.Blindness, new LogicBlindness() },
         { StatusType.Poison, new LogicPoison() },
-        { StatusType.FireShield, new LogicFireShield() }
+        { StatusType.FireShield, new LogicFireShield() },
+        { StatusType.VoodooCurse, new LogicVoodooCurse() }
     };
 
     public static StatusLogic GetLogic(StatusType type)

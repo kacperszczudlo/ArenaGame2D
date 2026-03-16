@@ -181,11 +181,21 @@ public class BattleManager : MonoBehaviour
             int mCost = levelData?.manaCost ?? 0;
             int sCost = levelData?.staminaCost ?? 0;
 
-            bool hasResources = action.actor.currentMana >= mCost && action.actor.currentStamina >= sCost;
+            // --- FIX TRUCIZNY: SPRAWDZAMY KARÊ PRZED ATAKIEM ---
+            int poisonPenalty = 0;
+            StatusEffect poison = action.actor.activeStatuses.Find(s => s.type == StatusType.Poison);
+            if (poison != null)
+            {
+                poisonPenalty = poison.value; // Pobieramy karê z trucizny (np. 30)
+            }
+
+            // Mened¿er sprawdza, czy gracz ma zasoby na koszt bazowy + karê z trucizny!
+            bool hasResources = action.actor.currentMana >= (mCost + poisonPenalty) && action.actor.currentStamina >= (sCost + poisonPenalty);
 
             if (!hasResources)
             {
                 action.actor.ShowFloatingText("Brak zasobów!", DamagePopup.PopupType.Miss);
+                // Jeœli to gracz nie ma many, kó³ko w UI robi siê czerwone/szare - tu zablokowaliœmy mu turê!
                 yield return new WaitForSeconds(0.8f);
             }
             else

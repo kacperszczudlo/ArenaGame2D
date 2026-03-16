@@ -10,29 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
-  m_Name: AtakCiemnychMocy
+  m_Name: PsychiczneZnecanie
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
-  skillName: "Atak z nik\u0105d"
-  icon: {fileID: -3420583558904034331, guid: dd114cf18e85fbe4499d21a29caca66a, type: 3}
-  category: 2
-  projectilePrefab: {fileID: 1362683062058433046, guid: 088bf36739bf2224c927a3b85f2a8249, type: 3}
+  skillName: "Zn\u0119canie psychiczne"
+  icon: {fileID: 21300000, guid: 45e765b1e326ce84083fe0c8c4f241fc, type: 3}
+  category: 1
+  projectilePrefab: {fileID: 0}
   projectileColor: {r: 1, g: 1, b: 1, a: 1}
-  animTriggerName: Attack1
-  showCenterVFX: 0
+  animTriggerName: Attack2
+  showCenterVFX: 1
   effects: []
   isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
-  knowledgeWeight: 1
-  powerWeight: 1
+  knowledgeWeight: 0.6
+  powerWeight: 1.4
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 0
-    staminaCost: 1
-    manaCost: 1
-    damageMultiplier: 1
-    hitChanceBonus: 1
+    requiredCharacterLevel: 1
+    staminaCost: 0
+    manaCost: 40
+    damageMultiplier: 2.6
+    hitChanceBonus: 1.5
     statusEffectChance: 0
     selfCastDifficulty: 0
     effectCharges: 0

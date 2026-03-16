@@ -80,6 +80,9 @@ public class Combatant : MonoBehaviour
     [Header("Mózg AI (Tylko dla wroga)")]
     public EnemyAIBrain myBrain;
 
+    private float lastPopupTime;
+    private int popupStackCount;
+
     // Funkcja do czyszczenia obrony po zakoñczeniu rundy
     public void ResetDefensePA()
     {
@@ -296,18 +299,24 @@ public class Combatant : MonoBehaviour
         activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
         RefreshStatusUI();
 
-        // Jeœli po przejœciu przez tarcze zosta³o 0 obra¿eñ (zablokowane/unikniête), wychodzimy!
-        if (finalDamage <= 0) return;
+        if (finalDamage <= 0 && category != SkillCategory.NegativeCharm) return;
 
-        // 3. OBLICZAMY RESZTÊ JAK ZWYKLE
-        currentHP -= finalDamage;
-        if (currentHP < 0) currentHP = 0;
+        // 3. OBLICZAMY RESZTÊ
+        if (finalDamage > 0)
+        {
+            currentHP -= finalDamage;
+            if (currentHP < 0) currentHP = 0;
 
-        //if (animator != null) animator.SetTrigger("Hit");
+            DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
+            ShowFloatingText("-" + finalDamage, pType, null, chanceText);
+        }
+        else
+        {
+            // Urok nie zada³ obra¿eñ, ale wszed³ w krew! Pokazujemy napis i szansê w procentach!
+            ShowFloatingText("Urok!", DamagePopup.PopupType.TextOnly, null, chanceText);
+        }
+
         if (myUI != null) myUI.UpdateUI();
-
-        DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
-        ShowFloatingText("-" + finalDamage, pType, null, chanceText);
 
         if (currentHP <= 0)
         {
@@ -327,9 +336,22 @@ public class Combatant : MonoBehaviour
     {
         if (damagePopupPrefab != null && popupSpawnPoint != null)
         {
-            Vector3 randomOffset = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(0f, 0.5f), 0);
-            GameObject popup = Instantiate(damagePopupPrefab, popupSpawnPoint.position + randomOffset, Quaternion.identity);
+            // Sprawdzamy, czy w ci¹gu ostatnich 0.4 sekundy wyskoczy³ ju¿ jakiœ napis na tej postaci
+            if (Time.time - lastPopupTime < 0.4f)
+            {
+                popupStackCount++; // Zwiêkszamy piêtro!
+            }
+            else
+            {
+                popupStackCount = 0; // Minê³o wystarczaj¹co du¿o czasu, resetujemy piêtro na sam dó³
+            }
+            lastPopupTime = Time.time;
 
+            // Uk³adamy napisy jeden nad drugim! Ka¿dy kolejny napis w combo wyskakuje o 0.8 jednostki wy¿ej.
+            // Zostawi³em lekki rozrzut na boki (X), ¿eby wygl¹da³o to dynamicznie.
+            Vector3 stackedOffset = new Vector3(Random.Range(-0.4f, 0.4f), (popupStackCount * 0.8f) + Random.Range(0f, 0.2f), 0);
+
+            GameObject popup = Instantiate(damagePopupPrefab, popupSpawnPoint.position + stackedOffset, Quaternion.identity);
             popup.GetComponent<DamagePopup>().Setup(text, type, icon, chanceText);
         }
     }
@@ -405,7 +427,7 @@ public class Combatant : MonoBehaviour
                 existing.remainingHits = newEffect.remainingHits;
                 existing.duration = newEffect.duration;
             }
-            else if (newEffect.type == StatusType.Freeze || newEffect.type == StatusType.Blindness || newEffect.type == StatusType.Poison)
+            else if (newEffect.type == StatusType.Freeze || newEffect.type == StatusType.Blindness || newEffect.type == StatusType.Poison || newEffect.type == StatusType.VoodooCurse)
             {
                 // --- NOWOŒÆ: KL¥TWY (MROZ, ŒLEPOTA, TRUCIZNA) ---
                 // Resetujemy czas trwania z powrotem do maksimum (np. do 3 rund)!
@@ -460,6 +482,7 @@ public class Combatant : MonoBehaviour
         {
             if (s.type == StatusType.Blessing) res += s.value; // Modlitwa dodaje Obronê Magiczn¹!
             if (s.type == StatusType.Fury) res -= s.value;
+            if (s.type == StatusType.VoodooCurse) res -= s.value;
         }
         return res;
     }
