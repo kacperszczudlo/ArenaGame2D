@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EffectApplyStatus
   effectName: Zatrucie
   type: 5
-  duration: 0
+  duration: 5
   value: 0
   charges: 0
   multiplier: 0

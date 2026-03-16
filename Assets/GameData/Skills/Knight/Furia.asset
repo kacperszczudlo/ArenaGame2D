@@ -15,6 +15,8 @@ MonoBehaviour:
   skillName: Furia
   icon: {fileID: 21300098, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 0
+  projectilePrefab: {fileID: 0}
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   animTriggerName: Fury
   showCenterVFX: 1
   effects:
@@ -27,7 +29,7 @@ MonoBehaviour:
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 15
+    requiredCharacterLevel: 12
     staminaCost: 10
     manaCost: 40
     damageMultiplier: 0
@@ -40,7 +42,7 @@ MonoBehaviour:
     effectMultiplier: 0.2
     effectHitChanceMod: -10
   - levelName: 2
-    requiredCharacterLevel: 16
+    requiredCharacterLevel: 13
     staminaCost: 12
     manaCost: 42
     damageMultiplier: 0
@@ -53,7 +55,7 @@ MonoBehaviour:
     effectMultiplier: 0.3
     effectHitChanceMod: -12
   - levelName: 3
-    requiredCharacterLevel: 17
+    requiredCharacterLevel: 14
     staminaCost: 14
     manaCost: 44
     damageMultiplier: 0
@@ -66,7 +68,7 @@ MonoBehaviour:
     effectMultiplier: 0.4
     effectHitChanceMod: -14
   - levelName: 4
-    requiredCharacterLevel: 18
+    requiredCharacterLevel: 15
     staminaCost: 16
     manaCost: 46
     damageMultiplier: 0
@@ -79,7 +81,7 @@ MonoBehaviour:
     effectMultiplier: 0.5
     effectHitChanceMod: -16
   - levelName: 5
-    requiredCharacterLevel: 19
+    requiredCharacterLevel: 16
     staminaCost: 18
     manaCost: 48
     damageMultiplier: 0
@@ -92,7 +94,7 @@ MonoBehaviour:
     effectMultiplier: 0.6
     effectHitChanceMod: -18
   - levelName: 6
-    requiredCharacterLevel: 20
+    requiredCharacterLevel: 17
     staminaCost: 20
     manaCost: 50
     damageMultiplier: 0
@@ -105,7 +107,7 @@ MonoBehaviour:
     effectMultiplier: 0.8
     effectHitChanceMod: -20
   - levelName: 7
-    requiredCharacterLevel: 21
+    requiredCharacterLevel: 18
     staminaCost: 22
     manaCost: 52
     damageMultiplier: 0
