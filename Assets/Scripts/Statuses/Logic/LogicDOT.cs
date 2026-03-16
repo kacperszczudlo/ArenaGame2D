@@ -14,7 +14,7 @@ public class LogicDOT : StatusLogic
             int damage = effect.value * effectiveStacks;
 
             // Wyœwietlamy napis i zadajemy obra¿enia
-            owner.ShowFloatingText("Zaka¿enie!", DamagePopup.PopupType.Miss);
+            owner.ShowFloatingText(effect.effectName + "!", DamagePopup.PopupType.Miss);
             owner.TakeDamage(damage, false, "", true, SkillCategory.MeleePhysical);
 
             // Zaka¿enie s³abnie! Odejmujemy jeden stack.

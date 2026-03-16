@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: Natan
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Natan
+  avatarImage: {fileID: 0}
+  enemyVisualPrefab: {fileID: 5348377220859076812, guid: 02429af6b0cfd164f9a06adbae528a3c, type: 3}
+  level: 12
+  maxHP: 800
+  maxMana: 900
+  maxStamina: 200
+  strength: 10
+  agility: 10
+  knowledge: 80
+  power: 40
+  physicalArmor: 4
+  magicResistance: 4
+  critChance: 5
+  weaponDamage: 44
+  meleeStoppingDistance: 1.5
+  enemySkills:
+  - data: {fileID: 11400000, guid: 1dac04ace46dfd141b3f827c674a9f0e, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 3b7dc4a5100d2624cb0079fc145f9625, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 29050404835239f4ca4b99736c15d0c7, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  aiBrain: {fileID: 11400000, guid: 764b876cf1fbd0c4cbd3ae03d091d4c7, type: 2}
+  goldReward: 0
+  expReward: 0

@@ -74,6 +74,16 @@ public class EffectApplyStatus : SkillEffect
             if (dodge != null)
             {
                 Debug.Log($"<color=cyan>Status {se.effectName} zablokowany, bo atak zosta³ unikniêty!</color>");
+
+                // --- FIX: Odbieramy ³adunek za unikniêcie uroku! ---
+                // Skoro atak zada³ 0 obra¿eñ, to LogicBlessing go zignorowa³ i nie odj¹³ ³adunku.
+                // Musimy wiêc odj¹æ go my i wyœwietliæ napis, ¿eby gracz wiedzia³, ¿e unik zadzia³a³!
+                if (result.damageDealt <= 0)
+                {
+                    dodge.remainingHits--;
+                    finalTarget.ShowFloatingText("Cudowny Unik!", DamagePopup.PopupType.Miss);
+                }
+
                 return; // Przerywamy! Trucizna nie wchodzi do krwiobiegu.
             }
         }

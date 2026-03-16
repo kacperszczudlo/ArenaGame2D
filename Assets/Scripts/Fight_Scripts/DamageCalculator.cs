@@ -63,6 +63,14 @@ public static class DamageCalculator
 
             if (data.category == SkillCategory.NegativeCharm && attacker.currentLevel > defender.currentLevel)
                 hitChance += (attacker.currentLevel - defender.currentLevel) * 2f;
+
+            StatusEffect voodooCurse = defender.activeStatuses.Find(s => s.type == StatusType.VoodooCurse);
+            if (voodooCurse != null)
+            {
+                // Mno¿ymy aktualn¹ szansê. Jeœli wpisa³eœ w Unity "50", to pomno¿y szansê przez 1.5!
+                // Z 42% zrobi siê równe 63%.
+                hitChance *= (1f + (voodooCurse.hitChanceMod / 100f));
+            }
         }
 
         hitChance = Mathf.Clamp(hitChance, 0f, 100f);

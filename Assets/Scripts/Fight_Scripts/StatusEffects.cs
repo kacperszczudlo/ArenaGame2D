@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum StatusType { DamageOverTime, HealOverTime, Shield, Blessing, Fury }
+public enum StatusType { DamageOverTime, HealOverTime, Shield, Blessing, Fury, Poison, Freeze, Blindness, FireShield, VoodooCurse }
 [System.Serializable]
 public class StatusEffect
 {

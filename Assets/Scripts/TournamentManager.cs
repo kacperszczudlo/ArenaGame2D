@@ -72,6 +72,11 @@ public class TournamentManager : MonoBehaviour
         if (currentIndex < tournamentEnemies.Count)
         {
             GameManager.Instance.currentEnemyToFight = tournamentEnemies[currentIndex];
+
+            // --- NOWOŒÆ: Ustawiamy kontekst dla BattleManagera! ---
+            GameManager.Instance.sceneToLoadAfterBattle = "ArenaLobby"; // Wrócimy do Lobby
+            GameManager.Instance.isTournamentBattle = true;             // U¿ywamy "tymczasowego worka" na ³upy
+
             SceneManager.LoadScene("FightScene");
         }
     }

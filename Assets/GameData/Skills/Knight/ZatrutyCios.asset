@@ -15,6 +15,8 @@ MonoBehaviour:
   skillName: Zatruty cios
   icon: {fileID: 21300058, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 4
+  projectilePrefab: {fileID: 0}
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   animTriggerName: Attack1
   showCenterVFX: 0
   effects:
@@ -32,7 +34,7 @@ MonoBehaviour:
     manaCost: 2
     damageMultiplier: 0.9
     hitChanceBonus: 1
-    statusEffectChance: 20
+    statusEffectChance: 50
     selfCastDifficulty: 0
     effectCharges: 2
     effectValue: 0
@@ -45,7 +47,7 @@ MonoBehaviour:
     manaCost: 3
     damageMultiplier: 1
     hitChanceBonus: 1.02
-    statusEffectChance: 22
+    statusEffectChance: 55
     selfCastDifficulty: 0
     effectCharges: 2
     effectValue: 0
@@ -58,7 +60,7 @@ MonoBehaviour:
     manaCost: 4
     damageMultiplier: 1.1
     hitChanceBonus: 1.04
-    statusEffectChance: 23
+    statusEffectChance: 60
     selfCastDifficulty: 0
     effectCharges: 2
     effectValue: 0
@@ -71,7 +73,7 @@ MonoBehaviour:
     manaCost: 5
     damageMultiplier: 1.2
     hitChanceBonus: 1.08
-    statusEffectChance: 24
+    statusEffectChance: 65
     selfCastDifficulty: 0
     effectCharges: 3
     effectValue: 0
@@ -84,7 +86,7 @@ MonoBehaviour:
     manaCost: 5
     damageMultiplier: 1.3
     hitChanceBonus: 1.1
-    statusEffectChance: 26
+    statusEffectChance: 75
     selfCastDifficulty: 0
     effectCharges: 3
     effectValue: 0
@@ -97,7 +99,7 @@ MonoBehaviour:
     manaCost: 6
     damageMultiplier: 1.4
     hitChanceBonus: 1.12
-    statusEffectChance: 28
+    statusEffectChance: 85
     selfCastDifficulty: 0
     effectCharges: 3
     effectValue: 0
@@ -110,7 +112,7 @@ MonoBehaviour:
     manaCost: 7
     damageMultiplier: 1.6
     hitChanceBonus: 1.15
-    statusEffectChance: 32
+    statusEffectChance: 95
     selfCastDifficulty: 0
     effectCharges: 3
     effectValue: 0

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: Voodoo
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Voodoo
+  avatarImage: {fileID: 0}
+  enemyVisualPrefab: {fileID: 5348377220859076812, guid: 02429af6b0cfd164f9a06adbae528a3c, type: 3}
+  level: 1
+  maxHP: 1000
+  maxMana: 2000
+  maxStamina: 2000
+  strength: 10
+  agility: 10
+  knowledge: 10
+  power: 10
+  physicalArmor: 5
+  magicResistance: 0
+  critChance: 5
+  weaponDamage: 10
+  meleeStoppingDistance: 1.5
+  enemySkills:
+  - data: {fileID: 11400000, guid: b683db60a03cc5943a6d4fbf9757f3f9, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  aiBrain: {fileID: 11400000, guid: 60e7f23a362a7074f947f8aebee489bf, type: 2}
+  goldReward: 0
+  expReward: 0

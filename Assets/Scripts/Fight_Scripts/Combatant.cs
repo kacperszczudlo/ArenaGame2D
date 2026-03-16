@@ -1,5 +1,6 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class Combatant : MonoBehaviour
 {
@@ -78,6 +79,9 @@ public class Combatant : MonoBehaviour
 
     [Header("Mózg AI (Tylko dla wroga)")]
     public EnemyAIBrain myBrain;
+
+    private float lastPopupTime;
+    private int popupStackCount;
 
     // Funkcja do czyszczenia obrony po zakoñczeniu rundy
     public void ResetDefensePA()
@@ -204,6 +208,14 @@ public class Combatant : MonoBehaviour
 
     public void ConsumeResources(int manaAmount, int staminaAmount)
     {
+        var poison = activeStatuses.Find(s => s.type == StatusType.Poison);
+        if (poison != null)
+        {
+            // Dodajemy karê z poziomu umiejêtnoœci (odczytujemy 'value')
+            manaAmount += poison.value;
+            staminaAmount += poison.value;
+        }
+
         currentMana -= manaAmount;
         if (currentMana < 0) currentMana = 0;
 
@@ -211,7 +223,6 @@ public class Combatant : MonoBehaviour
         if (currentStamina < 0) currentStamina = 0;
 
         Debug.Log($"<color=blue>{combatantName} zu¿ywa {manaAmount} Many i {staminaAmount} Kondycji.</color>");
-
         if (myUI != null) myUI.UpdateUI();
     }
 
@@ -227,6 +238,8 @@ public class Combatant : MonoBehaviour
 
         if (myUI != null) myUI.UpdateUI();
     }
+
+    
 
     public void PlayAttackAnimation(string animationTriggerName)
     {
@@ -286,18 +299,24 @@ public class Combatant : MonoBehaviour
         activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
         RefreshStatusUI();
 
-        // Jeœli po przejœciu przez tarcze zosta³o 0 obra¿eñ (zablokowane/unikniête), wychodzimy!
-        if (finalDamage <= 0) return;
+        if (finalDamage <= 0 && category != SkillCategory.NegativeCharm) return;
 
-        // 3. OBLICZAMY RESZTÊ JAK ZWYKLE
-        currentHP -= finalDamage;
-        if (currentHP < 0) currentHP = 0;
+        // 3. OBLICZAMY RESZTÊ
+        if (finalDamage > 0)
+        {
+            currentHP -= finalDamage;
+            if (currentHP < 0) currentHP = 0;
 
-        if (animator != null) animator.SetTrigger("Hit");
+            DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
+            ShowFloatingText("-" + finalDamage, pType, null, chanceText);
+        }
+        else
+        {
+            // Urok nie zada³ obra¿eñ, ale wszed³ w krew! Pokazujemy napis i szansê w procentach!
+            ShowFloatingText("Urok!", DamagePopup.PopupType.TextOnly, null, chanceText);
+        }
+
         if (myUI != null) myUI.UpdateUI();
-
-        DamagePopup.PopupType pType = isCritical ? DamagePopup.PopupType.CriticalDamage : DamagePopup.PopupType.NormalDamage;
-        ShowFloatingText("-" + finalDamage, pType, null, chanceText);
 
         if (currentHP <= 0)
         {
@@ -317,9 +336,22 @@ public class Combatant : MonoBehaviour
     {
         if (damagePopupPrefab != null && popupSpawnPoint != null)
         {
-            Vector3 randomOffset = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(0f, 0.5f), 0);
-            GameObject popup = Instantiate(damagePopupPrefab, popupSpawnPoint.position + randomOffset, Quaternion.identity);
+            // Sprawdzamy, czy w ci¹gu ostatnich 0.4 sekundy wyskoczy³ ju¿ jakiœ napis na tej postaci
+            if (Time.time - lastPopupTime < 0.4f)
+            {
+                popupStackCount++; // Zwiêkszamy piêtro!
+            }
+            else
+            {
+                popupStackCount = 0; // Minê³o wystarczaj¹co du¿o czasu, resetujemy piêtro na sam dó³
+            }
+            lastPopupTime = Time.time;
 
+            // Uk³adamy napisy jeden nad drugim! Ka¿dy kolejny napis w combo wyskakuje o 0.8 jednostki wy¿ej.
+            // Zostawi³em lekki rozrzut na boki (X), ¿eby wygl¹da³o to dynamicznie.
+            Vector3 stackedOffset = new Vector3(Random.Range(-0.4f, 0.4f), (popupStackCount * 0.8f) + Random.Range(0f, 0.2f), 0);
+
+            GameObject popup = Instantiate(damagePopupPrefab, popupSpawnPoint.position + stackedOffset, Quaternion.identity);
             popup.GetComponent<DamagePopup>().Setup(text, type, icon, chanceText);
         }
     }
@@ -332,20 +364,32 @@ public class Combatant : MonoBehaviour
             vfx.GetComponent<SkillEffectVFX>().Setup(icon);
         }
     }
-    public void ProcessStatuses()
+    public IEnumerator ProcessStatusesRoutine()
     {
-        // 1. Odpalamy logikê na pocz¹tku tury (np. Krwawienie zadaje ból)
         for (int i = activeStatuses.Count - 1; i >= 0; i--)
         {
             var status = activeStatuses[i];
             StatusLogic logic = StatusRegistry.GetLogic(status.type);
 
-            if (logic != null) logic.OnTurnStart(this, status);
+            if (logic != null)
+            {
+                logic.OnTurnStart(this, status);
 
-            status.duration--; // Odejmujemy rundê
+                // Jeœli status coœ fizycznie zrobi³ (Ogieñ zjad³ HP, Mróz zjad³ staminê), 
+                // zatrzymujemy kod na 0.7 sekundy, ¿eby gracz zd¹¿y³ przeczytaæ napis!
+                if (status.type == StatusType.DamageOverTime || status.type == StatusType.Freeze)
+                {
+                    yield return new WaitForSeconds(0.7f);
+                }
+            }
+
+            // Pamiêtaj: w DoT czas odjêliœmy w jego logice (remainingHits), reszcie odejmujemy tutaj
+            if (status.type != StatusType.DamageOverTime)
+            {
+                status.duration--;
+            }
         }
 
-        // 2. Usuwamy statusy, które wygas³y (Koniec rund, albo Tarcza straci³a ³adunki)
         activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
         RefreshStatusUI();
     }
@@ -366,30 +410,74 @@ public class Combatant : MonoBehaviour
 
     public void AddStatusEffect(StatusEffect newEffect)
     {
-        StatusEffect existing = activeStatuses.Find(s => s.effectName == newEffect.effectName);
+        // Kuloodporne: Szukamy istniej¹cego statusu po Nazwie ORAZ po jego Typie!
+        StatusEffect existing = activeStatuses.Find(s => s.effectName == newEffect.effectName && s.type == newEffect.type);
 
         if (existing != null)
         {
             if (newEffect.type == StatusType.DamageOverTime)
             {
+                // Krwawienie i Ogieñ siê kumuluj¹ (dodajemy stacki)
                 existing.remainingHits += newEffect.remainingHits;
-
-                // NAPRAWA UI: Aktualizujemy cyferkê na ikonce po do³o¿eniu stacków!
                 existing.duration = existing.remainingHits;
-
                 if (newEffect.value > existing.value) existing.value = newEffect.value;
             }
-            else if (newEffect.type == StatusType.Shield || newEffect.type == StatusType.Blessing)
+            else if (newEffect.type == StatusType.Shield || newEffect.type == StatusType.Blessing || newEffect.type == StatusType.FireShield || newEffect.type == StatusType.Fury)
             {
+                // Tarcze i Modlitwy po prostu siê odœwie¿aj¹
                 existing.remainingHits = newEffect.remainingHits;
                 existing.duration = newEffect.duration;
+            }
+            else if (newEffect.type == StatusType.Freeze || newEffect.type == StatusType.Blindness || newEffect.type == StatusType.Poison || newEffect.type == StatusType.VoodooCurse)
+            {
+                // --- NOWOŒÆ: KL¥TWY (MROZ, ŒLEPOTA, TRUCIZNA) ---
+                // Resetujemy czas trwania z powrotem do maksimum (np. do 3 rund)!
+                existing.duration = newEffect.duration;
+
+                // Opcjonalnie: Jeœli rzuci³eœ MOCNIEJSZ¥ wersjê skilla (np. poziom 2), nadpisujemy s³absz¹ karê!
+                if (newEffect.value > existing.value) existing.value = newEffect.value;
+                if (newEffect.multiplier > existing.multiplier) existing.multiplier = newEffect.multiplier;
+                if (newEffect.hitChanceMod < existing.hitChanceMod) existing.hitChanceMod = newEffect.hitChanceMod;
+
+                Debug.Log($"<color=cyan>Odœwie¿ono czas trwania statusu {existing.effectName} do {existing.duration} rund!</color>");
             }
         }
         else
         {
-            activeStatuses.Add(newEffect);
+            // --- FIX: Kopiujemy WSZYSTKO, ³¹cznie z obrazkiem! ---
+            StatusEffect clonedEffect = new StatusEffect
+            {
+                effectName = newEffect.effectName,
+                type = newEffect.type,
+                duration = newEffect.duration,
+                remainingHits = newEffect.remainingHits,
+                value = newEffect.value,
+                multiplier = newEffect.multiplier,
+                hitChanceMod = newEffect.hitChanceMod,
+
+                // Tego brakowa³o! Kopiujemy ikonkê, ¿eby UI mia³o co narysowaæ:
+                icon = newEffect.icon
+            };
+
+            // Dodajemy naszego klona do krwi postaci
+            activeStatuses.Add(clonedEffect);
         }
+
         RefreshStatusUI();
+    }
+
+    public int GetCombatAPReduction()
+    {
+        int reduction = 0;
+        foreach (var s in activeStatuses)
+        {
+            // Sprawdzamy, które statusy obni¿aj¹ PA
+            if (s.type == StatusType.Freeze || s.type == StatusType.Blindness)
+            {
+                reduction += s.value; // Pobieramy 'effectValue' z poziomu skilla!
+            }
+        }
+        return reduction;
     }
 
     public int GetCombatPhysicalArmor()
@@ -410,6 +498,7 @@ public class Combatant : MonoBehaviour
         {
             if (s.type == StatusType.Blessing) res += s.value; // Modlitwa dodaje Obronê Magiczn¹!
             if (s.type == StatusType.Fury) res -= s.value;
+            if (s.type == StatusType.VoodooCurse) res -= s.value;
         }
         return res;
     }
@@ -419,10 +508,12 @@ public class Combatant : MonoBehaviour
         float mult = 1.0f;
         foreach (var s in activeStatuses)
         {
-            // ZAMIAST na sztywno "+1.5f", dodajemy to, co wpisa³eœ w 'Effect Multiplier'!
             if (s.type == StatusType.Fury) mult += s.multiplier;
+
+            // --- TRUCIZNA: Zadajesz o 30% mniejsze obra¿enia! ---
+            if (s.type == StatusType.Poison) mult += s.multiplier;
         }
-        return mult;
+        return Mathf.Max(0.1f, mult); // Zabezpieczenie, ¿eby nie leczyæ wroga ujemnym dmg
     }
 
     public float GetCombatHitChanceMultiplier()
@@ -436,7 +527,16 @@ public class Combatant : MonoBehaviour
             {
                 mult *= (1f + (s.hitChanceMod / 100f));
             }
+
+            if (s.type == StatusType.Blindness)
+            {
+                mult *= (1f + (s.hitChanceMod / 100f));
+            }
         }
         return mult;
     }
+
+
+
+
 }

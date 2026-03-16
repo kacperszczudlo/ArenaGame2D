@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
+  m_Name: Zatruta_strzala
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "Zatruta strza\u0142a"
+  icon: {fileID: 21300000, guid: 95916d24a5a199b4abc0cbff6abca015, type: 3}
+  category: 3
+  projectilePrefab: {fileID: 4052815569465071598, guid: 5e40f3c3b43bdbf4d87b4a7d24039cc9, type: 3}
+  projectileColor: {r: 0.42779446, g: 1, b: 0, a: 1}
+  animTriggerName: Attack1
+  showCenterVFX: 0
+  effects:
+  - {fileID: 11400000, guid: 40a302503607bfa40b829c51eea3464b, type: 2}
+  isPassive: 0
+  strengthWeight: 0
+  agilityWeight: 0
+  knowledgeWeight: 0
+  powerWeight: 0
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    requiredCharacterLevel: 0
+    staminaCost: 0
+    manaCost: 0
+    damageMultiplier: 0
+    hitChanceBonus: 0
+    statusEffectChance: 62.6
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 30
+    effectDuration: 3
+    effectMultiplier: -0.5
+    effectHitChanceMod: 0

@@ -32,7 +32,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("UI Walki")]
     public TMPro.TextMeshProUGUI roundText;
-    private int currentRound = 1;
+    public int currentRound = 1;
+    public static BattleManager Instance;
 
     private Vector3 playerOriginalPos;
     private Vector3 enemyOriginalPos;
@@ -44,6 +45,11 @@ public class BattleManager : MonoBehaviour
 
         // --- NOWOŒÆ: Wywo³ujemy zrzucenie postaci na ring! ---
         SpawnCombatants();
+    }
+    void Awake()
+    {
+        // 3. Przypisz instancjê przy starcie
+        Instance = this;
     }
 
     void SpawnCombatants()
@@ -102,11 +108,11 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator ExecuteTurnRoutine()
     {
-        
 
-        player.ProcessStatuses();
-        enemy.ProcessStatuses();
-        yield return new WaitForSeconds(0.8f);
+
+        yield return StartCoroutine(player.ProcessStatusesRoutine());
+        yield return StartCoroutine(enemy.ProcessStatusesRoutine());
+        yield return new WaitForSeconds(0.4f);
 
         if (defenseMeleeUI != null) player.defenseMeleePA = defenseMeleeUI.currentPA;
         if (defenseRangedUI != null) player.defenseRangedPA = defenseRangedUI.currentPA;
@@ -175,11 +181,21 @@ public class BattleManager : MonoBehaviour
             int mCost = levelData?.manaCost ?? 0;
             int sCost = levelData?.staminaCost ?? 0;
 
-            bool hasResources = action.actor.currentMana >= mCost && action.actor.currentStamina >= sCost;
+            // --- FIX TRUCIZNY: SPRAWDZAMY KARÊ PRZED ATAKIEM ---
+            int poisonPenalty = 0;
+            StatusEffect poison = action.actor.activeStatuses.Find(s => s.type == StatusType.Poison);
+            if (poison != null)
+            {
+                poisonPenalty = poison.value; // Pobieramy karê z trucizny (np. 30)
+            }
+
+            // Mened¿er sprawdza, czy gracz ma zasoby na koszt bazowy + karê z trucizny!
+            bool hasResources = action.actor.currentMana >= (mCost + poisonPenalty) && action.actor.currentStamina >= (sCost + poisonPenalty);
 
             if (!hasResources)
             {
                 action.actor.ShowFloatingText("Brak zasobów!", DamagePopup.PopupType.Miss);
+                // Jeœli to gracz nie ma many, kó³ko w UI robi siê czerwone/szare - tu zablokowaliœmy mu turê!
                 yield return new WaitForSeconds(0.8f);
             }
             else
@@ -207,8 +223,32 @@ public class BattleManager : MonoBehaviour
 
                 // ATAK
                 action.actor.PlayAttackAnimation(skillData.animTriggerName);
-                yield return new WaitForSeconds(0.5f); // <--- ZWIÊKSZ TO, JEŒLI POTRZEBUJESZ D£U¯SZEJ PAUZY NA ANIMACJE
 
+                // --- NOWOŒÆ: OBS£UGA STRZA£ I POCISKÓW ---
+                // Sprawdzamy, czy skill ma przypisan¹ strza³ê (nie jest puste okienko w Inspektorze)
+                if (skillData.projectilePrefab != null)
+                {
+                    // Czekamy 0.4 sekundy, ¿eby zgraæ to z animacj¹ wystrza³u z ³uku (mo¿esz to modyfikowaæ!)
+                    yield return new WaitForSeconds(0.4f);
+
+                    // Tworzymy strza³ê na scenie
+                    GameObject projGo = Instantiate(skillData.projectilePrefab);
+                    Projectile projScript = projGo.GetComponent<Projectile>();
+
+                    if (projScript != null)
+                    {
+                        // WYSTRZA£: Mened¿er PAUZUJE bitwê, dopóki strza³a nie doleci do klatki piersiowej wroga!
+                        float arrowSpeed = 25f; // Szybkoœæ strza³y
+                        yield return StartCoroutine(projScript.FlyToTarget(action.actor.centerSpawnPoint.position, action.target.centerSpawnPoint.position, skillData.projectileColor, arrowSpeed));
+                    }
+                }
+                else
+                {
+                    // Zwyk³y atak (np. miecz, sypanie piachem) - stara, sztywna pauza na animacjê
+                    yield return new WaitForSeconds(0.5f);
+                }
+
+                // OBLICZANIE OBRA¯EÑ (Teraz dzieje siê to DOPIERO w momencie uderzenia strza³y/miecza!)
                 AttackResult result = DamageCalculator.ProcessAttack(action.actor, action.target, action.skill, action.paInvested);
 
                 if (result.isHit)
@@ -217,10 +257,33 @@ public class BattleManager : MonoBehaviour
                     if (skillData.showCenterVFX) mainTarget.PlaySkillEffect(skillData.icon);
 
                     if (skillData.category == SkillCategory.PositiveCharm)
+                    {
                         action.actor.Heal(result.damageDealt, result.chanceText);
+                    }
                     else
+                    {
+                        // 1. G£ÓWNY CEL DOSTAJE OBRA¯ENIA
                         action.target.TakeDamage(result.damageDealt, result.isCritical, result.chanceText, false, skillData.category);
 
+                        // --- 2. TARCZA OGNIA: ODBICIE RYKOSZETU! ---
+                        // Sprawdzamy czy cel uderzenia mia³ na sobie Tarczê Ognia
+                        StatusEffect fireShield = action.target.activeStatuses.Find(s => s.type == StatusType.FireShield);
+
+                        // Jeœli ma tarczê i w ogóle dosta³ jakieœ obra¿enia
+                        if (fireShield != null && result.damageDealt > 0)
+                        {
+                            // Liczymy odbicie
+                            int reflectedDamage = Mathf.RoundToInt(result.damageDealt * fireShield.multiplier);
+                            if (reflectedDamage > 0)
+                            {
+                                // 3. ATAKUJ¥CY DOSTAJE RYKOSZETEM (z u¿yciem poprawnej nazwy CriticalDamage!)
+                                action.actor.TakeDamage(reflectedDamage, false, "", true, SkillCategory.RangedMagic);
+                                action.actor.ShowFloatingText($"Odbicie: {reflectedDamage}", DamagePopup.PopupType.CriticalDamage);
+                            }
+                        }
+                    }
+
+                    // --- ODPALANIE EFEKTÓW (Nak³adanie statusów itp.) ---
                     float baseChance = levelData != null ? levelData.statusEffectChance : 100f;
                     float finalChance = (skillData.category == SkillCategory.PositiveCharm)
                         ? (100f * result.hitChanceMultiplier)
@@ -230,7 +293,9 @@ public class BattleManager : MonoBehaviour
                     {
                         if (effect != null)
                         {
-                            effect.Execute(action.actor, action.target, result, finalChance, levelData, skillData.icon);
+                            // FIX: U¿ywamy 'mainTarget' zamiast 'action.target'! 
+                            // Dziêki temu buffy trafiaj¹ na rzucaj¹cego, a kl¹twy na wroga.
+                            effect.Execute(action.actor, mainTarget, result, finalChance, levelData, skillData.icon);
                         }
                     }
                 }
@@ -294,6 +359,7 @@ public class BattleManager : MonoBehaviour
         // Odzyskiwanie zasobów na pocz¹tku rundy (5%)
         player.RegenerateResources();
         enemy.RegenerateResources();
+        RefreshPlayerAP();
 
         currentRound++;
         UpdateRoundUI();
@@ -311,44 +377,114 @@ public class BattleManager : MonoBehaviour
         }
         character.position = targetPos;
     }
+
+
+    
     // --- FUNKCJA ZAKOÑCZENIA BITWY ---
     IEnumerator EndBattleRoutine(bool playerWon)
     {
-        // Czekamy 2 sekundy, ¿eby gracz nacieszy³ siê widokiem pokonanego wroga (lub pop³aka³ nad swoim cia³em)
         yield return new WaitForSeconds(2.0f);
+        EnemyData defeatedEnemy = GameManager.Instance.currentEnemyToFight;
 
         if (playerWon)
         {
-            Debug.Log("<color=green>ZWYCIÊSTWO! Nagrody wêdruj¹ do worka.</color>");
-            EnemyData defeatedEnemy = GameManager.Instance.currentEnemyToFight;
+            Debug.Log("<color=green>ZWYCIÊSTWO!</color>");
 
-            // 1. Dodajemy nagrody do tymczasowego "worka" w GameManagerze
-            if (defeatedEnemy != null)
+            // SPRAWDZAMY CZY TO TURNIEJ CZY MAPA:
+            if (GameManager.Instance.isTournamentBattle)
             {
-                GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
-                GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+                // ZASADY TURNIEJU: £upy id¹ do worka (ryzykujemy dalej)
+                if (defeatedEnemy != null)
+                {
+                    GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
+                    GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+                }
+                GameManager.Instance.currentTournamentIndex++;
             }
-
-            // 2. Przechodzimy do kolejnego etapu turnieju
-            GameManager.Instance.currentTournamentIndex++;
+            else
+            {
+                // ZASADY MAPY (Random Encounter): £upy id¹ od razu na sta³e do kieszeni!
+                if (defeatedEnemy != null)
+                {
+                    GameManager.Instance.globalGold += defeatedEnemy.goldReward;
+                    PlayerDataManager.Instance.currentExperience += defeatedEnemy.expReward;
+                }
+            }
         }
         else
         {
-            Debug.Log("<color=red>PORA¯KA! Ale zachowujesz zebrane wczeœniej ³upy!</color>");
+            Debug.Log("<color=red>PORA¯KA!</color>");
 
-            GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
+            if (GameManager.Instance.isTournamentBattle)
+            {
+                // ZASADY TURNIEJU: Wrzucamy to co mieliœmy w worku do g³ównej puli i resetujemy turniej
+                GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
+                PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
 
-            // --- NOWOŒÆ: Przekazujemy Exp do PlayerDataManagera! ---
-            PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
-
-            GameManager.Instance.pendingGold = 0;
-            GameManager.Instance.pendingXP = 0;
-            GameManager.Instance.currentTournamentIndex = 0;
+                GameManager.Instance.pendingGold = 0;
+                GameManager.Instance.pendingXP = 0;
+                GameManager.Instance.currentTournamentIndex = 0;
+            }
+            else
+            {
+                // ZASADY MAPY: Gracz zgin¹³ w lesie. 
+                // Mo¿esz tu w przysz³oœci dodaæ karê (np. utrata 10% z³ota) albo po prostu go odrodziæ.
+                Debug.Log("Zgin¹³eœ na mapie! Zostajesz przeniesiony do bezpiecznego miejsca.");
+            }
         }
 
-        // Pakujemy walizki i wracamy do Lobby!
-        SceneManager.LoadScene("ArenaLobby");
+        // --- MAGIA: Wracamy tam, sk¹d przyszliœmy! ---
+        SceneManager.LoadScene(GameManager.Instance.sceneToLoadAfterBattle);
     }
+    public void RefreshPlayerAP()
+    {
+        if (CombatAPManager.Instance == null) return;
+
+        // 1. Obliczamy nowy, maksymalny limit PA (Bazowe - Kara z debuffów)
+        int apPenalty = player.GetCombatAPReduction();
+        int baseMaxAP = CombatAPManager.Instance.maxAP; // Pobieramy oryginalne 15 (lub ile tam masz)
+        int effectiveMaxAP = Mathf.Max(0, baseMaxAP - apPenalty);
+
+        // 2. Liczymy, ile gracz ma obecnie "naklikane" w UI (Ataki + Obrony)
+        int allocatedAP = 0;
+        foreach (var slot in attackSlots) allocatedAP += slot.currentPA;
+        if (defenseMeleeUI != null) allocatedAP += defenseMeleeUI.currentPA;
+        if (defenseRangedUI != null) allocatedAP += defenseRangedUI.currentPA;
+        if (defenseMentalUI != null) allocatedAP += defenseMentalUI.currentPA;
+
+        // 3. Jeœli masz rozdane wiêcej ni¿ wynosi nowy limit - KRADNIEMY!
+        int toRemove = allocatedAP - effectiveMaxAP;
+        if (toRemove > 0)
+        {
+            // A) Kradniemy ze skilli ataku (od prawego do lewego)
+            for (int j = attackSlots.Count - 1; j >= 0; j--)
+            {
+                var slot = attackSlots[j];
+                while (slot.currentPA > 0 && toRemove > 0)
+                {
+                    slot.currentPA--;
+                    toRemove--;
+                    slot.UpdateVisuals(); // Gasi kó³ko na ekranie!
+                }
+                if (toRemove <= 0) break;
+            }
+
+            // B) Jeœli dalej trzeba ukraœæ (kó³ka ataku puste), kradniemy z obron! (Umys³ -> Dystans -> Zwarcie)
+            if (toRemove > 0 && defenseMentalUI != null) { int drain = Mathf.Min(defenseMentalUI.currentPA, toRemove); defenseMentalUI.currentPA -= drain; toRemove -= drain; defenseMentalUI.UpdateVisuals(); }
+            if (toRemove > 0 && defenseRangedUI != null) { int drain = Mathf.Min(defenseRangedUI.currentPA, toRemove); defenseRangedUI.currentPA -= drain; toRemove -= drain; defenseRangedUI.UpdateVisuals(); }
+            if (toRemove > 0 && defenseMeleeUI != null) { int drain = Mathf.Min(defenseMeleeUI.currentPA, toRemove); defenseMeleeUI.currentPA -= drain; toRemove -= drain; defenseMeleeUI.UpdateVisuals(); }
+
+            allocatedAP = effectiveMaxAP; // Zrównaliœmy do limitu
+            Debug.Log($"<color=orange>Kl¹twa Œlepoty/Mrozu brutalnie odciê³a przypisane PA!</color>");
+        }
+
+        // 4. Przypisujemy wolne punkty z powrotem do puli Gracza (To naprawia blokadê klikania!)
+        CombatAPManager.Instance.currentAP = effectiveMaxAP - allocatedAP;
+
+        // 5. Aktualizujemy tekst na œrodku ekranu!
+        CombatAPManager.Instance.UpdateAPText(effectiveMaxAP);
+    }
+
 }
 
 public class CombatAction

@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
+  m_Name: "Ob\u0142\u0119d"
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "Kl\u0105twa ob\u0142\u0119du"
+  icon: {fileID: 21300000, guid: 371f3a320df317c45ad884dce273f66d, type: 3}
+  category: 1
+  projectilePrefab: {fileID: 0}
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
+  animTriggerName: Attack2
+  showCenterVFX: 1
+  effects:
+  - {fileID: 11400000, guid: bf6e26b13bb11c24788a49dbb8069192, type: 2}
+  isPassive: 0
+  strengthWeight: 0
+  agilityWeight: 0
+  knowledgeWeight: 0
+  powerWeight: 0
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    requiredCharacterLevel: 1
+    staminaCost: 1
+    manaCost: 1
+    damageMultiplier: 0
+    hitChanceBonus: 1
+    statusEffectChance: 100
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 0
+    effectDuration: 6
+    effectMultiplier: 0
+    effectHitChanceMod: 50
