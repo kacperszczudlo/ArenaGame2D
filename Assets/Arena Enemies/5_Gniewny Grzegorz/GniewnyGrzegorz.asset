@@ -24,7 +24,7 @@ MonoBehaviour:
   knowledge: 10
   power: 10
   physicalArmor: 50
-  magicResistance: 100
+  magicResistance: 50
   critChance: 2
   weaponDamage: 60
   meleeStoppingDistance: 2.2
