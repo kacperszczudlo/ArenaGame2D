@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: Szambelan
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Stefan
+  avatarImage: {fileID: 0}
+  enemyVisualPrefab: {fileID: 1999682254439131401, guid: 6c84b7ba735289d43a5e0c0488fcd130, type: 3}
+  level: 6
+  maxHP: 320
+  maxMana: 300
+  maxStamina: 300
+  strength: 20
+  agility: 25
+  knowledge: 10
+  power: 10
+  physicalArmor: 4
+  magicResistance: 0
+  critChance: 2
+  weaponDamage: 26
+  meleeStoppingDistance: 1.5
+  enemySkills:
+  - data: {fileID: 11400000, guid: 5e990651103baab499d088a0b6214afd, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: d68e9c9650adef2429254044d4d97778, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  aiBrain: {fileID: 11400000, guid: d4b499c45d8a24b468132d4da70c7f86, type: 2}
+  goldReward: 0
+  expReward: 0
