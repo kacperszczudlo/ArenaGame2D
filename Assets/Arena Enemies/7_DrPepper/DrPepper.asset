@@ -35,10 +35,10 @@ MonoBehaviour:
   - data: {fileID: 11400000, guid: 9e1762924ff955944b19f9c76e300d7d, type: 2}
     currentLevel: 1
     isUnlocked: 1
-  - data: {fileID: 11400000, guid: 9537c8bba2fc60a4d9704db19a11d9fe, type: 2}
+  - data: {fileID: 11400000, guid: da0bda90156d3d5468ea156205e5b4d7, type: 2}
     currentLevel: 1
     isUnlocked: 1
-  - data: {fileID: 11400000, guid: da0bda90156d3d5468ea156205e5b4d7, type: 2}
+  - data: {fileID: 11400000, guid: 9537c8bba2fc60a4d9704db19a11d9fe, type: 2}
     currentLevel: 1
     isUnlocked: 1
   aiBrain: {fileID: 11400000, guid: 4eeb71b48e98c7c4d8a67f8c3f405e20, type: 2}
