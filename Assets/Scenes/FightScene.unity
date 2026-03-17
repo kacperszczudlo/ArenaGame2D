@@ -254,38 +254,38 @@ PrefabInstance:
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentEnemyToFight
       value: 
-      objectReference: {fileID: 11400000, guid: 1856a78ad8438d84ea1a0676227e6f4b, type: 2}
+      objectReference: {fileID: 11400000, guid: f3daf5bbc1a39e249adf86b5704cc962, type: 2}
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentPlayerPrefab
       value: 
       objectReference: {fileID: 5169767090919104140, guid: 878db1372efdcc24b878521734ac7f38, type: 3}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: baseMaxHP
-      value: 420
+      value: 470
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusMaxHP
-      value: 400
+      value: 670
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: baseAgility
-      value: 30
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: baseStrength
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
-      propertyPath: bonusAgility
       value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: bonusAgility
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentLevel
-      value: 12
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: weaponDamage
-      value: 53
+      value: 71
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusStrength
@@ -293,15 +293,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusMaxStamina
-      value: 120
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusPhysicalArmor
-      value: 16
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: bonusMagicResistance
-      value: 16
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[0].currentLevel
@@ -309,11 +309,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[1].currentLevel
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[2].currentLevel
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[3].currentLevel
@@ -322,6 +322,10 @@ PrefabInstance:
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[4].currentLevel
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: unlockedSkills.Array.data[5].currentLevel
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5591046114039923796, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: m_Name
