@@ -24,15 +24,15 @@ MonoBehaviour:
   isPassive: 0
   strengthWeight: 0
   agilityWeight: 0
-  knowledgeWeight: 1
-  powerWeight: 2
+  knowledgeWeight: 0.6
+  powerWeight: 1.4
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
-    staminaCost: 1
-    manaCost: 1
-    damageMultiplier: 1
+    requiredCharacterLevel: 25
+    staminaCost: 24
+    manaCost: 24
+    damageMultiplier: 1.1
     hitChanceBonus: 1
     statusEffectChance: 100
     selfCastDifficulty: 0

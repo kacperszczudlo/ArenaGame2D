@@ -35,7 +35,7 @@ MonoBehaviour:
     damageMultiplier: 0
     hitChanceBonus: 0
     statusEffectChance: 100
-    selfCastDifficulty: 20
+    selfCastDifficulty: 120
     effectCharges: 0
     effectValue: 0
     effectDuration: 6
