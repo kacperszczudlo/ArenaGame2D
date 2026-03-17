@@ -39,7 +39,7 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 10
     effectDuration: 5
-    effectMultiplier: 0.2
+    effectMultiplier: 0.5
     effectHitChanceMod: -10
   - levelName: 2
     requiredCharacterLevel: 13
@@ -52,7 +52,7 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 30
     effectDuration: 5
-    effectMultiplier: 0.3
+    effectMultiplier: 0.6
     effectHitChanceMod: -12
   - levelName: 3
     requiredCharacterLevel: 14
@@ -65,7 +65,7 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 40
     effectDuration: 4
-    effectMultiplier: 0.4
+    effectMultiplier: 0.7
     effectHitChanceMod: -14
   - levelName: 4
     requiredCharacterLevel: 15
@@ -78,7 +78,7 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 50
     effectDuration: 4
-    effectMultiplier: 0.5
+    effectMultiplier: 0.8
     effectHitChanceMod: -16
   - levelName: 5
     requiredCharacterLevel: 16
@@ -91,7 +91,7 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 60
     effectDuration: 3
-    effectMultiplier: 0.6
+    effectMultiplier: 0.9
     effectHitChanceMod: -18
   - levelName: 6
     requiredCharacterLevel: 17
@@ -104,7 +104,7 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 80
     effectDuration: 2
-    effectMultiplier: 0.8
+    effectMultiplier: 1
     effectHitChanceMod: -20
   - levelName: 7
     requiredCharacterLevel: 18
@@ -117,5 +117,5 @@ MonoBehaviour:
     effectCharges: 0
     effectValue: 100
     effectDuration: 1
-    effectMultiplier: 1
+    effectMultiplier: 1.2
     effectHitChanceMod: -22

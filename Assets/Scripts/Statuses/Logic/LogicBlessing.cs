@@ -10,6 +10,7 @@ public class LogicBlessing : StatusLogic
         if (effect.remainingHits > 0 && incomingDamage > 0)
         {
             effect.remainingHits--;
+            owner.dodgedLastAttack = true;
             owner.ShowFloatingText("Cudowny Unik!", DamagePopup.PopupType.Miss);
             if (effect.icon != null) owner.PlaySkillEffect(effect.icon);
             return 0;

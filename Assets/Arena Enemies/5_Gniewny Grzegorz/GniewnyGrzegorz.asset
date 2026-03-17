@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: GniewnyGrzegorz
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Gniewny Grzegorz
+  avatarImage: {fileID: 8215116142658401957, guid: ebb5dbc7e110642458d3e93afc1bc2b3, type: 3}
+  enemyVisualPrefab: {fileID: 4026878321933279897, guid: ea6eedaae273b284c8fb731edd16c658, type: 3}
+  level: 18
+  maxHP: 2500
+  maxMana: 1000
+  maxStamina: 1000
+  strength: 40
+  agility: 160
+  knowledge: 10
+  power: 10
+  physicalArmor: 50
+  magicResistance: 100
+  critChance: 2
+  weaponDamage: 60
+  meleeStoppingDistance: 2.2
+  enemySkills:
+  - data: {fileID: 11400000, guid: 51c43c4343b6b2c4f8fb4367407184f0, type: 2}
+    currentLevel: 7
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 913e85fa4a03b374088df583a1418864, type: 2}
+    currentLevel: 7
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: b05eadd42e973914f9fb9aa6c69c50b2, type: 2}
+    currentLevel: 5
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 18b94cdaeb0d56d4fbefaebfda59d6f3, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 8c2b10769cda3ad49880d14c981075fd, type: 2}
+    currentLevel: 2
+    isUnlocked: 1
+  aiBrain: {fileID: 11400000, guid: 0906274077989b146abf14c288bf0c54, type: 2}
+  goldReward: 100
+  expReward: 100

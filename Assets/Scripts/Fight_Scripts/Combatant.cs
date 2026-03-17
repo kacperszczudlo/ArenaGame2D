@@ -83,6 +83,8 @@ public class Combatant : MonoBehaviour
     private float lastPopupTime;
     private int popupStackCount;
 
+    public bool dodgedLastAttack = false; // Pamiêta, czy uniknêliœmy ostatniego uderzenia
+
     // Funkcja do czyszczenia obrony po zakoñczeniu rundy
     public void ResetDefensePA()
     {
@@ -123,10 +125,10 @@ public class Combatant : MonoBehaviour
         maxHP = data.TotalMaxHP;
         currentHP = maxHP;
 
-        maxMana = data.baseMaxMana;
+        maxMana = data.TotalMaxMana;
         currentMana = maxMana;
 
-        maxStamina = data.baseMaxStamina;
+        maxStamina = data.TotalMaxStamina;
         currentStamina = maxStamina;
 
         strength = data.TotalStrength;
@@ -281,6 +283,7 @@ public class Combatant : MonoBehaviour
     // Zmieniamy sygnaturê, by przyjmowa³a isDot i category
     public void TakeDamage(int damage, bool isCritical = false, string chanceText = "", bool isDot = false, SkillCategory category = SkillCategory.MeleePhysical)
     {
+        dodgedLastAttack = false;
         int finalDamage = damage;
 
         // 1. Przepuszczamy obra¿enia przez statusy (Tarcza, Modlitwa)
