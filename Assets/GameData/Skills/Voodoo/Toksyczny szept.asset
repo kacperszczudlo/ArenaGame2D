@@ -41,3 +41,16 @@ MonoBehaviour:
     effectDuration: 5
     effectMultiplier: -0.5
     effectHitChanceMod: 0
+  - levelName: 2
+    requiredCharacterLevel: 55
+    staminaCost: 0
+    manaCost: 60
+    damageMultiplier: 0
+    hitChanceBonus: 1.2
+    statusEffectChance: 100
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 20
+    effectDuration: 3
+    effectMultiplier: -0.3
+    effectHitChanceMod: 0

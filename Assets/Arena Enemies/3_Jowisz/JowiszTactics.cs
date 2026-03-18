@@ -40,7 +40,7 @@ public class AIBrain_Mage : EnemyAIBrain
 
             // 1. Akcja: Mag rzuca na SIEBIE buffa
             // Zauwa¿, ¿e da³em target = me, choæ BattleManager i tak by to sam poprawi³!
-            actions.Add(new CombatAction { actor = me, target = me, skill = buffSkill, paInvested = 1, originalIndex = actionCounter++ });
+            actions.Add(new CombatAction { actor = me, target = me, skill = buffSkill, paInvested = 6, originalIndex = actionCounter++ });
 
             // 2 i 3. Akcja: Mag poprawia dwoma atakami we wroga
             actions.Add(new CombatAction { actor = me, target = player, skill = attackSkill, paInvested = 5, originalIndex = actionCounter++ });

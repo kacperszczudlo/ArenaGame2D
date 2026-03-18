@@ -29,11 +29,11 @@ MonoBehaviour:
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
-    staminaCost: 1
-    manaCost: 1
+    requiredCharacterLevel: 55
+    staminaCost: 0
+    manaCost: 60
     damageMultiplier: 0
-    hitChanceBonus: 1
+    hitChanceBonus: 1.2
     statusEffectChance: 100
     selfCastDifficulty: 0
     effectCharges: 0
