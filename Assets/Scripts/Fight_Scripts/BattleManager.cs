@@ -228,8 +228,11 @@ public class BattleManager : MonoBehaviour
                 // Sprawdzamy, czy skill ma przypisan¹ strza³ê (nie jest puste okienko w Inspektorze)
                 if (skillData.projectilePrefab != null)
                 {
-                    // Czekamy 0.4 sekundy, ¿eby zgraæ to z animacj¹ wystrza³u z ³uku (mo¿esz to modyfikowaæ!)
-                    yield return new WaitForSeconds(0.4f);
+                    // --- FIX NA DELAY: Jeœli postaæ leczy/buffuje sam¹ siebie, nie czekamy! ---
+                    float prepDelay = (action.actor == action.target) ? 0.05f : 0.4f;
+                    yield return new WaitForSeconds(prepDelay);
+
+                    
 
                     // Tworzymy strza³ê na scenie
                     GameObject projGo = Instantiate(skillData.projectilePrefab);
@@ -245,7 +248,9 @@ public class BattleManager : MonoBehaviour
                 else
                 {
                     // Zwyk³y atak (np. miecz, sypanie piachem) - stara, sztywna pauza na animacjê
-                    yield return new WaitForSeconds(0.5f);
+                    // --- FIX NA DELAY: B³yskawiczne efekty, gdy rzucamy buffa/leczenie na siebie! ---
+                    float impactDelay = (action.actor == action.target) ? 0.05f : 0.5f;
+                    yield return new WaitForSeconds(impactDelay);
                 }
 
                 // OBLICZANIE OBRA¯EÑ (Teraz dzieje siê to DOPIERO w momencie uderzenia strza³y/miecza!)
@@ -355,6 +360,9 @@ public class BattleManager : MonoBehaviour
         }
         player.ResetDefensePA();
         enemy.ResetDefensePA();
+        // --- ZAPISYWANIE HP NA KONIEC RUNDY ---
+        player.hpAtRoundEnd = player.currentHP;
+        enemy.hpAtRoundEnd = enemy.currentHP;
 
         // Odzyskiwanie zasobów na pocz¹tku rundy (5%)
         player.RegenerateResources();

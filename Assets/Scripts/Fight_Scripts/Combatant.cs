@@ -84,6 +84,7 @@ public class Combatant : MonoBehaviour
     private int popupStackCount;
 
     public bool dodgedLastAttack = false; // Pamiêta, czy uniknêliœmy ostatniego uderzenia
+    public int hpAtRoundEnd = 0;
 
     // Funkcja do czyszczenia obrony po zakoñczeniu rundy
     public void ResetDefensePA()
@@ -276,7 +277,7 @@ public class Combatant : MonoBehaviour
         {
             // Jeœli leczenie wynosi 0 (czyli rzucamy czysty Buff, np. Tarcza, Furia, Modlitwa)
             // Zamiast g³upiego "+0", wyœwietlamy fajny tekst!
-            ShowFloatingText("Wzmocnienie!", DamagePopup.PopupType.Heal, icon, chanceText);
+            ShowFloatingText("", DamagePopup.PopupType.Heal, icon, chanceText);
         }
     }
 

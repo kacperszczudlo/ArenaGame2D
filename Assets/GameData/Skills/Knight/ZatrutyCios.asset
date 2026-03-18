@@ -36,7 +36,7 @@ MonoBehaviour:
     hitChanceBonus: 1
     statusEffectChance: 50
     selfCastDifficulty: 0
-    effectCharges: 2
+    effectCharges: 3
     effectValue: 0
     effectDuration: 0
     effectMultiplier: 0.1
@@ -49,7 +49,7 @@ MonoBehaviour:
     hitChanceBonus: 1.02
     statusEffectChance: 55
     selfCastDifficulty: 0
-    effectCharges: 2
+    effectCharges: 3
     effectValue: 0
     effectDuration: 0
     effectMultiplier: 0.1
@@ -62,7 +62,7 @@ MonoBehaviour:
     hitChanceBonus: 1.04
     statusEffectChance: 60
     selfCastDifficulty: 0
-    effectCharges: 2
+    effectCharges: 3
     effectValue: 0
     effectDuration: 0
     effectMultiplier: 0.1
