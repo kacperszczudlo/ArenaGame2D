@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5841686842a21254987ec26c5c8e4218, type: 3}
   m_Name: Eff_Krwawienie_z_nosa
   m_EditorClassIdentifier: Assembly-CSharp::EffectApplyStatus
-  effectName: Podpalenie
+  effectName: Krew z nosa
   type: 0
   duration: 2
   value: 20

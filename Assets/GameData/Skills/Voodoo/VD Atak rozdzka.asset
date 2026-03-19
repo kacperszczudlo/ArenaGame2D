@@ -31,8 +31,8 @@ MonoBehaviour:
     requiredCharacterLevel: 55
     staminaCost: 50
     manaCost: 50
-    damageMultiplier: 1.8
-    hitChanceBonus: 1.3
+    damageMultiplier: 2.6
+    hitChanceBonus: 2
     statusEffectChance: 0
     selfCastDifficulty: 0
     effectCharges: 0

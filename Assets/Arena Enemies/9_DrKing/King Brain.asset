@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 451b729d29cedb74baae027213a43a0c, type: 3}
   m_Name: King Brain
   m_EditorClassIdentifier: Assembly-CSharp::AIBrain_King
-  forceTactic: 0
+  forceTactic: -1

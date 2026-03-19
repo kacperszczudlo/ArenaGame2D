@@ -51,6 +51,6 @@ MonoBehaviour:
     selfCastDifficulty: 0
     effectCharges: 0
     effectValue: 20
-    effectDuration: 3
+    effectDuration: 4
     effectMultiplier: -0.3
     effectHitChanceMod: 0

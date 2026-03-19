@@ -37,7 +37,7 @@ MonoBehaviour:
     statusEffectChance: 100
     selfCastDifficulty: 0
     effectCharges: 0
-    effectValue: 0
+    effectValue: 10
     effectDuration: 6
     effectMultiplier: 0
-    effectHitChanceMod: 50
+    effectHitChanceMod: 30
