@@ -86,8 +86,8 @@ public class AIBrain_King : EnemyAIBrain
             if (round == 1)
             {
                 // Rundy przygotowawcze: Spamuje wszystkim co brudne, by upewniæ siê, ¿e gracz ma wymagane debuffy!
-                actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 3, originalIndex = actionCounter++ });
-                actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 3, originalIndex = actionCounter++ });
+                actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 1, originalIndex = actionCounter++ });
+                actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 1, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 3, originalIndex = actionCounter++ });
 
                 actions.Add(new CombatAction { actor = me, target = player, skill = poisonAttack, paInvested = 3, originalIndex = actionCounter++ });
@@ -99,6 +99,8 @@ public class AIBrain_King : EnemyAIBrain
                 actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 3, originalIndex = actionCounter++ });
 
                 // Próba natychmiastowego mordu!
+                actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
+                actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
@@ -194,6 +196,7 @@ public class AIBrain_King : EnemyAIBrain
 
                 actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
+                actions.Add(new CombatAction { actor = me, target = player, skill = suddenDeath, paInvested = 6, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
 
                 // Opuszcza gardê
@@ -210,12 +213,14 @@ public class AIBrain_King : EnemyAIBrain
                     actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 4, originalIndex = actionCounter++ });
                     actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 4, originalIndex = actionCounter++ });
                     actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
 
                     me.defenseMeleePA = 1; me.defenseRangedPA = 1; me.defenseMentalPA = 1; 
                 }
@@ -228,7 +233,8 @@ public class AIBrain_King : EnemyAIBrain
                     {
                         Debug.Log($"<color=gray>{me.combatantName} (Wojownik): Uderza z cienia, truje i poprawia mieczem!</color>");
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 4, originalIndex = actionCounter++ });
-                        actions.Add(new CombatAction { actor = me, target = player, skill = poisonAttack, paInvested = 3, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = poisonAttack, paInvested = 2, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = poisonAttack, paInvested = 2, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
 
@@ -237,7 +243,8 @@ public class AIBrain_King : EnemyAIBrain
                     else if (subTactic == 1)
                     {
                         Debug.Log($"<color=gray>{me.combatantName} (Wojownik): Próbuje oœlepiæ i wyprowadza mordercze ciosy!</color>");
-                        actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 4, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 2, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 2, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = charmBleed, paInvested = 3, originalIndex = actionCounter++ });
@@ -248,8 +255,9 @@ public class AIBrain_King : EnemyAIBrain
                     {
                         Debug.Log($"<color=gray>{me.combatantName} (Wojownik): Kruszy pancerz magiczny i mia¿d¿y fizycznie!</color>");
                         actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 6, originalIndex = actionCounter++ });
-                        actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
-                        actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 5, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 4, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 6, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 4, originalIndex = actionCounter++ });
 
                         me.defenseMeleePA = 1; me.defenseRangedPA = 1; me.defenseMentalPA = 1;
@@ -282,13 +290,14 @@ public class AIBrain_King : EnemyAIBrain
                     Debug.Log($"<color=magenta>{me.combatantName} (W³adca): £amie magiczn¹ barierê i wdziera siê do umys³u!</color>");
 
                     actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 4, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 6, originalIndex = actionCounter++ });
+
+
+                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
                     
-                    
-                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
 
                     // Os³oniêty przed magi¹, ignoruje uderzenia fizyczne
                     me.defenseMeleePA = 1; me.defenseRangedPA = 1; me.defenseMentalPA = 1;
@@ -301,9 +310,10 @@ public class AIBrain_King : EnemyAIBrain
                     if (subTactic == 0)
                     {
                         Debug.Log($"<color=magenta>{me.combatantName} (W³adca): Szepty cienia i magia krwi!</color>");
+                        actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 4, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 4, originalIndex = actionCounter++ });
-                        actions.Add(new CombatAction { actor = me, target = player, skill = charmBleed, paInvested = 4, originalIndex = actionCounter++ });
-                        actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 1, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = charmBleed, paInvested = 6, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 2, originalIndex = actionCounter++ });
                         
 
                         me.defenseMeleePA = 3; me.defenseRangedPA = 3; me.defenseMentalPA = 3;
@@ -323,8 +333,9 @@ public class AIBrain_King : EnemyAIBrain
                         Debug.Log($"<color=magenta>{me.combatantName} (W³adca): Oœlepia iluzj¹, po czym atakuje umys³!</color>");
                         actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 4, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 6, originalIndex = actionCounter++ });
-                        actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 5, originalIndex = actionCounter++ });
-                        
+                        actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 1, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 1, originalIndex = actionCounter++ });
+
 
                         me.defenseMeleePA = 1; me.defenseRangedPA = 1; me.defenseMentalPA = 1;
                     }
@@ -363,9 +374,13 @@ public class AIBrain_King : EnemyAIBrain
                     actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 4, originalIndex = actionCounter++ });
                     actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                     actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
-                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
-
+                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
+                    actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
                     // Ukryty w cieniu, trudny do trafienia z ³uku/magii dystansowej
                     me.defenseMeleePA = 1; me.defenseRangedPA = 1; me.defenseMentalPA = 1;
                 }
@@ -378,6 +393,10 @@ public class AIBrain_King : EnemyAIBrain
                     {
                         Debug.Log($"<color=green>{me.combatantName} (Cieñ): Oœlepia z ukrycia i rzuca sztyletami!</color>");
                         actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 4, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = accuracyDown, paInvested = 2, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = meleeAttack, paInvested = 3, originalIndex = actionCounter++ });
@@ -388,7 +407,10 @@ public class AIBrain_King : EnemyAIBrain
                     {
                         Debug.Log($"<color=green>{me.combatantName} (Cieñ): Kl¹twa na pancerz i morderczy deszcz cieni!</color>");
                         actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 4, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = magicArmorDown, paInvested = 2, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 6, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = mentalAttack, paInvested = 3, originalIndex = actionCounter++ });
 
@@ -397,8 +419,11 @@ public class AIBrain_King : EnemyAIBrain
                     else
                     {
                         Debug.Log($"<color=green>{me.combatantName} (Cieñ): Rozprowadza krwawienie i truciznê!</color>");
-                        actions.Add(new CombatAction { actor = me, target = player, skill = charmBleed, paInvested = 4, originalIndex = actionCounter++ });
+                        
                         actions.Add(new CombatAction { actor = me, target = player, skill = poisonAttack, paInvested = 4, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = poisonAttack, paInvested = 2, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = charmBleed, paInvested = 4, originalIndex = actionCounter++ });
+                        actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
                         actions.Add(new CombatAction { actor = me, target = player, skill = shadowAttack, paInvested = 5, originalIndex = actionCounter++ });
 
