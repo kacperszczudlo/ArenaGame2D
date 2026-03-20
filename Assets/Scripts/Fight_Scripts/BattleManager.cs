@@ -38,6 +38,9 @@ public class BattleManager : MonoBehaviour
     private Vector3 playerOriginalPos;
     private Vector3 enemyOriginalPos;
 
+    public UnityEngine.UI.Button startRoundButton; // Przeci¹gniesz tu przycisk z Unity
+    private bool isExecutingRound = false;
+
     void Start()
     {
         currentRound = 1;
@@ -96,8 +99,18 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void TestEndTurn()
+    // Funkcja podpiêta pod przycisk "Rozpocznij rundê"
+    public void OnStartRoundClicked()
     {
+        // 1. ZABEZPIECZENIE: Jeœli runda ju¿ trwa, zignoruj klikniêcie!
+        if (isExecutingRound) return;
+
+        isExecutingRound = true; // Zaznaczamy, ¿e weszliœmy do walki
+
+        // 2. Blokujemy przycisk fizycznie, ¿eby zszarza³
+        if (startRoundButton != null) startRoundButton.interactable = false;
+
+        // 3. Odpalamy nasz¹ potê¿n¹ korutynê walki
         StartCoroutine(ExecuteTurnRoutine());
     }
 
@@ -380,6 +393,9 @@ public class BattleManager : MonoBehaviour
 
         currentRound++;
         UpdateRoundUI();
+
+        isExecutingRound = false; // Zdejmujemy flagê
+        if (startRoundButton != null) startRoundButton.interactable = true;
     }
 
     IEnumerator MoveCharacter(Transform character, Vector3 targetPos, float duration)
