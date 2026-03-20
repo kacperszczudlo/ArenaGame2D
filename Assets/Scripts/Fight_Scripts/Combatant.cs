@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Combatant : MonoBehaviour
 {
+    [Header("Wygl¹d (Do efektu zamro¿enia)")]
+    public SpriteRenderer characterSprite; // Bêdziesz musia³ przeci¹gn¹æ tu grafikê z Unity!
+    private Color originalColor = Color.white;
+
     [Header("Podstawowe Informacje")]
     public string combatantName;
     public bool isPlayer;
@@ -85,6 +89,8 @@ public class Combatant : MonoBehaviour
 
     public bool dodgedLastAttack = false; // Pamiêta, czy uniknêliœmy ostatniego uderzenia
     public int hpAtRoundEnd = 0;
+
+    
 
     // Funkcja do czyszczenia obrony po zakoñczeniu rundy
     public void ResetDefensePA()
@@ -396,6 +402,9 @@ public class Combatant : MonoBehaviour
 
         activeStatuses.RemoveAll(s => StatusRegistry.GetLogic(s.type)?.IsExpired(s) ?? true);
         RefreshStatusUI();
+
+        bool isStillFrozen = activeStatuses.Exists(s => s.type == StatusType.DeepFreeze);
+        ToggleFreezeVisual(isStillFrozen);
     }
 
     public void RefreshStatusUI()
@@ -432,7 +441,7 @@ public class Combatant : MonoBehaviour
                 existing.remainingHits = newEffect.remainingHits;
                 existing.duration = newEffect.duration;
             }
-            else if (newEffect.type == StatusType.Freeze || newEffect.type == StatusType.Blindness || newEffect.type == StatusType.Poison || newEffect.type == StatusType.VoodooCurse)
+            else if (newEffect.type == StatusType.DeepFreeze || newEffect.type == StatusType.Freeze || newEffect.type == StatusType.Blindness || newEffect.type == StatusType.Poison || newEffect.type == StatusType.VoodooCurse)
             {
                 // --- NOWOŒÆ: KL¥TWY (MROZ, ŒLEPOTA, TRUCIZNA) ---
                 // Resetujemy czas trwania z powrotem do maksimum (np. do 3 rund)!
@@ -538,6 +547,15 @@ public class Combatant : MonoBehaviour
             }
         }
         return mult;
+    }
+
+    public void ToggleFreezeVisual(bool isFrozen)
+    {
+        if (characterSprite != null)
+        {
+            // Jeœli zamro¿ony -> lodowy b³êkit. Jeœli nie -> wraca do normy.
+            characterSprite.color = isFrozen ? new Color(0.4f, 0.7f, 1f, 1f) : originalColor;
+        }
     }
 
 

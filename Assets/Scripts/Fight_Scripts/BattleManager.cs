@@ -175,6 +175,15 @@ public class BattleManager : MonoBehaviour
 
             if (action.actor.currentHP <= 0 || action.target.currentHP <= 0) break;
 
+            StatusEffect freezeStatus = action.actor.activeStatuses.Find(s => s.type == StatusType.DeepFreeze);
+            if (freezeStatus != null)
+            {
+                // Postaæ próbuje zaatakowaæ, ale lód j¹ blokuje!
+                action.actor.ShowFloatingText("ZAMRO¯ONY!", DamagePopup.PopupType.Miss);
+                yield return new WaitForSeconds(0.4f);
+                continue;
+            }
+
             SkillData skillData = action.skill.data;
             SkillLevelData levelData = skillData.GetLevelData(action.skill.currentLevel);
 

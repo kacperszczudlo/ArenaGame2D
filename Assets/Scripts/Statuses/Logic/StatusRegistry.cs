@@ -14,7 +14,8 @@ public static class StatusRegistry
         { StatusType.Blindness, new LogicBlindness() },
         { StatusType.Poison, new LogicPoison() },
         { StatusType.FireShield, new LogicFireShield() },
-        { StatusType.VoodooCurse, new LogicVoodooCurse() }
+        { StatusType.VoodooCurse, new LogicVoodooCurse() },
+        { StatusType.DeepFreeze, new LogicDeepFreeze() }
     };
 
     public static StatusLogic GetLogic(StatusType type)

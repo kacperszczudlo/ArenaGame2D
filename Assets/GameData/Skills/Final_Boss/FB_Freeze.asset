@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ab09af1da397394a800537450d110fc, type: 3}
+  m_Name: FB_Freeze
+  m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  skillName: "Zamro\u017Cenie"
+  icon: {fileID: 21300000, guid: 371f3a320df317c45ad884dce273f66d, type: 3}
+  category: 1
+  projectilePrefab: {fileID: 0}
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
+  animTriggerName: Attack2
+  showCenterVFX: 1
+  effects:
+  - {fileID: 11400000, guid: 87570140608a09f4aaf8d5276be7db35, type: 2}
+  isPassive: 0
+  strengthWeight: 0
+  agilityWeight: 0
+  knowledgeWeight: 0
+  powerWeight: 0
+  weaponDamageWeight: 1
+  progression:
+  - levelName: 1
+    requiredCharacterLevel: 55
+    staminaCost: 0
+    manaCost: 60
+    damageMultiplier: 0
+    hitChanceBonus: 0.3
+    statusEffectChance: 100
+    selfCastDifficulty: 0
+    effectCharges: 0
+    effectValue: 6
+    effectDuration: 3
+    effectMultiplier: 100
+    effectHitChanceMod: 0
