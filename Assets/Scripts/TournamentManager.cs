@@ -55,7 +55,7 @@ public class TournamentManager : MonoBehaviour
         // NOWOŒÆ: Pokazujemy potencjaln¹ nagrodê za tego konkretnego wroga
         if (enemyRewardText != null)
         {
-            enemyRewardText.text = $"Zwyciêstwo da Ci:\nZ³oto: +{currentEnemy.goldReward} | Exp: +{currentEnemy.expReward}";
+            enemyRewardText.text = $"Z³oto: +{currentEnemy.goldReward}  \nExp: +{currentEnemy.expReward}";
         }
 
         UpdatePendingRewardsUI();
@@ -66,7 +66,7 @@ public class TournamentManager : MonoBehaviour
         // Pokazujemy to, co gracz ju¿ uzbiera³ w tym podejœciu i co bezpiecznie zabierze
         if (pendingRewardsText != null)
         {
-            pendingRewardsText.text = $"Zebrane ³upy (Twoje niezale¿nie od wyniku):\nZ³oto: {GameManager.Instance.pendingGold}\nExp: {GameManager.Instance.pendingXP}";
+            pendingRewardsText.text = $"Zebrane ³upy:\nZ³oto: {GameManager.Instance.pendingGold}\nExp: {GameManager.Instance.pendingXP}";
         }
     }
 
