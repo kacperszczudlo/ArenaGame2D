@@ -19,8 +19,13 @@ public class TournamentManager : MonoBehaviour
     public TextMeshProUGUI progressText;        // Np. "Przeciwnik: 3/10"
     public TextMeshProUGUI pendingRewardsText;  // Np. "Zebrane ³upy: 300g"
 
-    void Start()
+    // Podmieñ star¹ funkcjê Start() na to:
+    System.Collections.IEnumerator Start()
     {
+        // Czekamy JEDN¥ KLATKÊ, a¿ GameManagery siê dogadaj¹ i stary zniszczy nowego
+        yield return null;
+
+        // Teraz ³adujemy UI, czytaj¹c z prawid³owego, ocala³ego GameManagera
         UpdateLobbyUI();
     }
 

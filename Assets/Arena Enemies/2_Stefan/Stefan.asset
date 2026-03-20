@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Stefan
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Stefan
-  avatarImage: {fileID: 0}
+  avatarImage: {fileID: 21300000, guid: 5d9ba4e7d0964044ea54abe409d81dfd, type: 3}
   enemyVisualPrefab: {fileID: 1999682254439131401, guid: 6c84b7ba735289d43a5e0c0488fcd130, type: 3}
   level: 6
   maxHP: 320

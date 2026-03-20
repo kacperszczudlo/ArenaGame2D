@@ -500,9 +500,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TournamentManager
   tournamentEnemies:
-  - {fileID: 11400000, guid: bf8e08bb0905e904383bbf82d0aeeb0c, type: 2}
-  - {fileID: 11400000, guid: bf8e08bb0905e904383bbf82d0aeeb0c, type: 2}
-  - {fileID: 11400000, guid: bf8e08bb0905e904383bbf82d0aeeb0c, type: 2}
+  - {fileID: 11400000, guid: 455c331ea425058488525eaae82d91b1, type: 2}
+  - {fileID: 11400000, guid: 9e1dd784b98ffdf4dab026e4108e1d36, type: 2}
+  - {fileID: 11400000, guid: fddfa401c95eda148a791c31ff08a6d2, type: 2}
+  - {fileID: 11400000, guid: 4384657a18ebc104498a97a7e9bf5fcd, type: 2}
+  - {fileID: 11400000, guid: 1856a78ad8438d84ea1a0676227e6f4b, type: 2}
+  - {fileID: 11400000, guid: f3daf5bbc1a39e249adf86b5704cc962, type: 2}
+  - {fileID: 11400000, guid: 63d7e91d0b5902646960faae72674997, type: 2}
+  - {fileID: 11400000, guid: ff307d7a165dc3b479c46158a9b87ea7, type: 2}
+  - {fileID: 11400000, guid: 07df771f1d5332a4fb32783a0188ba5c, type: 2}
+  - {fileID: 11400000, guid: 151b51f7f719e964b8dc5f3e572acedd, type: 2}
   enemyAvatar: {fileID: 1064731140}
   enemyInfoText: {fileID: 421985905}
   enemyRewardText: {fileID: 1033292491}
@@ -830,9 +837,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1075141480}
-        m_TargetAssemblyTypeName: ArenaLobbyController, Assembly-CSharp
-        m_MethodName: StartFight
+      - m_Target: {fileID: 675242170}
+        m_TargetAssemblyTypeName: TournamentManager, Assembly-CSharp
+        m_MethodName: OnClick_Fight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1581,30 +1588,54 @@ PrefabInstance:
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentEnemyToFight
       value: 
-      objectReference: {fileID: 11400000, guid: bf8e08bb0905e904383bbf82d0aeeb0c, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentPlayerPrefab
       value: 
       objectReference: {fileID: 5169767090919104140, guid: 878db1372efdcc24b878521734ac7f38, type: 3}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: baseMaxHP
+      value: 2000000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: baseAgility
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: baseStrength
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: weaponDamage
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: baseMaxStamina
+      value: 6000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: unlockedSkills.Array.data[0].currentLevel
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[1].currentLevel
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[2].currentLevel
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[3].currentLevel
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[4].currentLevel
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2897052082919525363, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: unlockedSkills.Array.data[5].currentLevel
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5591046114039923796, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: m_Name
