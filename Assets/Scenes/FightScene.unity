@@ -254,7 +254,7 @@ PrefabInstance:
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentEnemyToFight
       value: 
-      objectReference: {fileID: 11400000, guid: 151b51f7f719e964b8dc5f3e572acedd, type: 2}
+      objectReference: {fileID: 11400000, guid: fddfa401c95eda148a791c31ff08a6d2, type: 2}
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentPlayerPrefab
       value: 
@@ -345,7 +345,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5591046114039923796, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9060952191518578038, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1864,7 +1864,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3764722054901016182, guid: b4136b8001fd2324c8e37001e28b29c8, type: 3}
+  m_Sprite: {fileID: -1091885680012383054, guid: ef3f99ca75bcfcb4ba6a190b8e6faf69, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1884,8 +1884,8 @@ Transform:
   m_GameObject: {fileID: 538530750}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.13, y: 6.93, z: 0}
-  m_LocalScale: {x: 1.3697, y: 1.4328432, z: 1.3697}
+  m_LocalPosition: {x: -0.05, y: -0.01, z: 0}
+  m_LocalScale: {x: 0.74667996, y: 0.78110206, z: 0.74667996}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -4491,13 +4491,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -4559,7 +4559,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 495}
+  m_AnchoredPosition: {x: 0, y: 453}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1419598734
