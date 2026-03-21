@@ -59,6 +59,8 @@ public static class DamageCalculator
                 hitChance = (attackPower / (attackPower + defensePower)) * 100f;
                 // Dodajemy tylko karê p³ask¹ z Furii (-20%)
                 hitChance *= attacker.GetCombatHitChanceMultiplier();
+
+                if (attacker.isPlayer) hitChance *= (1f + attacker.hitChanceMultiplierBonus);
             }
 
             if (data.category == SkillCategory.NegativeCharm && attacker.currentLevel > defender.currentLevel)
@@ -77,7 +79,24 @@ public static class DamageCalculator
         result.hitChanceMultiplier = hitChance / 100f;
         result.chanceText = Mathf.RoundToInt(hitChance) + "%";
 
-        if (Random.Range(0f, 100f) > hitChance) { result.isHit = false; return result; }
+        // 1. Najpierw sprawdzamy, czy atak w ogóle trafi³ (PUD£O Z CELNOŒCI)
+        if (Random.Range(0f, 100f) > hitChance)
+        {
+            result.isHit = false;
+            // result.chanceText zostaje jako np. "45%", a Mened¿er Walki dopisze "Pud³o"
+            return result;
+        }
+
+        // 2. Skoro atak mia³ trafiæ, dajemy obroñcy szansê na ratunek: UNIK!
+        if (defender.isPlayer && defender.dodgeChance > 0 && Random.Range(0f, 100f) <= defender.dodgeChance)
+        {
+            result.isHit = false;
+            result.chanceText = "UNIK!"; // Nadpisujemy oryginalne % s³owem UNIK!
+            defender.dodgedLastAttack = true; // Flaga na przysz³e kontrataki
+            return result;
+        }
+
+        // 3. Jeœli atak by³ celny i gracz go nie unikn¹³ -> mamy trafienie!
         result.isHit = true;
 
         if (data.category == SkillCategory.PositiveCharm) return result;
@@ -91,6 +110,10 @@ public static class DamageCalculator
         float weaponDmg = attacker.weaponDamage * data.weaponDamageWeight;
 
         float rawDamage = (baseStatDmg + weaponDmg) * dmgModU * attacker.GetCombatDamageMultiplier();
+
+        // --- NOWOŒÆ: Mno¿nik z ekwipunku gracza ---
+        if (attacker.isPlayer) rawDamage *= (1f + attacker.damageMultiplierBonus);
+
         rawDamage *= Random.Range(0.7f, 1.3f);
 
         result.rawDamage = Mathf.RoundToInt(rawDamage);

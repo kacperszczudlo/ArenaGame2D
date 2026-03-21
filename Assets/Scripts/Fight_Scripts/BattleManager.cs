@@ -41,6 +41,11 @@ public class BattleManager : MonoBehaviour
     public UnityEngine.UI.Button startRoundButton; // Przeci¹gniesz tu przycisk z Unity
     private bool isExecutingRound = false;
 
+    [Header("Ekran Podsumowania (Koniec Walki)")]
+    public GameObject summaryPanel;
+    public TMPro.TextMeshProUGUI summaryTitleText;
+    public TMPro.TextMeshProUGUI summaryRewardsText;
+
     void Start()
     {
         currentRound = 1;
@@ -412,18 +417,22 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    
+
     // --- FUNKCJA ZAKOÑCZENIA BITWY ---
     IEnumerator EndBattleRoutine(bool playerWon)
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.5f); // Dajemy chwilê na opadniêcie kurzu
+
         EnemyData defeatedEnemy = GameManager.Instance.currentEnemyToFight;
+
+        // W³¹czamy nasz czarny ekran podsumowania
+        if (summaryPanel != null) summaryPanel.SetActive(true);
 
         if (playerWon)
         {
             Debug.Log("<color=green>ZWYCIÊSTWO!</color>");
+            if (summaryTitleText != null) { summaryTitleText.text = "ZWYCIÊSTWO!"; summaryTitleText.color = Color.green; }
 
-            // SPRAWDZAMY CZY TO TURNIEJ CZY MAPA:
             if (GameManager.Instance.isTournamentBattle)
             {
                 // ZASADY TURNIEJU: £upy id¹ do worka (ryzykujemy dalej)
@@ -433,20 +442,24 @@ public class BattleManager : MonoBehaviour
                     GameManager.Instance.pendingXP += defeatedEnemy.expReward;
                 }
                 GameManager.Instance.currentTournamentIndex++;
+
+                if (summaryRewardsText != null) summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {defeatedEnemy?.expReward}";
             }
             else
             {
-                // ZASADY MAPY (Random Encounter): £upy id¹ od razu na sta³e do kieszeni!
+                // ZASADY MAPY: £upy id¹ od razu do kieszeni!
                 if (defeatedEnemy != null)
                 {
                     GameManager.Instance.globalGold += defeatedEnemy.goldReward;
-                    PlayerDataManager.Instance.currentExperience += defeatedEnemy.expReward;
+                    
                 }
+                if (summaryRewardsText != null) summaryRewardsText.text = $"Zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}";
             }
         }
         else
         {
             Debug.Log("<color=red>PORA¯KA!</color>");
+            if (summaryTitleText != null) { summaryTitleText.text = "PORA¯KA!"; summaryTitleText.color = Color.red; }
 
             if (GameManager.Instance.isTournamentBattle)
             {
@@ -454,18 +467,35 @@ public class BattleManager : MonoBehaviour
                 GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
                 PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
 
+                if (GameManager.Instance.pendingGold > 0 || GameManager.Instance.pendingXP > 0)
+                {
+                    if (summaryRewardsText != null) summaryRewardsText.text = $"Podczas turnieju uda³o Ci siê zdobyæ:\nZ³oto: {GameManager.Instance.pendingGold}\nDoœwiadczenie: {GameManager.Instance.pendingXP}";
+                }
+                else
+                {
+                    if (summaryRewardsText != null) summaryRewardsText.text = "Niestety, wracasz z pustymi rêkami...";
+                }
+
                 GameManager.Instance.pendingGold = 0;
                 GameManager.Instance.pendingXP = 0;
                 GameManager.Instance.currentTournamentIndex = 0;
             }
             else
             {
-                // ZASADY MAPY: Gracz zgin¹³ w lesie. 
-                // Mo¿esz tu w przysz³oœci dodaæ karê (np. utrata 10% z³ota) albo po prostu go odrodziæ.
-                Debug.Log("Zgin¹³eœ na mapie! Zostajesz przeniesiony do bezpiecznego miejsca.");
+                if (summaryRewardsText != null) summaryRewardsText.text = "Zgin¹³eœ na mapie! Zostajesz przeniesiony do bezpiecznego miejsca.";
             }
+
+            // Gracz poleg³, wiêc zmieniamy bilet powrotny na mapê œwiata!
+            GameManager.Instance.sceneToLoadAfterBattle = "MainScene";
         }
 
+       
+        // Korutyna koñczy swoje dzia³anie. Gra czeka, a¿ gracz przeczyta nagrody i kliknie przycisk "Dalej"!
+    }
+
+    // Tê funkcjê podpinasz pod przycisk "Dalej" na ekranie podsumowania
+    public void OnClick_LeaveBattle()
+    {
         // --- MAGIA: Wracamy tam, sk¹d przyszliœmy! ---
         SceneManager.LoadScene(GameManager.Instance.sceneToLoadAfterBattle);
     }

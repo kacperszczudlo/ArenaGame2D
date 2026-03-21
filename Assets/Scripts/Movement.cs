@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Movement : MonoBehaviour 
+public class Movement : MonoBehaviour
 {
     [SerializeField] private float m_speed = 4.0f;
 
@@ -15,6 +15,16 @@ public class Movement : MonoBehaviour
 
         m_body2d.gravityScale = 0f;
         m_animator.SetBool("Grounded", true);
+
+        // --- NOWOŒÆ: Powrót na zapisan¹ pozycjê przed aren¹! ---
+        if (GameManager.Instance != null && GameManager.Instance.lastMapPosition != Vector3.zero)
+        {
+            // Teleportujemy gracza pod drzwi
+            transform.position = GameManager.Instance.lastMapPosition;
+
+            // Resetujemy koordynaty, ¿eby przy przechodzeniu miêdzy innymi scenami nie teleportowa³o nas losowo
+            GameManager.Instance.lastMapPosition = Vector3.zero;
+        }
     }
 
     void Update()
@@ -37,7 +47,7 @@ public class Movement : MonoBehaviour
         else
         {
             m_delayToIdle -= Time.deltaTime;
-            if(m_delayToIdle < 0)
+            if (m_delayToIdle < 0)
                 m_animator.SetInteger("AnimState", 0);
         }
     }
