@@ -67,24 +67,26 @@ public class EffectApplyStatus : SkillEffect
         Combatant finalTarget = goesToUser ? user : target;
 
         // --- NAPRAWA: Zabezpieczenie przed na³o¿eniem trucizny przy Uniku ---
+        // --- NAPRAWA: Zabezpieczenie przed na³o¿eniem trucizny przy Uniku ---
         if (!goesToUser)
         {
-            // Sprawdzamy, czy cel ma aktywn¹ Modlitwê (Cudowny Unik)
+            // SYTUACJA 1: Atak z obra¿eniami. Jeœli TakeDamage z³apa³o unik, my te¿ blokujemy status!
+            if (finalTarget.dodgedLastAttack)
+            {
+                Debug.Log($"<color=cyan>Status {se.effectName} zablokowany, bo cios bazowy zosta³ unikniêty!</color>");
+                return; // Przerywamy! (£adunek zosta³ ju¿ prawid³owo zabrany przez LogicBlessing)
+            }
+
+            // SYTUACJA 2: Czysty Urok (0 obra¿eñ). TakeDamage go zignorowa³o, wiêc my ³apiemy Modlitwê!
             StatusEffect dodge = finalTarget.activeStatuses.Find(s => s.type == StatusType.Blessing && s.remainingHits > 0);
             if (dodge != null)
             {
-                Debug.Log($"<color=cyan>Status {se.effectName} zablokowany, bo atak zosta³ unikniêty!</color>");
+                Debug.Log($"<color=cyan>Status {se.effectName} (Urok) odparty przez Modlitwê!</color>");
 
-                // --- FIX: Odbieramy ³adunek za unikniêcie uroku! ---
-                // Skoro atak zada³ 0 obra¿eñ, to LogicBlessing go zignorowa³ i nie odj¹³ ³adunku.
-                // Musimy wiêc odj¹æ go my i wyœwietliæ napis, ¿eby gracz wiedzia³, ¿e unik zadzia³a³!
-                if (result.damageDealt <= 0)
-                {
-                    dodge.remainingHits--;
-                    finalTarget.ShowFloatingText("Cudowny Unik!", DamagePopup.PopupType.Miss);
-                }
-
-                return; // Przerywamy! Trucizna nie wchodzi do krwiobiegu.
+                // Odbieramy ³adunek sami, bo LogicBlessing zignorowa³ ten atak
+                dodge.remainingHits--;
+                finalTarget.ShowFloatingText("Cudowny Unik!", DamagePopup.PopupType.Miss);
+                return;
             }
         }
 

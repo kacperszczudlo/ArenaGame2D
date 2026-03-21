@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: FinalBoss
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Przeciwnik
+  avatarImage: {fileID: 0}
+  enemyVisualPrefab: {fileID: 5348377220859076812, guid: 02429af6b0cfd164f9a06adbae528a3c, type: 3}
+  level: 38
+  maxHP: 5000
+  maxMana: 3000
+  maxStamina: 1000
+  strength: 10
+  agility: 10
+  knowledge: 100
+  power: 200
+  physicalArmor: 100
+  magicResistance: 100
+  critChance: 2
+  weaponDamage: 140
+  meleeStoppingDistance: 1.5
+  enemySkills:
+  - data: {fileID: 11400000, guid: b40e43565b05a0e429c42625a2876e5b, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: df244e8de1da3d444868d49c565a695e, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 5bdc1a62960cd444dbf7d1d2798bfc5a, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 12c59e2e2cdfb2f4095f43c86dc87ff2, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 464de62ee7bb23246b602a62e98e9e90, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 1dac04ace46dfd141b3f827c674a9f0e, type: 2}
+    currentLevel: 2
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 9f4e8cb5597a97c47ae5e109753e274e, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 3b7dc4a5100d2624cb0079fc145f9625, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: fee7a2d09e00bed47aeb17a6c87b0fdf, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  aiBrain: {fileID: 11400000, guid: 0506ff42213fc0446ae859f4cd65eb81, type: 2}
+  goldReward: 0
+  expReward: 0

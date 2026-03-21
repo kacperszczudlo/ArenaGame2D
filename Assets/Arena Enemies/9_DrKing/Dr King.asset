@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: Dr King
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: Dr King
+  avatarImage: {fileID: 0}
+  enemyVisualPrefab: {fileID: 5348377220859076812, guid: 02429af6b0cfd164f9a06adbae528a3c, type: 3}
+  level: 35
+  maxHP: 12000
+  maxMana: 5000
+  maxStamina: 5000
+  strength: 10
+  agility: 10
+  knowledge: 80
+  power: 100
+  physicalArmor: 50
+  magicResistance: 50
+  critChance: 2
+  weaponDamage: 70
+  meleeStoppingDistance: 1.5
+  enemySkills:
+  - data: {fileID: 11400000, guid: b683db60a03cc5943a6d4fbf9757f3f9, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 9f4e8cb5597a97c47ae5e109753e274e, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 1dac04ace46dfd141b3f827c674a9f0e, type: 2}
+    currentLevel: 2
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 3b7dc4a5100d2624cb0079fc145f9625, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 93bcaf619de5ad745a322dbe817c7d90, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: 29050404835239f4ca4b99736c15d0c7, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: fee7a2d09e00bed47aeb17a6c87b0fdf, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  - data: {fileID: 11400000, guid: b14d0ecd9b8f4c946bf4ee8d5b0db63f, type: 2}
+    currentLevel: 1
+    isUnlocked: 0
+  aiBrain: {fileID: 11400000, guid: 01db990a5b9d1714fbac060fe9839257, type: 2}
+  goldReward: 0
+  expReward: 0

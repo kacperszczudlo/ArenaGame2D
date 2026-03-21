@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
+  m_Name: DrPepper
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyData
+  enemyName: DrPepper
+  avatarImage: {fileID: 0}
+  enemyVisualPrefab: {fileID: 3502666265557062440, guid: 5f5f9736a5746df4cbd153d20fae0eb0, type: 3}
+  level: 35
+  maxHP: 8000
+  maxMana: 3000
+  maxStamina: 1000
+  strength: 10
+  agility: 10
+  knowledge: 120
+  power: 80
+  physicalArmor: 32
+  magicResistance: 32
+  critChance: 10
+  weaponDamage: 95
+  meleeStoppingDistance: 1.5
+  enemySkills:
+  - data: {fileID: 11400000, guid: 0aa074fb5492e654ea2daa6e74c507a7, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 9e1762924ff955944b19f9c76e300d7d, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: da0bda90156d3d5468ea156205e5b4d7, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  - data: {fileID: 11400000, guid: 9537c8bba2fc60a4d9704db19a11d9fe, type: 2}
+    currentLevel: 1
+    isUnlocked: 1
+  aiBrain: {fileID: 11400000, guid: 4eeb71b48e98c7c4d8a67f8c3f405e20, type: 2}
+  goldReward: 0
+  expReward: 0

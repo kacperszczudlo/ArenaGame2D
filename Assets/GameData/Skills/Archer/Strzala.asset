@@ -28,7 +28,7 @@ MonoBehaviour:
   weaponDamageWeight: 1
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
+    requiredCharacterLevel: 6
     staminaCost: 20
     manaCost: 0
     damageMultiplier: 1.7

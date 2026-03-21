@@ -22,19 +22,19 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: 87570140608a09f4aaf8d5276be7db35, type: 2}
   isPassive: 0
-  strengthWeight: 0
-  agilityWeight: 0
+  strengthWeight: 0.7
+  agilityWeight: 0.3
   knowledgeWeight: 0
   powerWeight: 0
-  weaponDamageWeight: 1
+  weaponDamageWeight: 0.6
   progression:
   - levelName: 1
-    requiredCharacterLevel: 1
-    staminaCost: 1
-    manaCost: 1
-    damageMultiplier: 1
-    hitChanceBonus: 1
-    statusEffectChance: 100
+    requiredCharacterLevel: 18
+    staminaCost: 30
+    manaCost: 19
+    damageMultiplier: 1.7
+    hitChanceBonus: 1.2
+    statusEffectChance: 40
     selfCastDifficulty: 0
     effectCharges: 0
     effectValue: 5

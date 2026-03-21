@@ -38,6 +38,9 @@ public class BattleManager : MonoBehaviour
     private Vector3 playerOriginalPos;
     private Vector3 enemyOriginalPos;
 
+    public UnityEngine.UI.Button startRoundButton; // Przeci¹gniesz tu przycisk z Unity
+    private bool isExecutingRound = false;
+
     void Start()
     {
         currentRound = 1;
@@ -96,8 +99,18 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void TestEndTurn()
+    // Funkcja podpiêta pod przycisk "Rozpocznij rundê"
+    public void OnStartRoundClicked()
     {
+        // 1. ZABEZPIECZENIE: Jeœli runda ju¿ trwa, zignoruj klikniêcie!
+        if (isExecutingRound) return;
+
+        isExecutingRound = true; // Zaznaczamy, ¿e weszliœmy do walki
+
+        // 2. Blokujemy przycisk fizycznie, ¿eby zszarza³
+        if (startRoundButton != null) startRoundButton.interactable = false;
+
+        // 3. Odpalamy nasz¹ potê¿n¹ korutynê walki
         StartCoroutine(ExecuteTurnRoutine());
     }
 
@@ -175,6 +188,15 @@ public class BattleManager : MonoBehaviour
 
             if (action.actor.currentHP <= 0 || action.target.currentHP <= 0) break;
 
+            StatusEffect freezeStatus = action.actor.activeStatuses.Find(s => s.type == StatusType.DeepFreeze);
+            if (freezeStatus != null)
+            {
+                // Postaæ próbuje zaatakowaæ, ale lód j¹ blokuje!
+                action.actor.ShowFloatingText("ZAMRO¯ONY!", DamagePopup.PopupType.Miss);
+                yield return new WaitForSeconds(0.4f);
+                continue;
+            }
+
             SkillData skillData = action.skill.data;
             SkillLevelData levelData = skillData.GetLevelData(action.skill.currentLevel);
 
@@ -228,8 +250,11 @@ public class BattleManager : MonoBehaviour
                 // Sprawdzamy, czy skill ma przypisan¹ strza³ê (nie jest puste okienko w Inspektorze)
                 if (skillData.projectilePrefab != null)
                 {
-                    // Czekamy 0.4 sekundy, ¿eby zgraæ to z animacj¹ wystrza³u z ³uku (mo¿esz to modyfikowaæ!)
-                    yield return new WaitForSeconds(0.4f);
+                    // --- FIX NA DELAY: Jeœli postaæ leczy/buffuje sam¹ siebie, nie czekamy! ---
+                    float prepDelay = (action.actor == action.target) ? 0.05f : 0.4f;
+                    yield return new WaitForSeconds(prepDelay);
+
+                    
 
                     // Tworzymy strza³ê na scenie
                     GameObject projGo = Instantiate(skillData.projectilePrefab);
@@ -245,7 +270,9 @@ public class BattleManager : MonoBehaviour
                 else
                 {
                     // Zwyk³y atak (np. miecz, sypanie piachem) - stara, sztywna pauza na animacjê
-                    yield return new WaitForSeconds(0.5f);
+                    // --- FIX NA DELAY: B³yskawiczne efekty, gdy rzucamy buffa/leczenie na siebie! ---
+                    float impactDelay = (action.actor == action.target) ? 0.05f : 0.5f;
+                    yield return new WaitForSeconds(impactDelay);
                 }
 
                 // OBLICZANIE OBRA¯EÑ (Teraz dzieje siê to DOPIERO w momencie uderzenia strza³y/miecza!)
@@ -355,6 +382,9 @@ public class BattleManager : MonoBehaviour
         }
         player.ResetDefensePA();
         enemy.ResetDefensePA();
+        // --- ZAPISYWANIE HP NA KONIEC RUNDY ---
+        player.hpAtRoundEnd = player.currentHP;
+        enemy.hpAtRoundEnd = enemy.currentHP;
 
         // Odzyskiwanie zasobów na pocz¹tku rundy (5%)
         player.RegenerateResources();
@@ -363,6 +393,9 @@ public class BattleManager : MonoBehaviour
 
         currentRound++;
         UpdateRoundUI();
+
+        isExecutingRound = false; // Zdejmujemy flagê
+        if (startRoundButton != null) startRoundButton.interactable = true;
     }
 
     IEnumerator MoveCharacter(Transform character, Vector3 targetPos, float duration)

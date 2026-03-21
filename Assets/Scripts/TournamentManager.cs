@@ -19,8 +19,13 @@ public class TournamentManager : MonoBehaviour
     public TextMeshProUGUI progressText;        // Np. "Przeciwnik: 3/10"
     public TextMeshProUGUI pendingRewardsText;  // Np. "Zebrane ³upy: 300g"
 
-    void Start()
+    // Podmieñ star¹ funkcjê Start() na to:
+    System.Collections.IEnumerator Start()
     {
+        // Czekamy JEDN¥ KLATKÊ, a¿ GameManagery siê dogadaj¹ i stary zniszczy nowego
+        yield return null;
+
+        // Teraz ³adujemy UI, czytaj¹c z prawid³owego, ocala³ego GameManagera
         UpdateLobbyUI();
     }
 
@@ -50,7 +55,7 @@ public class TournamentManager : MonoBehaviour
         // NOWOŒÆ: Pokazujemy potencjaln¹ nagrodê za tego konkretnego wroga
         if (enemyRewardText != null)
         {
-            enemyRewardText.text = $"Zwyciêstwo da Ci:\nZ³oto: +{currentEnemy.goldReward} | Exp: +{currentEnemy.expReward}";
+            enemyRewardText.text = $"Z³oto: +{currentEnemy.goldReward}  \nExp: +{currentEnemy.expReward}";
         }
 
         UpdatePendingRewardsUI();
@@ -61,7 +66,7 @@ public class TournamentManager : MonoBehaviour
         // Pokazujemy to, co gracz ju¿ uzbiera³ w tym podejœciu i co bezpiecznie zabierze
         if (pendingRewardsText != null)
         {
-            pendingRewardsText.text = $"Zebrane ³upy (Twoje niezale¿nie od wyniku):\nZ³oto: {GameManager.Instance.pendingGold}\nExp: {GameManager.Instance.pendingXP}";
+            pendingRewardsText.text = $"Zebrane ³upy:\nZ³oto: {GameManager.Instance.pendingGold}\nExp: {GameManager.Instance.pendingXP}";
         }
     }
 

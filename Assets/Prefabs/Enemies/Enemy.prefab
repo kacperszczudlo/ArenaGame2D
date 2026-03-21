@@ -326,6 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7375db07465a5a4408e20785df66bfd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combatant
+  characterSprite: {fileID: 7177607935208204149}
   combatantName: Janusz Walczuk
   isPlayer: 0
   avatarImage: {fileID: -1132740108, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
@@ -370,6 +371,8 @@ MonoBehaviour:
   defenseMentalPA: 0
   isDead: 0
   myBrain: {fileID: 0}
+  dodgedLastAttack: 0
+  hpAtRoundEnd: 0
 --- !u!1 &5112459337268042306
 GameObject:
   m_ObjectHideFlags: 0

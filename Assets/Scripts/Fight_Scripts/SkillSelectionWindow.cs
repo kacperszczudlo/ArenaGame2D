@@ -36,6 +36,15 @@ public class SkillSelectionWindow : MonoBehaviour
     // Odbiera CharacterSkill zamiast SkillData
     public void ShowDetails(CharacterSkill cSkill)
     {
+        // --- NOWOŒÆ: Szybka ucieczka, jeœli skill jest zablokowany! ---
+        if (!cSkill.isUnlocked)
+        {
+            detailsText.text = "<color=red>[ZABLOKOWANE]</color>";
+            detailsText.color = Color.white; // Ustawia bazowy kolor, tag <color> zrobi resztê
+            return; // Magiczne s³owo! Funkcja koñczy siê w tym miejscu.
+        }
+
+        // --- Poni¿szy kod wykona siê TYLKO dla odblokowanych skilli ---
         SkillData data = cSkill.data;
 
         if (data.progression != null && data.progression.Count > 0)
@@ -53,31 +62,28 @@ public class SkillSelectionWindow : MonoBehaviour
             if (mana > 0) costs.Add($"{mana} Many");
             if (stamina > 0) costs.Add($"{stamina} Kondycji");
 
-            // Informacja, czy skill jest zablokowany
-            string lockStatus = cSkill.isUnlocked ? "" : "<color=red>[ZABLOKOWANE]</color>\n";
-
             if (costs.Count > 0)
             {
-                detailsText.text = $"{lockStatus}Wymagania (Poz. {cSkill.currentLevel}):\n" + string.Join("\n", costs);
-                detailsText.color = cSkill.isUnlocked ? Color.yellow : new Color(0.7f, 0.7f, 0.7f);
+                // Wywaliliœmy zmienn¹ 'lockStatus', bo wiemy, ¿e na 100% skill jest odblokowany
+                detailsText.text = $"Wymagania (Poz. {cSkill.currentLevel}):\n" + string.Join("\n", costs);
+                detailsText.color = Color.yellow;
             }
             else
             {
-                detailsText.text = $"{lockStatus}Brak kosztów (Poz. {cSkill.currentLevel})";
-                detailsText.color = cSkill.isUnlocked ? Color.green : new Color(0.7f, 0.7f, 0.7f);
+                detailsText.text = $"Brak kosztów (Poz. {cSkill.currentLevel})";
+                detailsText.color = Color.green;
             }
         }
         else
         {
-            string lockStatus = cSkill.isUnlocked ? "" : "<color=red>[ZABLOKOWANE]</color>\n";
-            detailsText.text = $"{lockStatus}{data.skillName}\n(Brak wpisanych kosztów!)";
+            detailsText.text = $"{data.skillName}\n(Brak wpisanych kosztów!)";
             detailsText.color = Color.white;
         }
     }
 
     public void HideDetails()
     {
-        detailsText.text = "Wybierz umiejêtnoœæ...";
+        detailsText.text = "Wybierz umiejêtnoœæ";
         detailsText.color = Color.white;
     }
 

@@ -159,6 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7375db07465a5a4408e20785df66bfd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Combatant
+  characterSprite: {fileID: 2729391018904220699}
   combatantName: Voodoo
   isPlayer: 0
   avatarImage: {fileID: 0}
@@ -197,6 +198,8 @@ MonoBehaviour:
   defenseMentalPA: 0
   isDead: 0
   myBrain: {fileID: 0}
+  dodgedLastAttack: 0
+  hpAtRoundEnd: 0
 --- !u!1 &8661934138714687226
 GameObject:
   m_ObjectHideFlags: 0
