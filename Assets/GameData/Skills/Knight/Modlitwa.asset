@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: Modlitwa
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Modlitwa
-  skillDescription: 
+  skillDescription: "Kr\xF3tka chwila wyciszenia i \u017Carliwa pro\u015Bba do wy\u017Cszych
+    byt\xF3w o ochron\u0119 na arenie. Otacza wojownika mistyczn\u0105 aur\u0105,
+    znacznie zwi\u0119kszaj\u0105c jego odporno\u015B\u0107 i zapewniaj\u0105c bosk\u0105
+    szans\u0119 na unikni\u0119cie nawet najbardziej \u015Bmiertelnego ciosu."
   icon: {fileID: 21300152, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 0
   projectilePrefab: {fileID: 0}

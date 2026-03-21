@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: SzybkiCios
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Szybki Cios
+  skillDescription: "B\u0142yskawiczny, mierzony atak, kt\xF3ry stawia na precyzj\u0119
+    i szybko\u015B\u0107 kosztem czystej si\u0142y. Idealny do n\u0119kania przeciwnik\xF3w,
+    szukania luk w ich obronie i wyka\u0144czania rannych wrog\xF3w, zanim zd\u0105\u017C\u0105
+    zareagowa\u0107."
   icon: {fileID: 21300064, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 4
+  projectilePrefab: {fileID: 0}
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   animTriggerName: Attack2
   showCenterVFX: 0
   effects: []

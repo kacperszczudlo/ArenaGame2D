@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: UderzenieMieczem
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Uderzenie Mieczem
+  skillDescription: "Wymaga ogromnego wysi\u0142ku, ale wykorzystuje pe\u0142en impet
+    ca\u0142ego cia\u0142a i broni, by zada\u0107 mia\u017Cd\u017C\u0105ce rany.
+    Cios tak pot\u0119\u017Cny, \u017Ce potrafi zignorowa\u0107 s\u0142absze pancerze,
+    a trafienie nim cz\u0119sto decyduje o losach pojedynku."
   icon: {fileID: 21300070, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 4
   projectilePrefab: {fileID: 0}

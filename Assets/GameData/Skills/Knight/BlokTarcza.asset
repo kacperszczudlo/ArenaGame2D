@@ -13,8 +13,14 @@ MonoBehaviour:
   m_Name: BlokTarcza
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: "Blok Tarcz\u0105"
+  skillDescription: "Defensywna postawa pozwalaj\u0105ca na przyj\u0119cie najpot\u0119\u017Cniejszych
+    cios\xF3w na tward\u0105 stal. Umiej\u0119tne zablokowanie ataku drastycznie
+    redukuje nadchodz\u0105ce obra\u017Cenia, pozwalaj\u0105c przetrwa\u0107 najbardziej
+    mordercze kombinacje przeciwnika."
   icon: {fileID: 21300146, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 0
+  projectilePrefab: {fileID: 0}
+  projectileColor: {r: 1, g: 1, b: 1, a: 1}
   animTriggerName: Block
   showCenterVFX: 1
   effects:

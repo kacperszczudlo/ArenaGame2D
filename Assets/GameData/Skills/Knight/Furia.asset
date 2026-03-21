@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: Furia
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Furia
-  skillDescription: 
+  skillDescription: "Rycerz wpada w niekontrolowany, bitewny sza\u0142, odrzucaj\u0105c
+    na bok wszelk\u0105 taktyk\u0119. Jego ciosy staj\u0105 si\u0119 niszczycielskie
+    i brutalne, jednak w \u015Blepym gniewie ods\u0142ania si\u0119 na ataki wroga,
+    ryzykuj\u0105c w\u0142asnym \u017Cyciem."
   icon: {fileID: 21300098, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 0
   projectilePrefab: {fileID: 0}

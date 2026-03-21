@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: ZatrutyCios
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
   skillName: Zatruty cios
+  skillDescription: "Nikczemna, acz niezwykle skuteczna technika zapo\u017Cyczona
+    od skrytob\xF3jc\xF3w. Ostrze pokryte trucizn\u0105, kt\xF3ra po udanym trafieniu
+    wnika g\u0142\u0119boko w krwiobieg wroga, wywo\u0142uj\u0105c zaka\u017Cenie,
+    zadaj\u0105ce b\xF3l z ka\u017Cd\u0105 kolejn\u0105 rund\u0105."
   icon: {fileID: 21300058, guid: ae297123f091bbf4e8f1835eb98fb293, type: 3}
   category: 4
   projectilePrefab: {fileID: 0}
