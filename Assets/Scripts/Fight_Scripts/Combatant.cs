@@ -61,6 +61,9 @@ public class Combatant : MonoBehaviour
     [Header("Walka (Dla Gracza nadpisze je Mened¿er)")]
     public int weaponDamage = 50;
     public int critChance = 5; // DODANE: Szansa na trafienie krytyczne
+    public int dodgeChance = 0;
+    public float damageMultiplierBonus = 0f;
+    public float hitChanceMultiplierBonus = 0f;
 
     [Header("Komponenty Wizualne")]
     public Animator animator;
@@ -145,8 +148,13 @@ public class Combatant : MonoBehaviour
 
         physicalArmor = data.TotalPhysicalArmor;
         magicResistance = data.TotalMagicResistance;
-        critChance = data.TotalCritChance;
+        
         weaponDamage = data.weaponDamage;
+
+        critChance = data.TotalCritChance;
+        dodgeChance = data.TotalDodgeChance;
+        damageMultiplierBonus = data.bonusDamageMultiplier;
+        hitChanceMultiplierBonus = data.bonusHitChanceMultiplier;
 
 
         // --- POBIERANIE UMIEJÊTNOŒCI Z SERWERA ---
