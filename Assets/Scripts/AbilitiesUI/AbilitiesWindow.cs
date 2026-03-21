@@ -151,20 +151,21 @@ public class AbilitiesWindow : MonoBehaviour
             if (statsPreviewText != null) statsPreviewText.text = stats;
 
             // 2. ODDZIELNE EFEKTY SPECJALNE
-            string effectsStats = "<color=#ffcc00>Efekty Umiejêtnoœci:</color>\n";
+            string effectsStats = "";
 
             if (data.category == SkillCategory.PositiveCharm)
                 effectsStats += $"Trudnoœæ rzucenia (Buff): {previewData.selfCastDifficulty}\n";
 
             string sName = data.skillName.ToLower();
 
-            // Uwzglêdni³em s³owo "Zaka¿enie" i "Zakazenie" ¿eby bezb³êdnie czyta³ Twojego skilla!
+            // --- POPRAWIONY BLOK DLA ZAKA¯ENIA / TRUCIZNY ---
             if (sName.Contains("zatrut") || sName.Contains("trucizna") || sName.Contains("zakazenie") || sName.Contains("zaka¿enie"))
             {
                 effectsStats += $"Szansa na zaka¿enie: {previewData.statusEffectChance}%\n";
-                effectsStats += $"Czas trwania: {previewData.effectDuration} rund(y)\n";
-                effectsStats += $"Obra¿enia: {previewData.effectValue} / rundê\n";
+                effectsStats += $"Nak³adane ³adunki (stacki): {previewData.effectCharges}\n";
+                effectsStats += $"Obra¿enia z ³adunku: {Mathf.RoundToInt(previewData.effectMultiplier * 100)}% si³y ciosu\n";
             }
+            // ------------------------------------------------
             else if (sName.Contains("furia"))
             {
                 effectsStats += $"Czas trwania: {previewData.effectDuration} rund(y)\n";
@@ -177,7 +178,7 @@ public class AbilitiesWindow : MonoBehaviour
             {
                 effectsStats += $"Czas trwania: {previewData.effectDuration} rund(y)\n";
                 effectsStats += $"Iloœæ bloków (³adunki): {previewData.effectCharges}\n";
-                effectsStats += $"Si³a Tarczy / Odbicie: {Mathf.RoundToInt(previewData.effectMultiplier * 100)}%\n";
+                effectsStats += $"Redukcja obra¿eñ: {previewData.effectValue}%\n";
             }
             else if (sName.Contains("modlitwa") || sName.Contains("b³ogos³awieñstwo"))
             {
@@ -190,7 +191,11 @@ public class AbilitiesWindow : MonoBehaviour
                 effectsStats += $"Szansa na efekt specjalny: {previewData.statusEffectChance}%\n";
             }
 
-            // Wrzucamy efekty do nowego pola tekstowego!
+            if (!string.IsNullOrEmpty(effectsStats))
+            {
+                effectsStats = "<color=#ffcc00>Efekty Umiejêtnoœci:</color>\n" + effectsStats;
+            }
+
             if (effectsPreviewText != null) effectsPreviewText.text = effectsStats;
 
             // 3. LOGIKA ZBIORCZYCH KOSZTÓW I AWANSU
@@ -277,8 +282,10 @@ public class AbilitiesWindow : MonoBehaviour
         if (data.powerWeight > 0) parts.Add($"{data.powerWeight}*Moc");
         if (data.weaponDamageWeight > 0) parts.Add("Broñ");
 
-        string result = parts.Count > 0 ? string.Join(" + ", parts) : "Brak atrybutów";
-        return $"OBR.: {result}";
+        // --- NOWOŒÆ: Jeœli skill (np. Tarcza lub Furia) nie uderza i nie ma atrybutów, wyzeruj tekst! ---
+        if (parts.Count == 0) return "";
+
+        return $"OBR.: {string.Join(" + ", parts)}";
     }
 
     public void CloseWindow()
