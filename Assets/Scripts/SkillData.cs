@@ -37,6 +37,7 @@ public class SkillData : ScriptableObject
 {
     [Header("Podstawowe Informacje")]
     public string skillName;
+    [TextArea(3, 5)] public string skillDescription; // Mroczny opis z historii
     public Sprite icon;
     public SkillCategory category = SkillCategory.MeleePhysical;
 
