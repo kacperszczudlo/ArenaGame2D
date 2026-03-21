@@ -92,17 +92,20 @@ public class TournamentManager : MonoBehaviour
         // 1. Zgarniamy ³upy do g³ównej puli!
         GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
 
-        // 2. Przekazujemy Exp do PlayerDataManagera!
-        PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
-
         Debug.Log($"<color=green>Wycofujesz siê! Zgarniasz {GameManager.Instance.pendingGold} z³ota i {GameManager.Instance.pendingXP} expa.</color>");
+
+        // 2. Przekazujemy Exp przez now¹ funkcjê w PlayerDataManagera (odpali to levelowanie!)
+        if (GameManager.Instance.pendingXP > 0)
+        {
+            PlayerDataManager.Instance.AddExperience(GameManager.Instance.pendingXP);
+        }
 
         // 3. Resetujemy stan turnieju
         GameManager.Instance.currentTournamentIndex = 0;
         GameManager.Instance.pendingGold = 0;
         GameManager.Instance.pendingXP = 0;
 
-        // --- NOWOŒÆ: Zamiast odœwie¿aæ UI Lobby, wracamy na mapê g³ówn¹! ---
+        // Wracamy na mapê g³ówn¹!
         SceneManager.LoadScene("MainScene");
     }
 }

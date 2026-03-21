@@ -16,7 +16,12 @@ public class PlayerDataManager : MonoBehaviour
     [Header("Doœwiadczenie i Poziom")]
     public int currentLevel = 1;
     public int currentExperience = 0;
-    public int availableSkillPoints = 2;
+    public int experienceToNextLevel = 100;
+    public int deathCount = 0;
+
+    [Header("Punkty do Rozdania")]
+    public int availableSkillPoints = 2; 
+    public int availableStatPoints = 5;
 
     [Header("Podstawowe Statystyki (Zale¿ne od Klasy i Poziomu)")]
     public int baseMaxHP = 230;
@@ -87,6 +92,55 @@ public class PlayerDataManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+    // Tê funkcjê wywo³uje TournamentManager po klikniêciu "Wycofaj siê"
+    public void AddExperience(int amount)
+    {
+        // Jeœli mamy maksymalny poziom, ignorujemy expa
+        if (currentLevel >= 35) return;
+
+        currentExperience += amount;
+        Debug.Log($"Zdobyto {amount} punktów doœwiadczenia!");
+
+        // Magiczna pêtla: Dzia³a dopóki mamy doœæ expa na kolejny poziom i nie dobiliœmy do 35 lvl
+        while (currentExperience >= GetRequiredExpForNextLevel() && currentLevel < 35)
+        {
+            LevelUp();
+        }
+
+        // Blokada po wbiciu max levela
+        if (currentLevel >= 35)
+        {
+            currentLevel = 35;
+            currentExperience = 0;
+        }
+    }
+
+    private void LevelUp()
+    {
+        // Najpierw "p³acimy" expem za ten poziom
+        currentExperience -= GetRequiredExpForNextLevel();
+
+        // Wbijamy poziom
+        currentLevel++;
+
+        // --- NAGRODY ZA LEVEL ---
+        availableSkillPoints += 2;
+        availableStatPoints += 5;
+
+        Debug.Log($"<color=cyan>AWANS! Osi¹gniêto {currentLevel} poziom postaci! Przyznano 2 pkt umiejêtnoœci i 5 pkt statystyk.</color>");
+    }
+
+    // W tym miejscu w przysz³oœci wpiszesz dok³adne wymagania!
+    public int GetRequiredExpForNextLevel()
+    {
+        // Na ten moment to prosty wzór:
+        // Lvl 1 -> wymaga 100 expa
+        // Lvl 2 -> wymaga 150 expa
+        // Lvl 3 -> wymaga 200 expa itd.
+        // PóŸniej zamienimy to na dok³adn¹ listê wartoœci, jakie tylko sobie wymyœlisz!
+
+        return 100 + (currentLevel - 1) * 50;
     }
 
     // Ta funkcja w przysz³oœci obs³u¿y wybór klasy w Menu G³ównym!

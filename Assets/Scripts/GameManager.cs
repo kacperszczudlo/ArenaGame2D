@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Globalne Zasoby")]
     public int globalGold = 0;
+    public int tournamentGems = 0;
 
     [Header("Stan Turnieju")]
     public int currentTournamentIndex = 0; // Który to przeciwnik z rzêdu? (0 to pierwszy)

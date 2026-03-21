@@ -465,7 +465,12 @@ public class BattleManager : MonoBehaviour
             {
                 // ZASADY TURNIEJU: Wrzucamy to co mieliœmy w worku do g³ównej puli i resetujemy turniej
                 GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
-                PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
+
+                // --- NOWOŒÆ: U¿ywamy nowej funkcji, ¿eby œmieræ te¿ mog³a daæ Level Up! ---
+                if (GameManager.Instance.pendingXP > 0)
+                {
+                    PlayerDataManager.Instance.AddExperience(GameManager.Instance.pendingXP);
+                }
 
                 if (GameManager.Instance.pendingGold > 0 || GameManager.Instance.pendingXP > 0)
                 {
@@ -476,6 +481,7 @@ public class BattleManager : MonoBehaviour
                     if (summaryRewardsText != null) summaryRewardsText.text = "Niestety, wracasz z pustymi rêkami...";
                 }
 
+                PlayerDataManager.Instance.deathCount++;
                 GameManager.Instance.pendingGold = 0;
                 GameManager.Instance.pendingXP = 0;
                 GameManager.Instance.currentTournamentIndex = 0;
