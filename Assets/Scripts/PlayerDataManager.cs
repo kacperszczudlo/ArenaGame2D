@@ -143,17 +143,5 @@ public class PlayerDataManager : MonoBehaviour
         return 100 + (currentLevel - 1) * 50;
     }
 
-    // Ta funkcja w przysz³oœci obs³u¿y wybór klasy w Menu G³ównym!
-    /*
-    public void InitializeClass(ClassData chosenClass)
-    {
-        baseStrength = chosenClass.startStrength;
-        // ... itd ...
-        unlockedSkills.Clear();
-        foreach(var startSkill in chosenClass.startingSkills)
-        {
-            unlockedSkills.Add(new PlayerSkillSaveData { skill = startSkill, currentLevel = 1 });
-        }
-    }
-    */
+    
 }
