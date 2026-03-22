@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public int currentTournamentIndex = 0; // Który to przeciwnik z rzêdu? (0 to pierwszy)
     public int pendingGold = 0; // Z³oto w "wirtualnym worku" 
     public int pendingXP = 0;   // Doœwiadczenie w "wirtualnym worku"
+    public int pendingGems = 0;
 
     void Awake()
     {

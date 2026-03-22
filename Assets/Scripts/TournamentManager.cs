@@ -33,7 +33,6 @@ public class TournamentManager : MonoBehaviour
     {
         int currentIndex = GameManager.Instance.currentTournamentIndex;
 
-        // Sprawdzamy czy gracz nie pokona³ ju¿ wszystkich!
         if (currentIndex >= tournamentEnemies.Count)
         {
             if (enemyInfoText != null) enemyInfoText.text = "Mistrz Areny Pokonany!";
@@ -44,22 +43,18 @@ public class TournamentManager : MonoBehaviour
             return;
         }
 
-        // Pobieramy obecnego wroga z listy
         EnemyData currentEnemy = tournamentEnemies[currentIndex];
 
-        // Aktualizujemy informacje o przeciwniku
         if (enemyAvatar != null) enemyAvatar.sprite = currentEnemy.avatarImage;
         if (enemyInfoText != null) enemyInfoText.text = $"{currentEnemy.enemyName} - Lvl {currentEnemy.level}";
         if (progressText != null) progressText.text = $"Przeciwnik: {currentIndex + 1} / {tournamentEnemies.Count}";
 
-        // NOWOŒÆ: Pokazujemy potencjaln¹ nagrodê, weryfikuj¹c level wroga! (Musi byæ wy¿szy!)
         if (enemyRewardText != null)
         {
             int actualExp = (currentEnemy.level > PlayerDataManager.Instance.currentLevel) ? currentEnemy.expReward : 0;
+            string expText = actualExp > 0 ? $"+{actualExp}" : "<color=#888888>0 (Brak wyzwania!)</color>";
 
-            // Jeœli dostajemy 0 expa, wyœwietlamy na szaro
-            string expText = actualExp > 0 ? $"+{actualExp}" : "<color=#888888>0</color>";
-
+            // Czysty tekst nagrody - ZERO spoilerów o gemach!
             enemyRewardText.text = $"Z³oto: +{currentEnemy.goldReward}  \nExp: {expText}";
         }
 
@@ -68,7 +63,7 @@ public class TournamentManager : MonoBehaviour
 
     void UpdatePendingRewardsUI()
     {
-        // Pokazujemy to, co gracz ju¿ uzbiera³ w tym podejœciu i co bezpiecznie zabierze
+        // Worek pokazuje tylko z³oto i exp
         if (pendingRewardsText != null)
         {
             pendingRewardsText.text = $"Zebrane ³upy:\nZ³oto: {GameManager.Instance.pendingGold}\nExp: {GameManager.Instance.pendingXP}";
@@ -94,23 +89,21 @@ public class TournamentManager : MonoBehaviour
     // Podpinane pod przycisk "WYCOFAJ SIÊ / OPUŒÆ ARENÊ"
     public void OnClick_Retreat()
     {
-        // 1. Zgarniamy ³upy do g³ównej puli!
         GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
 
-        Debug.Log($"<color=green>Wycofujesz siê! Zgarniasz {GameManager.Instance.pendingGold} z³ota i {GameManager.Instance.pendingXP} expa.</color>");
+        // Zgarniamy gemy z worka w tle (gracz tego nie widzi w lobby, ale dostaje je na konto!)
+        GameManager.Instance.tournamentGems += GameManager.Instance.pendingGems;
 
-        // 2. Przekazujemy Exp przez now¹ funkcjê w PlayerDataManagera (odpali to levelowanie!)
         if (GameManager.Instance.pendingXP > 0)
         {
             PlayerDataManager.Instance.AddExperience(GameManager.Instance.pendingXP);
         }
 
-        // 3. Resetujemy stan turnieju
         GameManager.Instance.currentTournamentIndex = 0;
         GameManager.Instance.pendingGold = 0;
         GameManager.Instance.pendingXP = 0;
+        GameManager.Instance.pendingGems = 0; // Czyœcimy gemy
 
-        // Wracamy na mapê g³ówn¹!
         SceneManager.LoadScene("MainScene");
     }
 }

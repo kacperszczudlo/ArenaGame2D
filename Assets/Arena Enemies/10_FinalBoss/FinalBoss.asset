@@ -59,3 +59,5 @@ MonoBehaviour:
   aiBrain: {fileID: 11400000, guid: 0506ff42213fc0446ae859f4cd65eb81, type: 2}
   goldReward: 250000
   expReward: 0
+  gemRewardAmount: 30
+  gemRewardChance: 100

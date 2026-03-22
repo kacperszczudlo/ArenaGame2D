@@ -435,27 +435,33 @@ public class BattleManager : MonoBehaviour
 
             if (GameManager.Instance.isTournamentBattle)
             {
-                // ZASADY TURNIEJU: £upy id¹ do worka (ryzykujemy dalej)
+                // ZASADY TURNIEJU: £upy id¹ do worka
+                int droppedGems = 0;
+
                 if (defeatedEnemy != null)
                 {
                     GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
 
-                    // --- ZMIANA: Wróg musi mieæ WY¯SZY level ni¿ gracz! ---
                     if (defeatedEnemy.level > PlayerDataManager.Instance.currentLevel)
                     {
                         GameManager.Instance.pendingXP += defeatedEnemy.expReward;
                     }
-                    else
+
+                    // --- NOWOŒÆ: Losowanie Gemów Turniejowych! ---
+                    if (defeatedEnemy.gemRewardAmount > 0 && Random.Range(0f, 100f) <= defeatedEnemy.gemRewardChance)
                     {
-                        Debug.Log($"<color=gray>Przeciwnik (Lvl {defeatedEnemy.level}) nie stanowi³ wyzwania! Brak doœwiadczenia.</color>");
+                        droppedGems = defeatedEnemy.gemRewardAmount;
+                        GameManager.Instance.pendingGems += droppedGems;
+                        Debug.Log($"<color=cyan>Zdobyto {droppedGems} gemów!</color>");
                     }
                 }
                 GameManager.Instance.currentTournamentIndex++;
 
-                // Aktualizujemy tekst podsumowania, uwzglêdniaj¹c, czy dostaliœmy expa!
                 int gainedExp = (defeatedEnemy != null && defeatedEnemy.level > PlayerDataManager.Instance.currentLevel) ? defeatedEnemy.expReward : 0;
+                string gemsText = droppedGems > 0 ? $"\nGemy turniejowe: {droppedGems}" : ""; // Dopisek, jeœli wypad³y!
 
-                if (summaryRewardsText != null) summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {gainedExp}";
+                if (summaryRewardsText != null)
+                    summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {gainedExp}{gemsText}";
             }
             else
             {
@@ -496,6 +502,7 @@ public class BattleManager : MonoBehaviour
                 PlayerDataManager.Instance.deathCount++;
                 GameManager.Instance.pendingGold = 0;
                 GameManager.Instance.pendingXP = 0;
+                GameManager.Instance.pendingGems = 0;
                 GameManager.Instance.currentTournamentIndex = 0;
             }
             else
