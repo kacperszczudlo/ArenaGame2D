@@ -1,2 +1,17 @@
 fileFormatVersion: 2
 guid: 4dbc11356d798211994ffce4c3f9a0aa
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - categoryPrefab: {fileID: 3025197142539896918, guid: 77eff7fc3ba87e802a88762cf21e12c5, type: 3}
+  - itemPrefab: {fileID: 3376496935383830084, guid: 7b67e68e8b19de8d7a78ab10c68ed4ae, type: 3}
+  - closeButton: {instanceID: 0}
+  - prevTierButton: {instanceID: 0}
+  - nextTierButton: {instanceID: 0}
+  - pageText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

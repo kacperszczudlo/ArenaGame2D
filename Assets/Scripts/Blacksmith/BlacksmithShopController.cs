@@ -11,17 +11,16 @@ using TMPro;
 public class BlacksmithShopController : MonoBehaviour 
 {
     [Header("Złoto i Ekonomia")]
-    public int currentGold = 1500; // Twoje początkowe złoto
+    public int currentGold = 1500; 
 
-    [Header("Prefaby:")]
+    [Header("Podepnij z folderu Prefabs:")]
     public GameObject categoryPrefab;
     public GameObject itemPrefab;
 
-    [Header("Przyciski i UI:")]
-    public Button closeButton;       
-    public Button prevTierButton;    
-    public Button nextTierButton;    
-    public TMP_Text pageText; 
+    private Button closeButton;       
+    private Button prevTierButton;    
+    private Button nextTierButton;    
+    private TMP_Text pageText; 
 
     private List<ItemCategory> categories;
     private List<ItemTier> tiers;
@@ -36,6 +35,7 @@ public class BlacksmithShopController : MonoBehaviour
 
     void Awake() 
     {
+        // --- Automatyczne szukanie głównych widoków ---
         Transform cv = transform.Find("Categories_View");
         if (cv != null) { catView = cv.gameObject; catGrid = cv.Find("Category_Grid"); }
         
@@ -44,12 +44,21 @@ public class BlacksmithShopController : MonoBehaviour
         
         goldTxt = transform.Find("Header_Panel/Gold_Container/Gold_Text")?.GetComponent<TMP_Text>();
 
+        // --- Automatyczne podpinanie przycisków ---
         Transform backBtn = transform.Find("Header_Panel/Back_Button");
         if (backBtn != null) backBtn.GetComponent<Button>().onClick.AddListener(ShowCategories);
 
+        closeButton = transform.Find("Header_Panel/CloseButton")?.GetComponent<Button>();
         if (closeButton != null) closeButton.onClick.AddListener(CloseShop);
+
+        prevTierButton = transform.Find("Items_View/Pagination_Panel/Btn_Prev")?.GetComponent<Button>();
         if (prevTierButton != null) prevTierButton.onClick.AddListener(PreviousTier);
+
+        nextTierButton = transform.Find("Items_View/Pagination_Panel/Btn_Next")?.GetComponent<Button>();
         if (nextTierButton != null) nextTierButton.onClick.AddListener(NextTier);
+
+        pageText = transform.Find("Items_View/Pagination_Panel/Btn_Page_1/Text (TMP)")?.GetComponent<TMP_Text>() ?? 
+                   transform.Find("Items_View/Pagination_Panel/Btn_Page_1")?.GetComponent<TMP_Text>();
 
         LoadDatabase();
     }
@@ -62,24 +71,6 @@ public class BlacksmithShopController : MonoBehaviour
 
     public void UpdateGoldUI() {
         if (goldTxt != null) goldTxt.text = "ZŁOTO: " + currentGold;
-    }
-
-    public void TryBuyItem(int price, Sprite icon, string categoryName)
-    {
-        if (currentGold >= price)
-        {
-            bool itemAdded = InventoryManager.Instance.AddItemToInventory(icon, categoryName);
-            
-            if (itemAdded) {
-                currentGold -= price;
-                UpdateGoldUI();
-                Debug.Log("Kupiono pomyślnie!");
-            }
-        }
-        else
-        {
-            Debug.Log("Brak złota!");
-        }
     }
 
     public void ShowCategories() {
@@ -127,6 +118,7 @@ public class BlacksmithShopController : MonoBehaviour
         foreach (var v in variants) {
             var go = Instantiate(itemPrefab, itmList);
             var slot = go.GetComponent<ShopItemSlotUI>() ?? go.AddComponent<ShopItemSlotUI>();
+            
             slot.Setup(currentCategory.name + " " + v.suffix, currentTier, currentCategory, v, this); 
         }
 

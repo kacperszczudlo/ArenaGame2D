@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6368762967470648124}
   - component: {fileID: 5457899690742492567}
   - component: {fileID: 5961821285893357792}
-  - component: {fileID: 7048249981074660214}
+  - component: {fileID: 7863792524128277709}
   m_Layer: 5
   m_Name: SlotItem
   m_TagString: Untagged
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 3, y: -3}
   m_UseGraphicAlpha: 1
---- !u!114 &7048249981074660214
+--- !u!114 &7863792524128277709
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,12 +102,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6712525665318645964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 522b2d71925015b55ac7564974eb4a5a, type: 3}
+  m_Script: {fileID: 11500000, guid: c20616c37824de2e09ce2c5137689b9d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventorySlot
-  iconImage: {fileID: 4846254625320331324}
-  isFull: 0
-  itemCategory: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSlot
+  allowedType: 0
+  isEquippedSlot: 0
 --- !u!1 &8607425530967312181
 GameObject:
   m_ObjectHideFlags: 0

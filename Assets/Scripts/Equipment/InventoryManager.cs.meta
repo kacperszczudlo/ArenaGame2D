@@ -1,2 +1,13 @@
 fileFormatVersion: 2
 guid: 26d56c91d46e3aecca6910a4b4193c99
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gridInventory: {fileID: 3450193782863069517, guid: d6dd19066c11a1a1c94cb7cbd0b08935, type: 3}
+  - draggableItemPrefab: {fileID: 3529878095625891615, guid: d6dd19066c11a1a1c94cb7cbd0b08935, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
