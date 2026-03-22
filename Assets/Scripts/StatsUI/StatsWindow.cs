@@ -31,7 +31,6 @@ public class StatsWindow : MonoBehaviour
     public TextMeshProUGUI physicalArmorTotalText;
     public TextMeshProUGUI magicArmorTotalText;
 
-    // --- NOWOŒÆ: Wywo³anie przy starcie, ¿eby wyeliminowaæ b³¹d pustego okna ---
     void Start()
     {
         RefreshWindow();
@@ -103,7 +102,6 @@ public class StatsWindow : MonoBehaviour
             int total = baseValue + eqBonus;
             totalText.text = total.ToString();
 
-            // --- NOWOŒÆ: Zawsze piêkny, soczysty zielony dla ³¹cznych statystyk! ---
             totalText.color = Color.green;
         }
     }
@@ -127,7 +125,6 @@ public class StatsWindow : MonoBehaviour
         return false;
     }
 
-    // --- NOWOŒÆ: Funkcja zamykaj¹ca okno ---
     public void CloseWindow()
     {
         gameObject.SetActive(false);

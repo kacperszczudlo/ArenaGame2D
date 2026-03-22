@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // Wymagane do ³adowania scen!
+using UnityEngine.SceneManagement;
 
 public class ArenaInteractable : MonoBehaviour
 {
@@ -12,14 +12,13 @@ public class ArenaInteractable : MonoBehaviour
         // Sprawdzamy, czy to gracz wszed³ w strefê
         if (collision.CompareTag("Player"))
         {
-            // 1. Zapamiêtujemy pozycjê gracza w GameManagerze, ale z OFFSETEM!
+            // 1. Zapamiêtujemy pozycjê gracza w GameManagerze, ale z OFFSETEM
             if (GameManager.Instance != null)
             {
-                // Zapisujemy pozycjê gracza, ale odejmujemy 2 od osi Y (przesuwamy go w dó³)
+                // Zapisujemy pozycjê gracza, ale odejmujemy 2 od osi Y 
                 Vector3 safePosition = collision.transform.position + new Vector3(0f, -2f, 0f);
 
                 GameManager.Instance.lastMapPosition = safePosition;
-                Debug.Log($"<color=yellow>Zapisano bezpieczn¹ pozycjê na mapie: {safePosition}. £adujê Lobby!</color>");
             }
 
             // 2. £adujemy scenê z turniejem

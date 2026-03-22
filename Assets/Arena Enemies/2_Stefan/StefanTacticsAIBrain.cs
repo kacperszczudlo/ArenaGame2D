@@ -14,10 +14,9 @@ public class AIBrain_RoundArcher : EnemyAIBrain
         CharacterSkill fastArrow = me.mySkills[0];
         CharacterSkill normalArrow = me.mySkills[1];
 
-        // Pobieramy aktualny numer rundy prosto z Mened¿era Walki!
         int round = BattleManager.Instance.currentRound;
 
-        Debug.Log($"<color=orange>{me.combatantName} analizuje taktykê dla Rundy {round}!</color>");
+        
 
         if (round == 1)
         {
@@ -35,9 +34,9 @@ public class AIBrain_RoundArcher : EnemyAIBrain
         }
         else if (round % 3 == 0)
         {
-            // --- RUNDA 3, 6, 9, 12... (Co trzeci¹ rundê) ---
-            // £ucznik opuszcza gardê i ³aduje potê¿ny, morderczy strza³ za 5 PA!
-            Debug.Log($"<color=red>UWAGA! {me.combatantName} ³aduje potê¿ny strza³!</color>");
+            // --- RUNDA 3, 6, 9, 12... ---
+            // £ucznik opuszcza gardê i ³aduje potê¿ny, morderczy strza³ za 5 PA
+            
             actions.Add(new CombatAction { actor = me, target = player, skill = normalArrow, paInvested = 5, originalIndex = actionCounter++ });
             actions.Add(new CombatAction { actor = me, target = player, skill = normalArrow, paInvested = 5, originalIndex = actionCounter++ });
             actions.Add(new CombatAction { actor = me, target = player, skill = normalArrow, paInvested = 5, originalIndex = actionCounter++ });
@@ -50,8 +49,8 @@ public class AIBrain_RoundArcher : EnemyAIBrain
         }
         else
         {
-            // --- POZOSTA£E RUNDY (np. 2, 4, 5, 7...) ---
-            // Standardowy, powtarzalny ostrza³. Dwie szybkie strza³y i bezpieczna obrona.
+            // --- POZOSTA£E RUNDY ---
+            // Standardowy, powtarzalny ostrza³. 
             actions.Add(new CombatAction { actor = me, target = player, skill = normalArrow, paInvested = 2, originalIndex = actionCounter++ });
             actions.Add(new CombatAction { actor = me, target = player, skill = fastArrow, paInvested = 3, originalIndex = actionCounter++ });
             actions.Add(new CombatAction { actor = me, target = player, skill = fastArrow, paInvested = 3, originalIndex = actionCounter++ });

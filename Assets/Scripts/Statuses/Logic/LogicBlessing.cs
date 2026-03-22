@@ -4,7 +4,7 @@ public class LogicBlessing : StatusLogic
 {
     public override int OnTakeDamage(Combatant owner, StatusEffect effect, int incomingDamage, bool isDot, SkillCategory category)
     {
-        // Unikamy ciosów i magii, ale trucizny we krwi nie da siê unikn¹æ!
+        // Unikamy ciosów i magii, ale trucizny we krwi nie da siê unikn¹æ
         if (isDot) return incomingDamage;
 
         if (effect.remainingHits > 0 && incomingDamage > 0)

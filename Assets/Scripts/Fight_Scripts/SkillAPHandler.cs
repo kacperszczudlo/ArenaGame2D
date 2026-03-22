@@ -5,13 +5,13 @@ using System.Collections.Generic;
 public class SkillAPHandler : MonoBehaviour
 {
     [Header("Punkty Akcji (PA)")]
-    public List<Image> apSquares; // Tu przeci¹gnij obrazki kwadracików
+    public List<Image> apSquares; // obrazki kwadracików
     public Sprite activeSprite;   // Grafika "naklikanego" kafelka
     public Sprite inactiveSprite; // Grafika pustego kafelka
     public int currentPA = 0;
 
     [Header("Dane Umiejêtnoœci")]
-    public CharacterSkill currentSkill; // Korzystamy z nowej klasy
+    public CharacterSkill currentSkill; 
     public Image mainIconDisplay;
 
     // JEDNA, POPRAWNA funkcja do przypisywania skilli
@@ -28,7 +28,7 @@ public class SkillAPHandler : MonoBehaviour
 
     public void OpenSkillSelection()
     {
-        // Kó³ko szuka na scenie BattleManagera, bierze od niego Gracza (Rycerza) i jego osobiste skille!
+        // Kó³ko szuka na scenie BattleManagera, bierze od niego Gracza (Rycerza) i jego osobiste skille
         BattleManager manager = Object.FindFirstObjectByType<BattleManager>();
         if (manager != null && manager.player != null)
         {
@@ -68,7 +68,6 @@ public class SkillAPHandler : MonoBehaviour
         UpdateVisuals();
     }
 
-    // Opcjonalnie: prawy klik na ikonê skilla czyœci wszystko
     public void ClearAll()
     {
         if (CombatAPManager.Instance != null) CombatAPManager.Instance.RefundAP(currentPA);

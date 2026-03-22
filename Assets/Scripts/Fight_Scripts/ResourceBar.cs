@@ -4,9 +4,9 @@ using TMPro;
 
 public class ResourceBar : MonoBehaviour
 {
-    public Image fillImage;            // Obrazek paska (np. MANA_BAR)
-    public TextMeshProUGUI currentText; // Obiekt "Current_Value"
-    public TextMeshProUGUI maxText;     // Obiekt "Max_Value"
+    public Image fillImage;
+    public TextMeshProUGUI currentText;
+    public TextMeshProUGUI maxText;
 
     private float max;
 

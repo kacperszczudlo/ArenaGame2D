@@ -30,15 +30,12 @@ public static class DamageCalculator
         float PA_AttackMod = 1.0f + (allocatedPA * 0.2f);
         float PA_DefenseMod = 1.0f + (defenderPA * 0.2f);
 
-        // --- FIX MNO¯NIKA CELNOŒCI (modU) ---
-        // Pobieramy Twoje 2.4 lub 1.1 z Inspektora
+        // MNO¯NIKA CELNOŒCI (modU) ---
         float hitModU = levelData != null ? levelData.hitChanceBonus : 1.0f;
 
-        // Zabezpieczenie: jeœli wpisa³eœ w Unity "0" (np. na starych skillach), 
-        // traktujemy to jako standardowe x1.0, ¿eby atak nie mia³ 0% szans.
+        
         if (hitModU <= 0.01f) hitModU = 1.0f;
 
-        // TERAZ hitModU prawid³owo mno¿y si³ê ataku (zgodnie z Twoim GDD!)
         float attackPower = (40f + attackerStat + attacker.currentLevel) * PA_AttackMod * hitModU;
         float defensePower = (40f + defenderStat + defender.currentLevel) * PA_DefenseMod;
 
@@ -57,7 +54,7 @@ public static class DamageCalculator
             else
             {
                 hitChance = (attackPower / (attackPower + defensePower)) * 100f;
-                // Dodajemy tylko karê p³ask¹ z Furii (-20%)
+                // Dodajemy tylko karê p³ask¹ z Furii
                 hitChance *= attacker.GetCombatHitChanceMultiplier();
 
                 if (attacker.isPlayer) hitChance *= (1f + attacker.hitChanceMultiplierBonus);
@@ -69,8 +66,8 @@ public static class DamageCalculator
             StatusEffect voodooCurse = defender.activeStatuses.Find(s => s.type == StatusType.VoodooCurse);
             if (voodooCurse != null)
             {
-                // Mno¿ymy aktualn¹ szansê. Jeœli wpisa³eœ w Unity "50", to pomno¿y szansê przez 1.5!
-                // Z 42% zrobi siê równe 63%.
+                // Mno¿ymy aktualn¹ szansê. Jeœli wpisane w Unity "50", to pomno¿y szansê przez 1.5
+                
                 hitChance *= (1f + (voodooCurse.hitChanceMod / 100f));
             }
         }
@@ -83,11 +80,11 @@ public static class DamageCalculator
         if (Random.Range(0f, 100f) > hitChance)
         {
             result.isHit = false;
-            // result.chanceText zostaje jako np. "45%", a Mened¿er Walki dopisze "Pud³o"
+            
             return result;
         }
 
-        // 2. Skoro atak mia³ trafiæ, dajemy obroñcy szansê na ratunek: UNIK!
+        // 2.jeœli atak mia³ trafiæ, dajemy obroñcy szansê na ratunek: UNIK!
         if (defender.isPlayer && defender.dodgeChance > 0 && Random.Range(0f, 100f) <= defender.dodgeChance)
         {
             result.isHit = false;
@@ -96,7 +93,7 @@ public static class DamageCalculator
             return result;
         }
 
-        // 3. Jeœli atak by³ celny i gracz go nie unikn¹³ -> mamy trafienie!
+        // 3. Jeœli atak by³ celny i gracz go nie unikn¹³ -> mamy trafienie
         result.isHit = true;
 
         if (data.category == SkillCategory.PositiveCharm) return result;
@@ -104,14 +101,14 @@ public static class DamageCalculator
         float critChance = attacker.critChance;
         result.isCritical = Random.Range(0f, 100f) <= critChance;
 
-        // --- MNO¯NIK OBRA¯EÑ ZOSTAWIONY W SPOKOJU ---
+        //MNO¯NIK OBRA¯EÑ 
         float dmgModU = levelData != null ? levelData.damageMultiplier : 1.0f;
         float baseStatDmg = (data.strengthWeight * attacker.strength) + (data.agilityWeight * attacker.agility) + (data.knowledgeWeight * attacker.knowledge) + (data.powerWeight * attacker.power);
         float weaponDmg = attacker.weaponDamage * data.weaponDamageWeight;
 
         float rawDamage = (baseStatDmg + weaponDmg) * dmgModU * attacker.GetCombatDamageMultiplier();
 
-        // --- NOWOŒÆ: Mno¿nik z ekwipunku gracza ---
+        //Mno¿nik z ekwipunku gracza
         if (attacker.isPlayer) rawDamage *= (1f + attacker.damageMultiplierBonus);
 
         rawDamage *= Random.Range(0.7f, 1.3f);
@@ -121,23 +118,21 @@ public static class DamageCalculator
         float reducedDamage = rawDamage;
         float activeArmor = 0;
 
-        // Prosty podzia³: Fizyczne (Miecz/£uk) vs Magiczne (Magia/Uroki)
+        // podzia³: Fizyczne (Miecz/£uk) vs Magiczne (Magia/Uroki)
         if (data.category == SkillCategory.MeleePhysical || data.category == SkillCategory.RangedPhysical)
         {
             activeArmor = defender.GetCombatPhysicalArmor();
         }
         else
         {
-            // Tutaj wpadnie RangedMagic (Mag Ognia) oraz NegativeCharm (Uroki)
             activeArmor = defender.GetCombatMagicResistance();
         }
 
-        // --- TWÓJ NOWY SYSTEM PROCENTOWY ---
         // 1 punkt pancerza = 0.9% redukcji obra¿eñ
         float reductionPercentage = activeArmor * 0.9f;
 
         // Ograniczamy maksymaln¹ redukcjê do 90% (¿eby zawsze wejœæ za minimum 10%)
-        // Zostawiamy dó³ otwarty (np. -999%), ¿eby Furia mog³a sprawiæ, ¿e bêdziesz bra³ WIÊCEJ obra¿eñ!
+        // Zostawiamy dó³ otwarty, ¿eby Furia mog³a sprawiæ, ¿e bêdziesz bra³ WIÊCEJ obra¿eñ
         reductionPercentage = Mathf.Clamp(reductionPercentage, -999f, 90f);
 
         // Przeliczamy to na mno¿nik (np. 90% redukcji = mno¿nik 0.1)
@@ -146,7 +141,7 @@ public static class DamageCalculator
         // Aplikujemy pancerz do obra¿eñ
         reducedDamage *= armorMultiplier;
 
-        // --- KRYTYK (Odpala siê po pancerzu, dok³adnie tak jak chcia³eœ!) ---
+        // KRYTYK (Odpala siê po pancerzu
         if (result.isCritical)
         {
             if (Random.Range(0f, 100f) <= 20f) reducedDamage *= 3.0f;
@@ -160,7 +155,7 @@ public static class DamageCalculator
     }
 }
 
-// TA KLASA MUSI BYÆ TUTAJ (pod DamageCalculator), aby b³¹d znikn¹³!
+// (pod DamageCalculator)
 public class AttackResult
 {
     public bool isHit;

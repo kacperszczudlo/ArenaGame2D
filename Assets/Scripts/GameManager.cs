@@ -5,12 +5,12 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [Header("Przejœcia miêdzy scenami")]
-    public GameObject currentPlayerPrefab; // Zaktualizowane: Cia³o wybrane przez gracza
-    public EnemyData currentEnemyToFight;  // Kogo idziemy biæ?
-    public Vector3 lastMapPosition; // Zapamiêta koordynaty X, Y, Z przed wejœciem w krzaki!
+    public GameObject currentPlayerPrefab;
+    public EnemyData currentEnemyToFight;
+    public Vector3 lastMapPosition; // Zapamiêta koordynaty X, Y, Z
 
     [Header("Kontekst Walki")]
-    public string sceneToLoadAfterBattle = "ArenaLobby"; // Gdzie mamy wróciæ po walce?
+    public string sceneToLoadAfterBattle = "ArenaLobby";
     public bool isTournamentBattle = true;
 
     [Header("Globalne Zasoby")]
@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public int tournamentGems = 0;
 
     [Header("Stan Turnieju")]
-    public int currentTournamentIndex = 0; // Który to przeciwnik z rzêdu? (0 to pierwszy)
+    public int currentTournamentIndex = 0;
     public int pendingGold = 0; // Z³oto w "wirtualnym worku" 
     public int pendingXP = 0;   // Doœwiadczenie w "wirtualnym worku"
     public int pendingGems = 0;
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Ten skrypt te¿ przetrwa zmianê sceny!
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {

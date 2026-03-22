@@ -10,7 +10,6 @@ public class LogicFreeze : StatusLogic
         owner.currentStamina -= staminaDrain;
         if (owner.currentStamina < 0) owner.currentStamina = 0;
 
-        // --- NOWOŒÆ: ODŒWIE¯AMY UI NATYCHMIAST! ---
         if (owner.myUI != null) owner.myUI.UpdateUI();
 
         owner.ShowFloatingText($"-{staminaDrain} Kondycji", DamagePopup.PopupType.Miss);

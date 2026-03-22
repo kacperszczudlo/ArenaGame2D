@@ -5,7 +5,7 @@ using System.Collections;
 public class SkillEffectVFX : MonoBehaviour
 {
     public Image iconImage;
-    public CanvasGroup canvasGroup; // Odpowiada za p³ynne zanikanie ca³ego obiektu
+    public CanvasGroup canvasGroup; 
     public float displayTime = 0.6f;
     public float fadeSpeed = 3f;
 
@@ -34,7 +34,6 @@ public class SkillEffectVFX : MonoBehaviour
         }
         transform.localScale = targetScale;
 
-        // Czekamy chwilê
         yield return new WaitForSeconds(displayTime);
 
         // P³ynne znikanie przez CanvasGroup

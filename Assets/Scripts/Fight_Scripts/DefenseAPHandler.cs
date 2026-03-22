@@ -16,7 +16,6 @@ public class DefenseAPHandler : MonoBehaviour
     public Sprite inactiveSprite; // Pusty kwadracik
     public int currentPA = 0;
 
-    // Zauwa¿ brak AssignSkill i OpenSkillSelection!
 
     public void OnSquareClicked(int index)
     {
@@ -52,7 +51,7 @@ public class DefenseAPHandler : MonoBehaviour
         UpdateVisuals();
     }
 
-    public void UpdateVisuals() // Zmienione na publiczne, ¿eby BattleManager móg³ to odœwie¿aæ
+    public void UpdateVisuals() 
     {
         for (int i = 0; i < apSquares.Count; i++)
         {

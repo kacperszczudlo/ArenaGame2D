@@ -158,7 +158,7 @@ public class AbilitiesWindow : MonoBehaviour
 
             string sName = data.skillName.ToLower();
 
-            // --- POPRAWIONY BLOK DLA ZAKA¯ENIA / TRUCIZNY ---
+            // ---  ZAKA¯ENIA / TRUCIZNY ---
             if (sName.Contains("zatrut") || sName.Contains("trucizna") || sName.Contains("zakazenie") || sName.Contains("zaka¿enie"))
             {
                 effectsStats += $"Szansa na zaka¿enie: {previewData.statusEffectChance}%\n";
@@ -250,25 +250,24 @@ public class AbilitiesWindow : MonoBehaviour
 
             if (PlayerDataManager.Instance.availableSkillPoints >= totalCost && hasLevel)
             {
-                // Odejmujemy ca³¹ kwotê ze skarbca
+                // Odejmujemy wszystkie potrzebne pnkty z puli
                 PlayerDataManager.Instance.availableSkillPoints -= totalCost;
 
                 // Awansujemy skill OD RAZU na docelowy poziom!
                 selectedSkill.currentLevel = currentPreviewLevel;
                 selectedSkill.isUnlocked = true;
 
-                // Zapisujemy nowy poziom do g³ównego sejwa gry
+                // Zapisujemy nowy poziom do g³ównego sejwaa gry
                 var savedData = PlayerDataManager.Instance.unlockedSkills.Find(s => s.skill == selectedSkill.data);
                 if (savedData != null) savedData.currentLevel = selectedSkill.currentLevel;
 
-                // Po awansie automatycznie podgl¹damy kolejny level (jeœli nie dobiliœmy do sufitu)
+                // Po awansie automatycznie podgl¹damy kolejny level (jeœli nie dobiliœmy do maxa)
                 if (currentPreviewLevel < selectedSkill.data.progression.Count)
                 {
                     currentPreviewLevel++;
                 }
 
                 RefreshWindow();
-                Debug.Log($"<color=yellow>Zainwestowano {totalCost} pkt. {selectedSkill.data.skillName} przeskakuje na poziom {selectedSkill.currentLevel}!</color>");
             }
         }
     }
@@ -282,7 +281,6 @@ public class AbilitiesWindow : MonoBehaviour
         if (data.powerWeight > 0) parts.Add($"{data.powerWeight}*Moc");
         if (data.weaponDamageWeight > 0) parts.Add("Broñ");
 
-        // --- NOWOŒÆ: Jeœli skill (np. Tarcza lub Furia) nie uderza i nie ma atrybutów, wyzeruj tekst! ---
         if (parts.Count == 0) return "";
 
         return $"OBR.: {string.Join(" + ", parts)}";

@@ -5,13 +5,13 @@ using UnityEngine;
 public class Combatant : MonoBehaviour
 {
     [Header("Wygl¹d (Do efektu zamro¿enia)")]
-    public SpriteRenderer characterSprite; // Bêdziesz musia³ przeci¹gn¹æ tu grafikê z Unity!
+    public SpriteRenderer characterSprite;
     private Color originalColor = Color.white;
 
     [Header("Podstawowe Informacje")]
     public string combatantName;
     public bool isPlayer;
-    public Sprite avatarImage; // ZDJÊCIE TWARZY
+    public Sprite avatarImage;
 
     [Header("Leveling")]
     public int currentLevel = 1;
@@ -20,19 +20,19 @@ public class Combatant : MonoBehaviour
     public EnemyData enemyTemplate;
 
     [Header("Po³¹czenie z UI")]
-    public CharacterUI myUI; // Referencja do panelu na dole ekranu
+    public CharacterUI myUI;
 
     [Header("Ustawienia Areny")]
     [Tooltip("W jakiej odleg³oœci od œrodka tej postaci ma stan¹æ wróg, ¿eby zadaæ cios w zwarciu?")]
-    public float meleeStoppingDistance = 1.5f; // Dla smoka zrobisz np. 4.0, dla szczura 0.8
+    public float meleeStoppingDistance = 1.5f;
 
     [Header("Efekty Trafienia (VFX)")]
-    public GameObject skillEffectPrefab; // Przeci¹gniesz tu nowy prefab
-    public Transform centerSpawnPoint;   // Œrodek postaci (klatka piersiowa)
+    public GameObject skillEffectPrefab;
+    public Transform centerSpawnPoint;
 
     [Header("Efekty")]
-    public GameObject damagePopupPrefab; // Tu wrzucisz nowy prefab
-    public Transform popupSpawnPoint;    // Miejsce nad g³ow¹
+    public GameObject damagePopupPrefab;
+    public Transform popupSpawnPoint;
     public List<StatusEffect> activeStatuses = new List<StatusEffect>();
 
     [Header("Statystyki (Dla Gracza nadpisze je Mened¿er)")]
@@ -54,13 +54,13 @@ public class Combatant : MonoBehaviour
     public int strength = 20;
     public int knowledge = 15;
     public int agility = 18;
-    public int power = 10; // DODANE: Moc
+    public int power = 10;
 
-    public int health = 200; // Zostawiam z Twojego starego skryptu
+    public int health = 200;
 
     [Header("Walka (Dla Gracza nadpisze je Mened¿er)")]
     public int weaponDamage = 50;
-    public int critChance = 5; // DODANE: Szansa na trafienie krytyczne
+    public int critChance = 2;
     public int dodgeChance = 0;
     public float damageMultiplierBonus = 0f;
     public float hitChanceMultiplierBonus = 0f;
@@ -74,7 +74,7 @@ public class Combatant : MonoBehaviour
     public string deathAnimTrigger = "Death";
 
     [Header("Status UI")]
-    public Transform statusIconsContainer; // Tu przeci¹gnij Horizontal Layout Group
+    public Transform statusIconsContainer;
     public GameObject statusIconPrefab;
 
     [Header("Punkty Obrony w Bie¿¹cej Rundzie")]
@@ -117,7 +117,7 @@ public class Combatant : MonoBehaviour
             LoadEnemyData(enemyTemplate);
         }
 
-        // 2. DOPIERO TERAZ wysy³amy dane do UI
+        // 2. wysy³amy dane do UI
         if (myUI != null)
         {
             myUI.Setup(this);
@@ -125,7 +125,7 @@ public class Combatant : MonoBehaviour
         }
     }
 
-    // --- FUNKCJA POBIERAJ¥CA DANE Z SERWERA (PLAYER DATA MANAGER) ---
+    // FUNKCJA POBIERAJ¥CA DANE Z (PLAYER DATA MANAGER)
     public void LoadDataFromManager()
     {
         var data = PlayerDataManager.Instance;
@@ -157,7 +157,7 @@ public class Combatant : MonoBehaviour
         hitChanceMultiplierBonus = data.bonusHitChanceMultiplier;
 
 
-        // --- POBIERANIE UMIEJÊTNOŒCI Z SERWERA ---
+        // POBIERANIE UMIEJÊTNOŒCI Z SERWERA
         mySkills.Clear();
 
         foreach (var savedSkill in data.unlockedSkills)
@@ -168,7 +168,7 @@ public class Combatant : MonoBehaviour
                 newSkill.data = savedSkill.skill;
                 newSkill.currentLevel = savedSkill.currentLevel;
 
-                // ZMIANA: Sprawdzamy, czy skill ma poziom 0!
+                //Sprawdzamy, czy skill ma poziom 0
                 if (savedSkill.currentLevel == 0)
                 {
                     newSkill.isUnlocked = false; // Przyszarzony, zablokowany
@@ -211,7 +211,7 @@ public class Combatant : MonoBehaviour
         critChance = data.critChance;
         weaponDamage = data.weaponDamage;
 
-        myBrain = data.aiBrain; // Kopiujemy mózg z szablonu do g³owy wroga na arenie!
+        myBrain = data.aiBrain; // Kopiujemy mózg z szablonu do g³owy wroga na arenie
 
         // Kopiujemy skille
         mySkills.Clear();
@@ -265,7 +265,7 @@ public class Combatant : MonoBehaviour
 
     void Die()
     {
-        if (isDead) return; // Jeœli ju¿ umar³, ignorujemy kolejne komendy!
+        if (isDead) return; // Jeœli ju¿ umar³, ignorujemy kolejne komendy
         isDead = true;
 
         Debug.Log($"<b>{combatantName} pada na ziemiê!</b>");
@@ -277,7 +277,7 @@ public class Combatant : MonoBehaviour
 
     public void Heal(int amount, string chanceText = "", Sprite icon = null)
     {
-        // Jeœli faktycznie jest jakieœ leczenie (np. mikstura albo skill lecz¹cy)
+        // Jeœli faktycznie jest jakieœ leczenie 
         if (amount > 0)
         {
             currentHP += amount;
@@ -289,26 +289,23 @@ public class Combatant : MonoBehaviour
         }
         else
         {
-            // Jeœli leczenie wynosi 0 (czyli rzucamy czysty Buff, np. Tarcza, Furia, Modlitwa)
-            // Zamiast g³upiego "+0", wyœwietlamy fajny tekst!
+            
             ShowFloatingText("", DamagePopup.PopupType.Heal, icon, chanceText);
         }
     }
 
-    // Zmieniamy sygnaturê, by przyjmowa³a isDot i category
     public void TakeDamage(int damage, bool isCritical = false, string chanceText = "", bool isDot = false, SkillCategory category = SkillCategory.MeleePhysical)
     {
         dodgedLastAttack = false;
         int finalDamage = damage;
 
         // 1. Przepuszczamy obra¿enia przez statusy (Tarcza, Modlitwa)
-        // U¿ywamy .ToArray(), ¿eby móc bezpiecznie modyfikowaæ listê w trakcie pêtli
         foreach (var s in activeStatuses.ToArray())
         {
             StatusLogic logic = StatusRegistry.GetLogic(s.type);
             if (logic != null)
             {
-                // Wysy³amy nasze nowe informacje do Tarczy/Modlitwy!
+                // Wysy³amy informacje do Tarczy/Modlitwy
                 finalDamage = logic.OnTakeDamage(this, s, finalDamage, isDot, category);
             }
         }
@@ -330,7 +327,7 @@ public class Combatant : MonoBehaviour
         }
         else
         {
-            // Urok nie zada³ obra¿eñ, ale wszed³ w krew! Pokazujemy napis i szansê w procentach!
+            // Urok nie zada³ obra¿eñ, ale wszed³ w krew
             ShowFloatingText("Urok!", DamagePopup.PopupType.TextOnly, null, chanceText);
         }
 
@@ -338,11 +335,10 @@ public class Combatant : MonoBehaviour
 
         if (currentHP <= 0)
         {
-            Die(); // Jeœli umar³, zagraj TYLKO œmieræ
+            Die(); 
         }
         else
         {
-            // Zamiast sztywnego "Hit", u¿ywamy naszej zmiennej!
             if (animator != null && !string.IsNullOrEmpty(hitAnimTrigger))
             {
                 animator.SetTrigger(hitAnimTrigger);
@@ -357,16 +353,15 @@ public class Combatant : MonoBehaviour
             // Sprawdzamy, czy w ci¹gu ostatnich 0.4 sekundy wyskoczy³ ju¿ jakiœ napis na tej postaci
             if (Time.time - lastPopupTime < 0.4f)
             {
-                popupStackCount++; // Zwiêkszamy piêtro!
+                popupStackCount++; // Zwiêkszamy wysoksc
             }
             else
             {
-                popupStackCount = 0; // Minê³o wystarczaj¹co du¿o czasu, resetujemy piêtro na sam dó³
+                popupStackCount = 0; // Minê³o wystarczaj¹co du¿o czasu, resetujemy wysokosc na sam dó³
             }
             lastPopupTime = Time.time;
 
-            // Uk³adamy napisy jeden nad drugim! Ka¿dy kolejny napis w combo wyskakuje o 0.8 jednostki wy¿ej.
-            // Zostawi³em lekki rozrzut na boki (X), ¿eby wygl¹da³o to dynamicznie.
+            // Uk³adamy napisy jeden nad drugim Ka¿dy kolejny napis w combo wyskakuje o 0.8 jednostki wy¿ej.
             Vector3 stackedOffset = new Vector3(Random.Range(-0.4f, 0.4f), (popupStackCount * 0.8f) + Random.Range(0f, 0.2f), 0);
 
             GameObject popup = Instantiate(damagePopupPrefab, popupSpawnPoint.position + stackedOffset, Quaternion.identity);
@@ -393,15 +388,15 @@ public class Combatant : MonoBehaviour
             {
                 logic.OnTurnStart(this, status);
 
-                // Jeœli status coœ fizycznie zrobi³ (Ogieñ zjad³ HP, Mróz zjad³ staminê), 
-                // zatrzymujemy kod na 0.7 sekundy, ¿eby gracz zd¹¿y³ przeczytaæ napis!
+                // Jeœli status coœ fizycznie zrobi³, zatrzymujemy kod na 0.7 sekundy, ¿eby gracz zd¹¿y³ przeczytaæ napis
+
                 if (status.type == StatusType.DamageOverTime || status.type == StatusType.Freeze)
                 {
                     yield return new WaitForSeconds(0.7f);
                 }
             }
 
-            // Pamiêtaj: w DoT czas odjêliœmy w jego logice (remainingHits), reszcie odejmujemy tutaj
+            // w DoT czas odjety w jego logice, reszcie odejmujemy tutaj
             if (status.type != StatusType.DamageOverTime)
             {
                 status.duration--;
@@ -431,7 +426,7 @@ public class Combatant : MonoBehaviour
 
     public void AddStatusEffect(StatusEffect newEffect)
     {
-        // Kuloodporne: Szukamy istniej¹cego statusu po Nazwie ORAZ po jego Typie!
+        // Szukamy istniej¹cego statusu po Nazwie ORAZ po jego Typie!
         StatusEffect existing = activeStatuses.Find(s => s.effectName == newEffect.effectName && s.type == newEffect.type);
 
         if (existing != null)
@@ -445,17 +440,16 @@ public class Combatant : MonoBehaviour
             }
             else if (newEffect.type == StatusType.Shield || newEffect.type == StatusType.Blessing || newEffect.type == StatusType.FireShield || newEffect.type == StatusType.Fury)
             {
-                // Tarcze i Modlitwy po prostu siê odœwie¿aj¹
+                // Tarcze i Modlitwy siê odœwie¿aj¹
                 existing.remainingHits = newEffect.remainingHits;
                 existing.duration = newEffect.duration;
             }
             else if (newEffect.type == StatusType.DeepFreeze || newEffect.type == StatusType.Freeze || newEffect.type == StatusType.Blindness || newEffect.type == StatusType.Poison || newEffect.type == StatusType.VoodooCurse)
             {
-                // --- NOWOŒÆ: KL¥TWY (MROZ, ŒLEPOTA, TRUCIZNA) ---
-                // Resetujemy czas trwania z powrotem do maksimum (np. do 3 rund)!
+                //  KL¥TWY (MROZ, ŒLEPOTA, TRUCIZNA)
+                // Resetujemy czas trwania z powrotem do maksimum
                 existing.duration = newEffect.duration;
 
-                // Opcjonalnie: Jeœli rzuci³eœ MOCNIEJSZ¥ wersjê skilla (np. poziom 2), nadpisujemy s³absz¹ karê!
                 if (newEffect.value > existing.value) existing.value = newEffect.value;
                 if (newEffect.multiplier > existing.multiplier) existing.multiplier = newEffect.multiplier;
                 if (newEffect.hitChanceMod < existing.hitChanceMod) existing.hitChanceMod = newEffect.hitChanceMod;
@@ -465,7 +459,6 @@ public class Combatant : MonoBehaviour
         }
         else
         {
-            // --- FIX: Kopiujemy WSZYSTKO, ³¹cznie z obrazkiem! ---
             StatusEffect clonedEffect = new StatusEffect
             {
                 effectName = newEffect.effectName,
@@ -476,11 +469,9 @@ public class Combatant : MonoBehaviour
                 multiplier = newEffect.multiplier,
                 hitChanceMod = newEffect.hitChanceMod,
 
-                // Tego brakowa³o! Kopiujemy ikonkê, ¿eby UI mia³o co narysowaæ:
                 icon = newEffect.icon
             };
 
-            // Dodajemy naszego klona do krwi postaci
             activeStatuses.Add(clonedEffect);
         }
 
@@ -495,7 +486,7 @@ public class Combatant : MonoBehaviour
             // Sprawdzamy, które statusy obni¿aj¹ PA
             if (s.type == StatusType.Freeze || s.type == StatusType.Blindness)
             {
-                reduction += s.value; // Pobieramy 'effectValue' z poziomu skilla!
+                reduction += s.value; // Pobieramy 'effectValue' z poziomu skilla
             }
         }
         return reduction;
@@ -517,7 +508,7 @@ public class Combatant : MonoBehaviour
         int res = magicResistance;
         foreach (var s in activeStatuses)
         {
-            if (s.type == StatusType.Blessing) res += s.value; // Modlitwa dodaje Obronê Magiczn¹!
+            if (s.type == StatusType.Blessing) res += s.value; // Modlitwa dodaje Obronê Magiczn¹
             if (s.type == StatusType.Fury) res -= s.value;
             if (s.type == StatusType.VoodooCurse) res -= s.value;
         }
@@ -531,7 +522,7 @@ public class Combatant : MonoBehaviour
         {
             if (s.type == StatusType.Fury) mult += s.multiplier;
 
-            // --- TRUCIZNA: Zadajesz o 30% mniejsze obra¿enia! ---
+            // TRUCIZNA: Zadajesz mniejsze obra¿enia!
             if (s.type == StatusType.Poison) mult += s.multiplier;
         }
         return Mathf.Max(0.1f, mult); // Zabezpieczenie, ¿eby nie leczyæ wroga ujemnym dmg
@@ -542,8 +533,8 @@ public class Combatant : MonoBehaviour
         float mult = 1.0f;
         foreach (var s in activeStatuses)
         {
-            // Przerabiamy wpisane -10 na u³amek. 
-            // Wzór: 1 + (-10 / 100) = 0.9.  Zatem celnoœæ zostanie pomno¿ona przez 0.9!
+            // Przerabiamy wpisane kary na u³amek. 
+            // Wzór: 1 + (-10 / 100) = 0.9
             if (s.type == StatusType.Fury)
             {
                 mult *= (1f + (s.hitChanceMod / 100f));

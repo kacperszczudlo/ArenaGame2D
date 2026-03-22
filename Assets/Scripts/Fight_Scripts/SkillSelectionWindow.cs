@@ -13,7 +13,7 @@ public class SkillSelectionWindow : MonoBehaviour
 
     void Awake() { Instance = this; gameObject.SetActive(false); }
 
-    // Przyjmuje List<CharacterSkill> zamiast List<SkillData>
+    // Przyjmuje List<CharacterSkill>
     public void Open(SkillAPHandler caller, List<CharacterSkill> availableSkills)
     {
         activeSlot = caller;
@@ -36,20 +36,18 @@ public class SkillSelectionWindow : MonoBehaviour
     // Odbiera CharacterSkill zamiast SkillData
     public void ShowDetails(CharacterSkill cSkill)
     {
-        // --- NOWOŒÆ: Szybka ucieczka, jeœli skill jest zablokowany! ---
         if (!cSkill.isUnlocked)
         {
             detailsText.text = "<color=red>[ZABLOKOWANE]</color>";
-            detailsText.color = Color.white; // Ustawia bazowy kolor, tag <color> zrobi resztê
-            return; // Magiczne s³owo! Funkcja koñczy siê w tym miejscu.
+            detailsText.color = Color.white; 
+            return;
         }
 
-        // --- Poni¿szy kod wykona siê TYLKO dla odblokowanych skilli ---
         SkillData data = cSkill.data;
 
         if (data.progression != null && data.progression.Count > 0)
         {
-            // Bierzemy poziom od POSTACI (cSkill), a nie z pliku danych
+            // Bierzemy poziom od POSTACI (cSkill)
             int levelIndex = cSkill.currentLevel - 1;
             if (levelIndex >= data.progression.Count) levelIndex = data.progression.Count - 1;
             else if (levelIndex < 0) levelIndex = 0;
@@ -64,7 +62,6 @@ public class SkillSelectionWindow : MonoBehaviour
 
             if (costs.Count > 0)
             {
-                // Wywaliliœmy zmienn¹ 'lockStatus', bo wiemy, ¿e na 100% skill jest odblokowany
                 detailsText.text = $"Wymagania (Poz. {cSkill.currentLevel}):\n" + string.Join("\n", costs);
                 detailsText.color = Color.yellow;
             }

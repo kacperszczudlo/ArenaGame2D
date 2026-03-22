@@ -8,13 +8,13 @@ public class LogicDeepFreeze : StatusLogic
         return incomingDamage;
     }
 
-    // Nie zadajemy obra¿eñ co turê, wiêc tu jest pusto
+    // Nie zadajemy obra¿eñ co turê
     public override void OnTurnStart(Combatant owner, StatusEffect status)
     {
-        // Cisza, postaæ jest zamro¿ona :)
+        //  postaæ jest zamro¿ona :))
     }
 
-    // Standardowe sprawdzanie, czy lód ju¿ stopnia³ (czas dobieg³ koñca)
+    // Standardowe sprawdzanie, czy lód ju¿ stopnia³
     public override bool IsExpired(StatusEffect status)
     {
         return status.duration <= 0;

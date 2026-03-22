@@ -4,7 +4,7 @@ using TMPro;
 
 public class CombatantUI : MonoBehaviour
 {
-    private Combatant target; // Postaæ, któr¹ œledzi ten panel
+    private Combatant target;
 
     [Header("Informacje G³ówne")]
     public Image avatarDisplay;

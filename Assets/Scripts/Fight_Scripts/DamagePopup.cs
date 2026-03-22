@@ -26,7 +26,7 @@ public class DamagePopup : MonoBehaviour
     // Przyjmuje szansê w procentach (np. "50%")
     public void Setup(string textContent, PopupType type, Sprite icon = null, string chanceText = "")
     {
-        // Jeœli podano procent, doklejamy go po prawej stronie!
+        // Jeœli podano procent, doklejamy go po prawej stronie
         if (!string.IsNullOrEmpty(chanceText))
         {
             textContent += $" <size=40%><color=#A0A0A0>{chanceText}</color></size>";

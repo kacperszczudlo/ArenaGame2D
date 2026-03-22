@@ -38,7 +38,7 @@ public class BattleManager : MonoBehaviour
     private Vector3 playerOriginalPos;
     private Vector3 enemyOriginalPos;
 
-    public UnityEngine.UI.Button startRoundButton; // Przeci¹gniesz tu przycisk z Unity
+    public UnityEngine.UI.Button startRoundButton;
     private bool isExecutingRound = false;
 
     [Header("Ekran Podsumowania (Koniec Walki)")]
@@ -51,12 +51,11 @@ public class BattleManager : MonoBehaviour
         currentRound = 1;
         UpdateRoundUI();
 
-        // --- NOWOŒÆ: Wywo³ujemy zrzucenie postaci na ring! ---
         SpawnCombatants();
     }
     void Awake()
     {
-        // 3. Przypisz instancjê przy starcie
+        // Przypisz instancjê przy starcie
         Instance = this;
     }
 
@@ -82,7 +81,7 @@ public class BattleManager : MonoBehaviour
             Debug.LogError("B³¹d! GameManager nie przekaza³ prefaba gracza!");
         }
 
-        // 2. TWORZYMY WROGA (Pobieramy duszê i cia³o z GameManagera!)
+        // 2. TWORZYMY WROGA (Pobieramy z GameManagera!)
         EnemyData enemyData = GameManager.Instance.currentEnemyToFight;
         if (enemyData != null && enemyData.enemyVisualPrefab != null && enemySpawnPoint != null)
         {
@@ -95,7 +94,7 @@ public class BattleManager : MonoBehaviour
             if (enemyUI != null) enemy.myUI = enemyUI;
             if (enemyStatusContainer != null) enemy.statusIconsContainer = enemyStatusContainer;
 
-            // WSTRZYKUJEMY DUSZÊ! (Statystyki, poziom, skille i Mózg AI)
+            // WSTRZYKUJEMY  (Statystyki, poziom, skille i Mózg AI)
             enemy.LoadEnemyData(enemyData);
         }
         else
@@ -107,15 +106,15 @@ public class BattleManager : MonoBehaviour
     // Funkcja podpiêta pod przycisk "Rozpocznij rundê"
     public void OnStartRoundClicked()
     {
-        // 1. ZABEZPIECZENIE: Jeœli runda ju¿ trwa, zignoruj klikniêcie!
+        // ZABEZPIECZENIE: Jeœli runda ju¿ trwa, zignoruj klikniêcie
         if (isExecutingRound) return;
 
         isExecutingRound = true; // Zaznaczamy, ¿e weszliœmy do walki
 
-        // 2. Blokujemy przycisk fizycznie, ¿eby zszarza³
+        // Blokujemy przycisk fizycznie, ¿eby zszarza³
         if (startRoundButton != null) startRoundButton.interactable = false;
 
-        // 3. Odpalamy nasz¹ potê¿n¹ korutynê walki
+        // Odpalamy korutynê walki
         StartCoroutine(ExecuteTurnRoutine());
     }
 
@@ -135,13 +134,12 @@ public class BattleManager : MonoBehaviour
         if (defenseMeleeUI != null) player.defenseMeleePA = defenseMeleeUI.currentPA;
         if (defenseRangedUI != null) player.defenseRangedPA = defenseRangedUI.currentPA;
         if (defenseMentalUI != null) player.defenseMentalPA = defenseMentalUI.currentPA;
-        Debug.Log($"<color=green>Gracz pobra³ z UI obronê: Zwarcie {player.defenseMeleePA}, Dystans {player.defenseRangedPA}, Umys³ {player.defenseMentalPA}</color>");
-        // ----------------------------------------------------
+        
 
         List<CombatAction> roundActions = new List<CombatAction>();
         int actionCounter = 0;
 
-        // 1. ZBIERANIE DECYZJI GRACZA
+        // ZBIERANIE DECYZJI GRACZA
         foreach (var slot in attackSlots)
         {
             if (slot.currentSkill?.data != null && slot.currentPA > 0)
@@ -157,22 +155,21 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        // 2. MÓZG WROGA (Teraz u¿ywamy wpiêtego modu³u AI!)
+        // MÓZG WROGA
         if (enemy.currentHP > 0)
         {
             if (enemy.myBrain != null)
             {
-                // Mened¿er po prostu mówi: "Masz tu dane, pomyœl sam i daj mi listê ataków!"
                 List<CombatAction> enemyActions = enemy.myBrain.DecideTurn(enemy, player, ref actionCounter);
                 roundActions.AddRange(enemyActions);
             }
             else
             {
-                Debug.LogWarning($"<color=yellow>UWAGA: {enemy.combatantName} nie ma podpiêtego Mózgu (AI Brain) w pliku EnemyData! Stoi i gapi siê w niebo.</color>");
+                Debug.LogWarning($"<color=yellow>UWAGA: {enemy.combatantName} nie ma podpiêtego Mózgu w pliku EnemyData!</color>");
             }
         }
 
-        // 3. SORTOWANIE (Teraz z poszanowaniem kolejki gracza!)
+        // SORTOWANIE 
         roundActions.Sort((a, b) => {
             int categoryComparison = a.skill.data.category.CompareTo(b.skill.data.category);
             if (categoryComparison != 0) return categoryComparison;
@@ -183,7 +180,7 @@ public class BattleManager : MonoBehaviour
             return a.originalIndex.CompareTo(b.originalIndex);
         });
 
-        // 4. WYKONYWANIE AKCJI
+        // WYKONYWANIE AKCJI
         bool playerAtMelee = false;
         bool enemyAtMelee = false;
 
@@ -196,7 +193,6 @@ public class BattleManager : MonoBehaviour
             StatusEffect freezeStatus = action.actor.activeStatuses.Find(s => s.type == StatusType.DeepFreeze);
             if (freezeStatus != null)
             {
-                // Postaæ próbuje zaatakowaæ, ale lód j¹ blokuje!
                 action.actor.ShowFloatingText("ZAMRO¯ONY!", DamagePopup.PopupType.Miss);
                 yield return new WaitForSeconds(0.4f);
                 continue;
@@ -208,21 +204,21 @@ public class BattleManager : MonoBehaviour
             int mCost = levelData?.manaCost ?? 0;
             int sCost = levelData?.staminaCost ?? 0;
 
-            // --- FIX TRUCIZNY: SPRAWDZAMY KARÊ PRZED ATAKIEM ---
+            //TRUCIZNY: SPRAWDZAMY KARÊ PRZED ATAKIEM ---
             int poisonPenalty = 0;
             StatusEffect poison = action.actor.activeStatuses.Find(s => s.type == StatusType.Poison);
             if (poison != null)
             {
-                poisonPenalty = poison.value; // Pobieramy karê z trucizny (np. 30)
+                poisonPenalty = poison.value; // Pobieramy karê z trucizny
             }
 
-            // Mened¿er sprawdza, czy gracz ma zasoby na koszt bazowy + karê z trucizny!
+            //sprawdzamy, czy gracz ma zasoby na koszt bazowy + karê z trucizny
             bool hasResources = action.actor.currentMana >= (mCost + poisonPenalty) && action.actor.currentStamina >= (sCost + poisonPenalty);
 
             if (!hasResources)
             {
                 action.actor.ShowFloatingText("Brak zasobów!", DamagePopup.PopupType.Miss);
-                // Jeœli to gracz nie ma many, kó³ko w UI robi siê czerwone/szare - tu zablokowaliœmy mu turê!
+                // Jeœli to gracz nie ma many, kó³ko w UI robi siê czerwone/szare - zablokowanie tury
                 yield return new WaitForSeconds(0.8f);
             }
             else
@@ -251,11 +247,11 @@ public class BattleManager : MonoBehaviour
                 // ATAK
                 action.actor.PlayAttackAnimation(skillData.animTriggerName);
 
-                // --- NOWOŒÆ: OBS£UGA STRZA£ I POCISKÓW ---
+                //OBS£UGA STRZA£ I POCISKÓW
                 // Sprawdzamy, czy skill ma przypisan¹ strza³ê (nie jest puste okienko w Inspektorze)
                 if (skillData.projectilePrefab != null)
                 {
-                    // --- FIX NA DELAY: Jeœli postaæ leczy/buffuje sam¹ siebie, nie czekamy! ---
+                    //DELAY: Jeœli postaæ leczy/buffuje sam¹ siebie, nie czekamy
                     float prepDelay = (action.actor == action.target) ? 0.05f : 0.4f;
                     yield return new WaitForSeconds(prepDelay);
 
@@ -267,20 +263,20 @@ public class BattleManager : MonoBehaviour
 
                     if (projScript != null)
                     {
-                        // WYSTRZA£: Mened¿er PAUZUJE bitwê, dopóki strza³a nie doleci do klatki piersiowej wroga!
+                        // Mened¿er PAUZUJE bitwê, dopóki strza³a nie doleci do klatki piersiowej wroga
                         float arrowSpeed = 25f; // Szybkoœæ strza³y
                         yield return StartCoroutine(projScript.FlyToTarget(action.actor.centerSpawnPoint.position, action.target.centerSpawnPoint.position, skillData.projectileColor, arrowSpeed));
                     }
                 }
                 else
                 {
-                    // Zwyk³y atak (np. miecz, sypanie piachem) - stara, sztywna pauza na animacjê
-                    // --- FIX NA DELAY: B³yskawiczne efekty, gdy rzucamy buffa/leczenie na siebie! ---
+                    // Zwyk³y atak  - stara, sztywna pauza na animacjê
+                    // FIX NA DELAY: B³yskawiczne efekty, gdy rzucamy buffa/leczenie na siebie!
                     float impactDelay = (action.actor == action.target) ? 0.05f : 0.5f;
                     yield return new WaitForSeconds(impactDelay);
                 }
 
-                // OBLICZANIE OBRA¯EÑ (Teraz dzieje siê to DOPIERO w momencie uderzenia strza³y/miecza!)
+                // OBLICZANIE OBRA¯EÑ 
                 AttackResult result = DamageCalculator.ProcessAttack(action.actor, action.target, action.skill, action.paInvested);
 
                 if (result.isHit)
@@ -294,10 +290,10 @@ public class BattleManager : MonoBehaviour
                     }
                     else
                     {
-                        // 1. G£ÓWNY CEL DOSTAJE OBRA¯ENIA
+                        // G£ÓWNY CEL DOSTAJE OBRA¯ENIA
                         action.target.TakeDamage(result.damageDealt, result.isCritical, result.chanceText, false, skillData.category);
 
-                        // --- 2. TARCZA OGNIA: ODBICIE RYKOSZETU! ---
+                        // TARCZA OGNIA: ODBICIE ---
                         // Sprawdzamy czy cel uderzenia mia³ na sobie Tarczê Ognia
                         StatusEffect fireShield = action.target.activeStatuses.Find(s => s.type == StatusType.FireShield);
 
@@ -308,14 +304,14 @@ public class BattleManager : MonoBehaviour
                             int reflectedDamage = Mathf.RoundToInt(result.damageDealt * fireShield.multiplier);
                             if (reflectedDamage > 0)
                             {
-                                // 3. ATAKUJ¥CY DOSTAJE RYKOSZETEM (z u¿yciem poprawnej nazwy CriticalDamage!)
+                                // ATAKUJ¥CY DOSTAJE RYKOSZETEM
                                 action.actor.TakeDamage(reflectedDamage, false, "", true, SkillCategory.RangedMagic);
                                 action.actor.ShowFloatingText($"Odbicie: {reflectedDamage}", DamagePopup.PopupType.CriticalDamage);
                             }
                         }
                     }
 
-                    // --- ODPALANIE EFEKTÓW (Nak³adanie statusów itp.) ---
+                    // ODPALANIE EFEKTÓW
                     float baseChance = levelData != null ? levelData.statusEffectChance : 100f;
                     float finalChance = (skillData.category == SkillCategory.PositiveCharm)
                         ? (100f * result.hitChanceMultiplier)
@@ -325,7 +321,6 @@ public class BattleManager : MonoBehaviour
                     {
                         if (effect != null)
                         {
-                            // FIX: U¿ywamy 'mainTarget' zamiast 'action.target'! 
                             // Dziêki temu buffy trafiaj¹ na rzucaj¹cego, a kl¹twy na wroga.
                             effect.Execute(action.actor, mainTarget, result, finalChance, levelData, skillData.icon);
                         }
@@ -340,7 +335,7 @@ public class BattleManager : MonoBehaviour
                 yield return new WaitForSeconds(0.6f);
             }
 
-            // --- INTELIGENTNY POWRÓT NA MIEJSCE ---
+            //INTELIGENTNY POWRÓT NA MIEJSCE
             if (skillData.category == SkillCategory.MeleePhysical)
             {
                 bool shouldReturn = false;
@@ -374,7 +369,7 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        // 5. CZYSZCZENIE RUNDY
+        // CZYSZCZENIE RUNDY
         if (player.currentHP <= 0)
         {
             StartCoroutine(EndBattleRoutine(false)); // Gracz przegra³
@@ -387,7 +382,7 @@ public class BattleManager : MonoBehaviour
         }
         player.ResetDefensePA();
         enemy.ResetDefensePA();
-        // --- ZAPISYWANIE HP NA KONIEC RUNDY ---
+        // ZAPISYWANIE HP NA KONIEC RUNDY 
         player.hpAtRoundEnd = player.currentHP;
         enemy.hpAtRoundEnd = enemy.currentHP;
 
@@ -399,7 +394,7 @@ public class BattleManager : MonoBehaviour
         currentRound++;
         UpdateRoundUI();
 
-        isExecutingRound = false; // Zdejmujemy flagê
+        isExecutingRound = false;
         if (startRoundButton != null) startRoundButton.interactable = true;
     }
 
@@ -418,24 +413,23 @@ public class BattleManager : MonoBehaviour
 
 
 
-    // --- FUNKCJA ZAKOÑCZENIA BITWY ---
+    //FUNKCJA ZAKOÑCZENIA BITWY
     IEnumerator EndBattleRoutine(bool playerWon)
     {
-        yield return new WaitForSeconds(1.5f); // Dajemy chwilê na opadniêcie kurzu
+        yield return new WaitForSeconds(1.5f);
 
         EnemyData defeatedEnemy = GameManager.Instance.currentEnemyToFight;
 
-        // W³¹czamy nasz czarny ekran podsumowania
+        // W³¹czamy czarny ekran podsumowania
         if (summaryPanel != null) summaryPanel.SetActive(true);
 
         if (playerWon)
         {
-            Debug.Log("<color=green>ZWYCIÊSTWO!</color>");
             if (summaryTitleText != null) { summaryTitleText.text = "ZWYCIÊSTWO!"; summaryTitleText.color = Color.green; }
 
             if (GameManager.Instance.isTournamentBattle)
             {
-                // ZASADY TURNIEJU: £upy id¹ do worka
+                // ZASADY TURNIEJU: £upy id¹ do sumy
                 int droppedGems = 0;
 
                 if (defeatedEnemy != null)
@@ -447,25 +441,24 @@ public class BattleManager : MonoBehaviour
                         GameManager.Instance.pendingXP += defeatedEnemy.expReward;
                     }
 
-                    // --- NOWOŒÆ: Losowanie Gemów Turniejowych! ---
+                    // Losowanie Gemów Turniejowych
                     if (defeatedEnemy.gemRewardAmount > 0 && Random.Range(0f, 100f) <= defeatedEnemy.gemRewardChance)
                     {
                         droppedGems = defeatedEnemy.gemRewardAmount;
                         GameManager.Instance.pendingGems += droppedGems;
-                        Debug.Log($"<color=cyan>Zdobyto {droppedGems} gemów!</color>");
                     }
                 }
                 GameManager.Instance.currentTournamentIndex++;
 
                 int gainedExp = (defeatedEnemy != null && defeatedEnemy.level > PlayerDataManager.Instance.currentLevel) ? defeatedEnemy.expReward : 0;
-                string gemsText = droppedGems > 0 ? $"\nGemy turniejowe: {droppedGems}" : ""; // Dopisek, jeœli wypad³y!
+                string gemsText = droppedGems > 0 ? $"\nGemy turniejowe: {droppedGems}" : ""; // Dopisek, jeœli wypad³y
 
                 if (summaryRewardsText != null)
                     summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {gainedExp}{gemsText}";
             }
             else
             {
-                // ZASADY MAPY: £upy id¹ od razu do kieszeni!
+                // ZASADY MAPY: £upy id¹ od razu do kieszeni
                 if (defeatedEnemy != null)
                 {
                     GameManager.Instance.globalGold += defeatedEnemy.goldReward;
@@ -476,7 +469,6 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("<color=red>PORA¯KA!</color>");
             if (summaryTitleText != null) { summaryTitleText.text = "PORA¯KA!"; summaryTitleText.color = Color.red; }
 
             if (GameManager.Instance.isTournamentBattle)
@@ -484,7 +476,6 @@ public class BattleManager : MonoBehaviour
                 // ZASADY TURNIEJU: Wrzucamy to co mieliœmy w worku do g³ównej puli i resetujemy turniej
                 GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
 
-                // --- NOWOŒÆ: U¿ywamy nowej funkcji, ¿eby œmieræ te¿ mog³a daæ Level Up! ---
                 if (GameManager.Instance.pendingXP > 0)
                 {
                     PlayerDataManager.Instance.AddExperience(GameManager.Instance.pendingXP);
@@ -510,18 +501,14 @@ public class BattleManager : MonoBehaviour
                 if (summaryRewardsText != null) summaryRewardsText.text = "Zgin¹³eœ na mapie! Zostajesz przeniesiony do bezpiecznego miejsca.";
             }
 
-            // Gracz poleg³, wiêc zmieniamy bilet powrotny na mapê œwiata!
             GameManager.Instance.sceneToLoadAfterBattle = "MainScene";
         }
 
        
-        // Korutyna koñczy swoje dzia³anie. Gra czeka, a¿ gracz przeczyta nagrody i kliknie przycisk "Dalej"!
     }
 
-    // Tê funkcjê podpinasz pod przycisk "Dalej" na ekranie podsumowania
     public void OnClick_LeaveBattle()
     {
-        // --- MAGIA: Wracamy tam, sk¹d przyszliœmy! ---
         SceneManager.LoadScene(GameManager.Instance.sceneToLoadAfterBattle);
     }
     public void RefreshPlayerAP()
@@ -530,17 +517,17 @@ public class BattleManager : MonoBehaviour
 
         // 1. Obliczamy nowy, maksymalny limit PA (Bazowe - Kara z debuffów)
         int apPenalty = player.GetCombatAPReduction();
-        int baseMaxAP = CombatAPManager.Instance.maxAP; // Pobieramy oryginalne 15 (lub ile tam masz)
+        int baseMaxAP = CombatAPManager.Instance.maxAP; // Pobieramy oryginalne 15
         int effectiveMaxAP = Mathf.Max(0, baseMaxAP - apPenalty);
 
-        // 2. Liczymy, ile gracz ma obecnie "naklikane" w UI (Ataki + Obrony)
+        // 2. Liczymy, ile gracz ma obecnie naklikane w UI (Ataki + Obrony)
         int allocatedAP = 0;
         foreach (var slot in attackSlots) allocatedAP += slot.currentPA;
         if (defenseMeleeUI != null) allocatedAP += defenseMeleeUI.currentPA;
         if (defenseRangedUI != null) allocatedAP += defenseRangedUI.currentPA;
         if (defenseMentalUI != null) allocatedAP += defenseMentalUI.currentPA;
 
-        // 3. Jeœli masz rozdane wiêcej ni¿ wynosi nowy limit - KRADNIEMY!
+        // 3. Jeœli masz rozdane wiêcej ni¿ wynosi nowy limit to odejmujemy
         int toRemove = allocatedAP - effectiveMaxAP;
         if (toRemove > 0)
         {
@@ -552,24 +539,23 @@ public class BattleManager : MonoBehaviour
                 {
                     slot.currentPA--;
                     toRemove--;
-                    slot.UpdateVisuals(); // Gasi kó³ko na ekranie!
+                    slot.UpdateVisuals(); // Gasi kó³ko na ekranie
                 }
                 if (toRemove <= 0) break;
             }
 
-            // B) Jeœli dalej trzeba ukraœæ (kó³ka ataku puste), kradniemy z obron! (Umys³ -> Dystans -> Zwarcie)
+            // B) Jeœli dalej trzeba ukraœæ (kó³ka ataku puste), kradniemy z obron (Umys³ -> Dystans -> Zwarcie)
             if (toRemove > 0 && defenseMentalUI != null) { int drain = Mathf.Min(defenseMentalUI.currentPA, toRemove); defenseMentalUI.currentPA -= drain; toRemove -= drain; defenseMentalUI.UpdateVisuals(); }
             if (toRemove > 0 && defenseRangedUI != null) { int drain = Mathf.Min(defenseRangedUI.currentPA, toRemove); defenseRangedUI.currentPA -= drain; toRemove -= drain; defenseRangedUI.UpdateVisuals(); }
             if (toRemove > 0 && defenseMeleeUI != null) { int drain = Mathf.Min(defenseMeleeUI.currentPA, toRemove); defenseMeleeUI.currentPA -= drain; toRemove -= drain; defenseMeleeUI.UpdateVisuals(); }
 
-            allocatedAP = effectiveMaxAP; // Zrównaliœmy do limitu
-            Debug.Log($"<color=orange>Kl¹twa Œlepoty/Mrozu brutalnie odciê³a przypisane PA!</color>");
+            allocatedAP = effectiveMaxAP; 
         }
 
-        // 4. Przypisujemy wolne punkty z powrotem do puli Gracza (To naprawia blokadê klikania!)
+        // 4. Przypisujemy wolne punkty z powrotem do puli Gracza 
         CombatAPManager.Instance.currentAP = effectiveMaxAP - allocatedAP;
 
-        // 5. Aktualizujemy tekst na œrodku ekranu!
+        // 5. Aktualizujemy tekst na œrodku ekranu
         CombatAPManager.Instance.UpdateAPText(effectiveMaxAP);
     }
 

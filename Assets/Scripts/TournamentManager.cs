@@ -7,25 +7,22 @@ using System.Collections.Generic;
 public class TournamentManager : MonoBehaviour
 {
     [Header("Lista Przeciwników w Turnieju")]
-    [Tooltip("Przeci¹gnij tu pliki EnemyData (np. Janusz, Szkielet, Smok). Pierwszy to indeks 0.")]
+    [Tooltip("Przeci¹gnij tu pliki EnemyData (np. Janusz). Pierwszy to indeks 0.")]
     public List<EnemyData> tournamentEnemies;
 
     [Header("UI Przeciwnika")]
     public Image enemyAvatar;
     public TextMeshProUGUI enemyInfoText;       // Np. "Janusz - Lvl 20"
-    public TextMeshProUGUI enemyRewardText;     // NOWOŒÆ: "Nagroda: 100g | 50xp"
+    public TextMeshProUGUI enemyRewardText;     //"Nagroda: 100g | 50xp"
 
     [Header("UI Turnieju")]
     public TextMeshProUGUI progressText;        // Np. "Przeciwnik: 3/10"
     public TextMeshProUGUI pendingRewardsText;  // Np. "Zebrane ³upy: 300g"
 
-    // Podmieñ star¹ funkcjê Start() na to:
     System.Collections.IEnumerator Start()
     {
-        // Czekamy JEDN¥ KLATKÊ, a¿ GameManagery siê dogadaj¹ i stary zniszczy nowego
         yield return null;
 
-        // Teraz ³adujemy UI, czytaj¹c z prawid³owego, ocala³ego GameManagera
         UpdateLobbyUI();
     }
 
@@ -54,7 +51,6 @@ public class TournamentManager : MonoBehaviour
             int actualExp = (currentEnemy.level > PlayerDataManager.Instance.currentLevel) ? currentEnemy.expReward : 0;
             string expText = actualExp > 0 ? $"+{actualExp}" : "<color=#888888>0 (Brak wyzwania!)</color>";
 
-            // Czysty tekst nagrody - ZERO spoilerów o gemach!
             enemyRewardText.text = $"Z³oto: +{currentEnemy.goldReward}  \nExp: {expText}";
         }
 
@@ -63,14 +59,13 @@ public class TournamentManager : MonoBehaviour
 
     void UpdatePendingRewardsUI()
     {
-        // Worek pokazuje tylko z³oto i exp
+        
         if (pendingRewardsText != null)
         {
             pendingRewardsText.text = $"Zebrane ³upy:\nZ³oto: {GameManager.Instance.pendingGold}\nExp: {GameManager.Instance.pendingXP}";
         }
     }
 
-    // Podpinane pod przycisk "WALCZ"
     public void OnClick_Fight()
     {
         int currentIndex = GameManager.Instance.currentTournamentIndex;
@@ -78,7 +73,7 @@ public class TournamentManager : MonoBehaviour
         {
             GameManager.Instance.currentEnemyToFight = tournamentEnemies[currentIndex];
 
-            // --- NOWOŒÆ: Ustawiamy kontekst dla BattleManagera! ---
+            //Ustawiamy kontekst dla BattleManagera
             GameManager.Instance.sceneToLoadAfterBattle = "ArenaLobby"; // Wrócimy do Lobby
             GameManager.Instance.isTournamentBattle = true;             // U¿ywamy "tymczasowego worka" na ³upy
 
@@ -91,7 +86,6 @@ public class TournamentManager : MonoBehaviour
     {
         GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
 
-        // Zgarniamy gemy z worka w tle (gracz tego nie widzi w lobby, ale dostaje je na konto!)
         GameManager.Instance.tournamentGems += GameManager.Instance.pendingGems;
 
         if (GameManager.Instance.pendingXP > 0)
@@ -102,7 +96,7 @@ public class TournamentManager : MonoBehaviour
         GameManager.Instance.currentTournamentIndex = 0;
         GameManager.Instance.pendingGold = 0;
         GameManager.Instance.pendingXP = 0;
-        GameManager.Instance.pendingGems = 0; // Czyœcimy gemy
+        GameManager.Instance.pendingGems = 0; 
 
         SceneManager.LoadScene("MainScene");
     }

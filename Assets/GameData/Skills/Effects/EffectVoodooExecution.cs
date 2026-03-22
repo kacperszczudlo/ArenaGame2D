@@ -17,7 +17,6 @@ public class EffectVoodooExecution : SkillEffect
         bool hasBlindness = target.activeStatuses.Exists(s => s.type == StatusType.Blindness);
         bool hasVoodooCurse = target.activeStatuses.Exists(s => s.type == StatusType.VoodooCurse);
 
-        // Jeœli ma wszystkie trzy...
         if (hasPoison && hasBlindness && hasVoodooCurse)
         {
             // 2. LOSUJEMY SZANSÊ NA ZGON (od 0 do 100)
@@ -25,12 +24,9 @@ public class EffectVoodooExecution : SkillEffect
 
             if (roll <= executionChance)
             {
-                Debug.Log($"<color=red>FATALITY VOODOO! {target.combatantName} umiera na miejscu!</color>");
 
-                // Wyœwietlamy mroczny napis
                 target.ShowFloatingText("NAG£Y ZGON!", DamagePopup.PopupType.CriticalDamage, icon);
 
-                // Zadajemy absurdalne obra¿enia, ¿eby przebiæ ka¿dy pancerz i zabiæ na 100%
                 target.TakeDamage(99999, true, "Zgon", false, SkillCategory.NegativeCharm);
             }
             

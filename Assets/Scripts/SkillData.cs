@@ -22,11 +22,11 @@ public class SkillLevelData
     [Header("Szanse na Efekty")]
     [Range(0, 100)] public float statusEffectChance = 10f;
     [Header("Trudnoœæ Buffa (Dla PositiveCharm)")]
-    public int selfCastDifficulty = 120; // Np. 120 na 1 poziomie, 40 na 7 poziomie
+    public int selfCastDifficulty = 120;
 
     [Header("Ustawienia Efektów (np. Tarcza)")]
-    public int effectCharges = 2; // Tu wpiszesz 2 dla poziomu 1, a 4 dla poziomu 7
-    public int effectValue = 20;   // Opcjonalnie: si³a krwawienia/leczenia na tym poziomie
+    public int effectCharges = 2;
+    public int effectValue = 20;
     public int effectDuration = 3;
     public float effectMultiplier = 1.5f;
     public float effectHitChanceMod = -20f; // mod celnosci
@@ -37,13 +37,13 @@ public class SkillData : ScriptableObject
 {
     [Header("Podstawowe Informacje")]
     public string skillName;
-    [TextArea(3, 5)] public string skillDescription; // Mroczny opis z historii
+    [TextArea(3, 5)] public string skillDescription;
     public Sprite icon;
     public SkillCategory category = SkillCategory.MeleePhysical;
 
     [Header("Efekty Wizualne Lec¹cego Pocisku")]
-    public GameObject projectilePrefab; // Tu wrzucimy "bia³¹ strza³ê"
-    public Color projectileColor = Color.white; // Tu zmienimy kolor na zielony/czerwony/niebieski!
+    public GameObject projectilePrefab;
+    public Color projectileColor = Color.white; 
 
     [Header("Animacja")]
     public string animTriggerName;
@@ -53,7 +53,7 @@ public class SkillData : ScriptableObject
     [Tooltip("Tu wrzucasz skrypty efektów (np. Tarcza, Krwawienie, Drain Many)")]
     public List<SkillEffect> effects;
 
-    // Opcjonalnie: Efekt Bierny (Passive)
+    // Efekt Bierny
     public bool isPassive;
 
     [Header("Wagi Statystyk")]

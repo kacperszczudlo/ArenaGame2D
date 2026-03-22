@@ -10,8 +10,8 @@ public class StatusIconUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public TextMeshProUGUI durationText;
 
     [Header("Dymek z nazw¹ (Tooltip)")]
-    public GameObject tooltipBox;       // Ca³e okienko dymku (t³o)
-    public TextMeshProUGUI tooltipText; // Tekst w œrodku dymku
+    public GameObject tooltipBox;
+    public TextMeshProUGUI tooltipText;
 
     public void Setup(StatusEffect status)
     {
@@ -34,7 +34,6 @@ public class StatusIconUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (tooltipBox != null) tooltipBox.SetActive(false);
     }
 
-    // --- FUNKCJE MYSZKI ---
 
     // Odpala siê, gdy kursor wjedzie na ikonkê
     public void OnPointerEnter(PointerEventData eventData)

@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Effect_DeepFreeze", menuName = "RPG System/Effects/Deep Freeze (Stun)")]
 public class EffectDeepFreeze : SkillEffect
 {
-    public int duration = 2; // Ile rund postaæ bêdzie staæ jak sopel lodu
+    public int duration = 2;
 
     public override void Execute(Combatant actor, Combatant target, AttackResult result, float baseChance, SkillLevelData levelData, Sprite skillIcon)
     {
@@ -19,7 +19,6 @@ public class EffectDeepFreeze : SkillEffect
             // Sprawdzamy szansê na wejœcie G³êbokiego Zamro¿enia
             if (Random.Range(0f, 100f) <= baseChance)
             {
-                // Tworzymy "klocek" statusu
                 StatusEffect freezeEffect = new StatusEffect
                 {
                     effectName = "G³êbokie Zamro¿enie",
@@ -44,9 +43,8 @@ public class EffectDeepFreeze : SkillEffect
         }
         else
         {
-            // Jeœli boss u¿yje tego skilla za wczeœnie (gracz nie ma Freeze), to nic siê nie dzieje!
-            // Mo¿emy opcjonalnie wyœwietliæ, ¿e combo siê nie uda³o:
-            // target.ShowFloatingText("Brak wych³odzenia!", DamagePopup.PopupType.Miss);
+            // Jeœli boss u¿yje tego skilla za wczeœnie (gracz nie ma Freeze), to nic siê nie dzieje
+            
         }
     }
 }

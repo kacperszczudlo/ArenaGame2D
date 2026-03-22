@@ -8,7 +8,7 @@ public class SkillItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public Image iconImage;
     public TextMeshProUGUI nameText;
 
-    private CharacterSkill mySkill; // Zmienione z SkillData na CharacterSkill
+    private CharacterSkill mySkill;
 
     // Funkcja ustawiaj¹ca dane skilla w prefabie
     public void Setup(CharacterSkill cSkill)

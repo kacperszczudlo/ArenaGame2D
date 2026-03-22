@@ -33,12 +33,12 @@ public class PlayerDataManager : MonoBehaviour
     public int baseKnowledge = 10;
     public int basePower = 10;
 
-    public int basePhysicalArmor = 0;   // Np. Rycerz mo¿e mieæ 2 na start, Mag 0
+    public int basePhysicalArmor = 0; 
     public int baseMagicResistance = 0;
     
 
     [Header("Bonusy z Ekwipunku / Buffów")]
-    public int bonusMaxHP = 0;          // np. Pierœcieñ ¯ycia +20 HP
+    public int bonusMaxHP = 0;
     public int bonusMaxMana = 0;
     public int bonusMaxStamina = 0;
 
@@ -47,20 +47,19 @@ public class PlayerDataManager : MonoBehaviour
     public int bonusKnowledge = 0;
     public int bonusPower = 0;
 
-    public int bonusPhysicalArmor = 0;  // Zbroja
-    public int bonusMagicResistance = 0;// Amulet
-        // Ostry miecz daje +10% do Crita
+    public int bonusPhysicalArmor = 0;
+    public int bonusMagicResistance = 0;
 
-    public int weaponDamage = 0;       // Si³a samej broni
+    public int weaponDamage = 0;
 
     [Header("Bonusy Unikalne z ekwipunku")]
-    public int baseCritChance = 2;      // Baza
-    public int bonusCritChance = 0;    // szansa na krytyk 
-    public int baseDodgeChance = 0;     // Bazowa szansa na unik (np. klasa £otrzyka mo¿e mieæ 5%)
-    public int bonusDodgeChance = 0;    // Unik z butów/p³aszcza
+    public int baseCritChance = 2;
+    public int bonusCritChance = 0;
+    public int baseDodgeChance = 0;
+    public int bonusDodgeChance = 0;
 
-    public float bonusDamageMultiplier = 0f;    // Np. 0.2f oznacza +20% obra¿eñ z jakiegoœ artefaktu
-    public float bonusHitChanceMultiplier = 0f; // Np. 0.2f oznacza +20% celnoœci z magicznego wizjera
+    public float bonusDamageMultiplier = 0f;    // Np. 0.2f oznacza +20% obra¿eñ z jakiegoœ itemu
+    public float bonusHitChanceMultiplier = 0f; // Np. 0.2f oznacza +20% celnoœci z jakiegos itemu
 
     // Zsumowane wartoœci:
     public int TotalDodgeChance => baseDodgeChance + bonusDodgeChance;
@@ -68,7 +67,7 @@ public class PlayerDataManager : MonoBehaviour
     [Header("Odblokowane Umiejêtnoœci")]
     public List<PlayerSkillSaveData> unlockedSkills = new List<PlayerSkillSaveData>();
 
-    // --- ZSUMOWANE W£AŒCIWOŒCI (To z nich korzysta Kalkulator Walki!) ---
+    //ZSUMOWANE W£AŒCIWOŒCI (To z nich korzysta Kalkulator Walki)
     public int TotalMaxHP => baseMaxHP + bonusMaxHP;
     public int TotalMaxMana => baseMaxMana + bonusMaxMana;
     public int TotalMaxStamina => baseMaxStamina + bonusMaxStamina;
@@ -79,7 +78,7 @@ public class PlayerDataManager : MonoBehaviour
 
     public int TotalPhysicalArmor => basePhysicalArmor + bonusPhysicalArmor;
     public int TotalMagicResistance => baseMagicResistance + bonusMagicResistance;
-    public int TotalCritChance => baseCritChance + bonusCritChance; // O to dok³adnie Ci chodzi³o!
+    public int TotalCritChance => baseCritChance + bonusCritChance;
 
     void Awake()
     {
@@ -102,7 +101,7 @@ public class PlayerDataManager : MonoBehaviour
         currentExperience += amount;
         Debug.Log($"Zdobyto {amount} punktów doœwiadczenia!");
 
-        // Magiczna pêtla: Dzia³a dopóki mamy doœæ expa na kolejny poziom i nie dobiliœmy do 35 lvl
+        // pêtla: Dzia³a dopóki mamy doœæ expa na kolejny poziom i nie dobiliœmy do 35 lvl
         while (currentExperience >= GetRequiredExpForNextLevel() && currentLevel < 35)
         {
             LevelUp();
@@ -124,14 +123,14 @@ public class PlayerDataManager : MonoBehaviour
         // Wbijamy poziom
         currentLevel++;
 
-        // --- NAGRODY ZA LEVEL ---
+        // NAGRODY ZA LEVEL
         availableSkillPoints += 2;
         availableStatPoints += 5;
 
         Debug.Log($"<color=cyan>AWANS! Osi¹gniêto {currentLevel} poziom postaci! Przyznano 2 pkt umiejêtnoœci i 5 pkt statystyk.</color>");
     }
 
-    // --- TABELA DOŒWIADCZENIA ---
+    //TABELA DOŒWIADCZENIA
     // Indeks 0 to koszt przejœcia z 1 na 2 poziom, Indeks 1 to z 2 na 3, itd.
     private readonly int[] expTable = new int[]
     {

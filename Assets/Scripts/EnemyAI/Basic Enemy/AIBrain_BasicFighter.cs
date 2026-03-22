@@ -10,7 +10,6 @@ public class AIBrain_BasicFighter : EnemyAIBrain
 
         me.ResetDefensePA();
         int tacticRoll = Random.Range(1, 4);
-        Debug.Log($"<color=orange>{me.combatantName} (Mózg: Podstawowy Wojownik) wybiera Taktykê nr: {tacticRoll}</color>");
 
         if (tacticRoll == 1) 
         {
@@ -39,7 +38,6 @@ public class AIBrain_BasicFighter : EnemyAIBrain
                     originalIndex = actionCounter++
                 });
             }
-            // --- NAPRAWA: Zmienne obrony s¹ teraz bezpieczne w œrodku bloku! ---
             me.defenseMeleePA = 0;
             me.defenseRangedPA = 0;
             me.defenseMentalPA = 0;
@@ -57,7 +55,6 @@ public class AIBrain_BasicFighter : EnemyAIBrain
             me.defenseMentalPA = 5;
         }
 
-        Debug.Log($"<color=red>{me.combatantName} ustawi³ obronê: Zwarcie {me.defenseMeleePA}, Dystans {me.defenseRangedPA}, Umys³ {me.defenseMentalPA}</color>");
         return actions;
     }
 }

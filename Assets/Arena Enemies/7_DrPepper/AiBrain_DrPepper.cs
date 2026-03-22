@@ -11,7 +11,6 @@ public class AIBrain_DrPepper : EnemyAIBrain
 
         if (me.mySkills.Count < 4)
         {
-            Debug.LogError($"<color=red>UWAGA: {me.combatantName} potrzebuje 4 skilli (0: Tarcza, 1: Inkantacja, 2: Podpalenie, 3: Kula Ognia)!</color>");
             return actions;
         }
 
@@ -22,7 +21,7 @@ public class AIBrain_DrPepper : EnemyAIBrain
 
         int round = BattleManager.Instance.currentRound;
 
-        // --- IDEALNY CYKL ZGRANY Z 3-RUNDOW¥ TARCZ¥ ---
+        // --- CYKL Z 3-RUNDOW¥ TARCZ¥ ---
         // Okienka w rundach: 4, 9, 14, 19...
         bool isShieldDropRound = (round == 4) || (round > 4 && (round - 4) % 5 == 0);
 
@@ -34,7 +33,6 @@ public class AIBrain_DrPepper : EnemyAIBrain
         {
             // --- RUNDA 1: LOSOWANIE TAKTYKI ---
             int tactic = Random.Range(0, 2);
-            Debug.Log($"<color=magenta>{me.combatantName} (Runda 1): Rzut monet¹... Wybrano Taktykê {(tactic == 0 ? "Fizyczn¹ (Podpalenie)" : "Magiczn¹ (Kule Ognia)")}!</color>");
 
             actions.Add(new CombatAction { actor = me, target = me, skill = fireShield, paInvested = 3, originalIndex = actionCounter++ });
             actions.Add(new CombatAction { actor = me, target = me, skill = incantation, paInvested = 5, originalIndex = actionCounter++ });
@@ -58,8 +56,7 @@ public class AIBrain_DrPepper : EnemyAIBrain
         }
         else if (isArmageddonRound)
         {
-            // --- ARMAGEDON (Gracz musi u¿yæ modlitwy!) ---
-            Debug.Log($"<color=red>{me.combatantName} (Runda {round}): ARMAGEDON! £aduje 2 potê¿ne Kule Ognia!</color>");
+            // --- ARMAGEDON (Gracz musi u¿yæ modlitwy) ---
 
             actions.Add(new CombatAction { actor = me, target = player, skill = fireball, paInvested = 6, originalIndex = actionCounter++ });
             actions.Add(new CombatAction { actor = me, target = player, skill = fireball, paInvested = 6, originalIndex = actionCounter++ });
@@ -70,8 +67,7 @@ public class AIBrain_DrPepper : EnemyAIBrain
         }
         else if (isShieldDropRound)
         {
-            // --- OKIENKO DLA GRACZA (Tarcza spada naturalnie!) ---
-            Debug.Log($"<color=yellow>{me.combatantName} (Runda {round}): Tarcza opad³a! Mag szykuje siê do Armagedonu!</color>");
+            // --- OKIENKO DLA GRACZA (Tarcza spada) ---
 
             actions.Add(new CombatAction { actor = me, target = me, skill = incantation, paInvested = 4, originalIndex = actionCounter++ });
             actions.Add(new CombatAction { actor = me, target = player, skill = burnAttack, paInvested = 2, originalIndex = actionCounter++ });
@@ -83,13 +79,12 @@ public class AIBrain_DrPepper : EnemyAIBrain
         }
         else
         {
-            // --- STANDARDOWE RUNDY (INTELIGENTNE SPRAWDZANIE TARCZY) ---
+            // --- STANDARDOWE RUNDY  ---
             bool hasShield = me.activeStatuses.Exists(s => s.type == StatusType.FireShield);
 
             if (!hasShield)
             {
-                // Jeœli nie ma tarczy (np. Runda 6 po Armagedonie), rzuca j¹!
-                Debug.Log($"<color=orange>{me.combatantName} (Runda {round}): Nak³ada now¹ Tarczê Ognia!</color>");
+                // Jeœli nie ma tarczy (np. Runda 6 po Armagedonie), rzuca j¹
                 actions.Add(new CombatAction { actor = me, target = me, skill = fireShield, paInvested = 4, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = burnAttack, paInvested = 3, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = fireball, paInvested = 3, originalIndex = actionCounter++ });
@@ -100,8 +95,7 @@ public class AIBrain_DrPepper : EnemyAIBrain
             }
             else
             {
-                // Jeœli tarcza ju¿ na nim wisi (np. Rundy 2, 3, 7, 8), bije znacznie mocniej!
-                Debug.Log($"<color=orange>{me.combatantName} (Runda {round}): Tarcza wci¹¿ aktywna, skupia siê na ataku!</color>");
+                // Jeœli tarcza ju¿ na nim wisi (np. Rundy 2, 3, 7, 8), bije mocniej
                 actions.Add(new CombatAction { actor = me, target = player, skill = burnAttack, paInvested = 4, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = burnAttack, paInvested = 2, originalIndex = actionCounter++ });
                 actions.Add(new CombatAction { actor = me, target = player, skill = fireball, paInvested = 4, originalIndex = actionCounter++ });

@@ -20,7 +20,6 @@ public class LogicShield : StatusLogic
 
             int reducedDamage = Mathf.RoundToInt(incomingDamage * damageMultiplier);
 
-            // --- NOWOŒÆ: Odtwarzamy efekt wizualny (VFX) z ikonk¹ zamiast tekstu! ---
             if (effect.icon != null)
             {
                 owner.PlaySkillEffect(effect.icon);

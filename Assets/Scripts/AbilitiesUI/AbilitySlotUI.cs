@@ -7,7 +7,7 @@ public class AbilitySlotUI : MonoBehaviour
     public Image skillIcon;
     public Image lockMask;
     public TextMeshProUGUI levelText;
-    public TextMeshProUGUI skillNameText; // --- NOWOŒÆ: Miejsce na tekst nazwy ---
+    public TextMeshProUGUI skillNameText; 
     public Button slotButton;
 
     private CharacterSkill mySkill;
@@ -22,13 +22,12 @@ public class AbilitySlotUI : MonoBehaviour
         if (skillIcon != null && skill.data != null)
             skillIcon.sprite = skill.data.icon;
 
-        // --- NOWOŒÆ: Podmieniamy Nazwê pod kó³kiem! ---
+        // Podmieniamy Nazwê pod kó³kiem! 
         if (skillNameText != null && skill.data != null)
             skillNameText.text = skill.data.skillName;
 
         RefreshVisuals();
 
-        // Przypinamy klikniêcie
         slotButton.onClick.RemoveAllListeners();
         slotButton.onClick.AddListener(() => myWindow.SelectSkill(mySkill, this));
     }
