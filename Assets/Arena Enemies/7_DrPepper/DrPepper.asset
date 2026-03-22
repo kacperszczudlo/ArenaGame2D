@@ -42,5 +42,5 @@ MonoBehaviour:
     currentLevel: 1
     isUnlocked: 1
   aiBrain: {fileID: 11400000, guid: 4eeb71b48e98c7c4d8a67f8c3f405e20, type: 2}
-  goldReward: 0
-  expReward: 0
+  goldReward: 3000
+  expReward: 15000

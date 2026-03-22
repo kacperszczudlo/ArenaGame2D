@@ -52,10 +52,15 @@ public class TournamentManager : MonoBehaviour
         if (enemyInfoText != null) enemyInfoText.text = $"{currentEnemy.enemyName} - Lvl {currentEnemy.level}";
         if (progressText != null) progressText.text = $"Przeciwnik: {currentIndex + 1} / {tournamentEnemies.Count}";
 
-        // NOWOŒÆ: Pokazujemy potencjaln¹ nagrodê za tego konkretnego wroga
+        // NOWOŒÆ: Pokazujemy potencjaln¹ nagrodê, weryfikuj¹c level wroga! (Musi byæ wy¿szy!)
         if (enemyRewardText != null)
         {
-            enemyRewardText.text = $"Z³oto: +{currentEnemy.goldReward}  \nExp: +{currentEnemy.expReward}";
+            int actualExp = (currentEnemy.level > PlayerDataManager.Instance.currentLevel) ? currentEnemy.expReward : 0;
+
+            // Jeœli dostajemy 0 expa, wyœwietlamy na szaro
+            string expText = actualExp > 0 ? $"+{actualExp}" : "<color=#888888>0</color>";
+
+            enemyRewardText.text = $"Z³oto: +{currentEnemy.goldReward}  \nExp: {expText}";
         }
 
         UpdatePendingRewardsUI();

@@ -131,17 +131,53 @@ public class PlayerDataManager : MonoBehaviour
         Debug.Log($"<color=cyan>AWANS! Osi¹gniêto {currentLevel} poziom postaci! Przyznano 2 pkt umiejêtnoœci i 5 pkt statystyk.</color>");
     }
 
-    // W tym miejscu w przysz³oœci wpiszesz dok³adne wymagania!
+    // --- TABELA DOŒWIADCZENIA ---
+    // Indeks 0 to koszt przejœcia z 1 na 2 poziom, Indeks 1 to z 2 na 3, itd.
+    private readonly int[] expTable = new int[]
+    {
+        10,   // Lvl 1 -> 2
+        20,   // Lvl 2 -> 3
+        30,   // Lvl 3 -> 4
+        60,   // Lvl 4 -> 5
+        90,   // 5 -> 6
+        120,   // 6 -> 7
+        240,  // 7 -> 8
+        360,  // 8 -> 9
+        390,  // 9 -> 10
+        780,  // 10 -> 11
+        1170,  // 11 -> 12
+        1200,  // 12 -> 13
+        2400,  // 13 -> 14
+        3600,  // 14 -> 15
+        3600,  // 15 -> 16
+        3600,  // 16 -> 17
+        3600,  // 17 -> 18
+        4000, // 18 -> 19
+        8000, // 19 -> 20
+        12000, // 20 -> 21
+        12000, // 21 -> 22
+        12000, // 22 -> 23
+        12000, // 23 -> 24
+        12000, // 24 -> 25
+        15000, // 25 -> 26
+        30000, // 26 -> 27
+        45000, // 27 -> 28
+        45000, // 28 -> 29
+        45000, // 29 -> 30
+        45000, // 30 -> 31
+        45000, // 31 -> 32
+        45000, // 32 -> 33
+        45000, // 33 -> 34
+        45000  // 34 -> 35
+    };
+
     public int GetRequiredExpForNextLevel()
     {
-        // Na ten moment to prosty wzór:
-        // Lvl 1 -> wymaga 100 expa
-        // Lvl 2 -> wymaga 150 expa
-        // Lvl 3 -> wymaga 200 expa itd.
-        // PóŸniej zamienimy to na dok³adn¹ listê wartoœci, jakie tylko sobie wymyœlisz!
+        if (currentLevel >= 35) return 999999; // Zabezpieczenie dla Max Levela
 
-        return 100 + (currentLevel - 1) * 50;
+        // currentLevel = 1 pobierze indeks 0 (czyli 100)
+        return expTable[currentLevel - 1];
     }
 
-    
+
 }

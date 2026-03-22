@@ -439,11 +439,23 @@ public class BattleManager : MonoBehaviour
                 if (defeatedEnemy != null)
                 {
                     GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
-                    GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+
+                    // --- ZMIANA: Wróg musi mieæ WY¯SZY level ni¿ gracz! ---
+                    if (defeatedEnemy.level > PlayerDataManager.Instance.currentLevel)
+                    {
+                        GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+                    }
+                    else
+                    {
+                        Debug.Log($"<color=gray>Przeciwnik (Lvl {defeatedEnemy.level}) nie stanowi³ wyzwania! Brak doœwiadczenia.</color>");
+                    }
                 }
                 GameManager.Instance.currentTournamentIndex++;
 
-                if (summaryRewardsText != null) summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {defeatedEnemy?.expReward}";
+                // Aktualizujemy tekst podsumowania, uwzglêdniaj¹c, czy dostaliœmy expa!
+                int gainedExp = (defeatedEnemy != null && defeatedEnemy.level > PlayerDataManager.Instance.currentLevel) ? defeatedEnemy.expReward : 0;
+
+                if (summaryRewardsText != null) summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {gainedExp}";
             }
             else
             {
