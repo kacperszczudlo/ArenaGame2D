@@ -23,6 +23,9 @@ public class PlayerDataManager : MonoBehaviour
     public int availableSkillPoints = 2; 
     public int availableStatPoints = 5;
 
+    public bool hasUnseenSkillPoints = true;
+    public bool hasUnseenStatPoints = true;
+
     [Header("Podstawowe Statystyki (Zale¿ne od Klasy i Poziomu)")]
     public int baseMaxHP = 230;
     public int baseMaxMana = 200;
@@ -126,6 +129,9 @@ public class PlayerDataManager : MonoBehaviour
         // NAGRODY ZA LEVEL
         availableSkillPoints += 2;
         availableStatPoints += 5;
+
+        hasUnseenSkillPoints = true;
+        hasUnseenStatPoints = true;
 
         Debug.Log($"<color=cyan>AWANS! Osi¹gniêto {currentLevel} poziom postaci! Przyznano 2 pkt umiejêtnoœci i 5 pkt statystyk.</color>");
     }

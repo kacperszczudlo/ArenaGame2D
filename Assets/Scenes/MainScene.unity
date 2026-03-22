@@ -3426,7 +3426,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8686767555700674222, guid: f44ec7b8d3180a84e90732db691925bf, type: 3}
+  m_Sprite: {fileID: -8686767555700674222, guid: 8ae7378481fa1364abae621a3d7b9d02, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -45950,6 +45950,7 @@ GameObject:
   - component: {fileID: 1117280557}
   - component: {fileID: 1117280556}
   - component: {fileID: 1117280555}
+  - component: {fileID: 1117280558}
   m_Layer: 5
   m_Name: Stats
   m_TagString: Untagged
@@ -46032,6 +46033,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1117280558}
+        m_TargetAssemblyTypeName: NotificationBlinker, Assembly-CSharp
+        m_MethodName: OnButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1117280556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46070,6 +46083,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1117280553}
   m_CullTransparentMesh: 1
+--- !u!114 &1117280558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117280553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6ca5698a89ddb4b8895af57660939a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotificationBlinker
+  type: 0
+  targetImage: {fileID: 1117280556}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  blinkColor: {r: 1, g: 0.8, b: 0, a: 1}
+  blinkSpeed: 3
 --- !u!1 &1120627913
 GameObject:
   m_ObjectHideFlags: 0
@@ -48357,6 +48387,7 @@ GameObject:
   - component: {fileID: 1272411703}
   - component: {fileID: 1272411702}
   - component: {fileID: 1272411701}
+  - component: {fileID: 1272411704}
   m_Layer: 5
   m_Name: Abilities
   m_TagString: Untagged
@@ -48439,6 +48470,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1272411704}
+        m_TargetAssemblyTypeName: NotificationBlinker, Assembly-CSharp
+        m_MethodName: OnButtonClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1272411702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48477,6 +48520,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272411699}
   m_CullTransparentMesh: 1
+--- !u!114 &1272411704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272411699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6ca5698a89ddb4b8895af57660939a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotificationBlinker
+  type: 1
+  targetImage: {fileID: 1272411702}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  blinkColor: {r: 1, g: 0.8, b: 0, a: 1}
+  blinkSpeed: 3
 --- !u!1 &1278994297
 GameObject:
   m_ObjectHideFlags: 0
@@ -54246,7 +54306,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8686767555700674222, guid: f44ec7b8d3180a84e90732db691925bf, type: 3}
+  m_Sprite: {fileID: -8686767555700674222, guid: 8ae7378481fa1364abae621a3d7b9d02, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1

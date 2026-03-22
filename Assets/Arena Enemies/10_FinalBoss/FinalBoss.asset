@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a46af50f9a5e4b4493f4530a2803526, type: 3}
   m_Name: FinalBoss
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
-  enemyName: Przeciwnik
+  enemyName: JJ Niszczyciel
   avatarImage: {fileID: 0}
   enemyVisualPrefab: {fileID: 5348377220859076812, guid: 02429af6b0cfd164f9a06adbae528a3c, type: 3}
   level: 38
