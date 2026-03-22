@@ -435,15 +435,33 @@ public class BattleManager : MonoBehaviour
 
             if (GameManager.Instance.isTournamentBattle)
             {
-                // ZASADY TURNIEJU: £upy id¹ do worka (ryzykujemy dalej)
+                // ZASADY TURNIEJU: £upy id¹ do worka
+                int droppedGems = 0;
+
                 if (defeatedEnemy != null)
                 {
                     GameManager.Instance.pendingGold += defeatedEnemy.goldReward;
-                    GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+
+                    if (defeatedEnemy.level > PlayerDataManager.Instance.currentLevel)
+                    {
+                        GameManager.Instance.pendingXP += defeatedEnemy.expReward;
+                    }
+
+                    // --- NOWOŒÆ: Losowanie Gemów Turniejowych! ---
+                    if (defeatedEnemy.gemRewardAmount > 0 && Random.Range(0f, 100f) <= defeatedEnemy.gemRewardChance)
+                    {
+                        droppedGems = defeatedEnemy.gemRewardAmount;
+                        GameManager.Instance.pendingGems += droppedGems;
+                        Debug.Log($"<color=cyan>Zdobyto {droppedGems} gemów!</color>");
+                    }
                 }
                 GameManager.Instance.currentTournamentIndex++;
 
-                if (summaryRewardsText != null) summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {defeatedEnemy?.expReward}";
+                int gainedExp = (defeatedEnemy != null && defeatedEnemy.level > PlayerDataManager.Instance.currentLevel) ? defeatedEnemy.expReward : 0;
+                string gemsText = droppedGems > 0 ? $"\nGemy turniejowe: {droppedGems}" : ""; // Dopisek, jeœli wypad³y!
+
+                if (summaryRewardsText != null)
+                    summaryRewardsText.text = $"Do puli nagród za walki w turnieju zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}\nDoœwiadczenie: {gainedExp}{gemsText}";
             }
             else
             {
@@ -465,7 +483,12 @@ public class BattleManager : MonoBehaviour
             {
                 // ZASADY TURNIEJU: Wrzucamy to co mieliœmy w worku do g³ównej puli i resetujemy turniej
                 GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
-                PlayerDataManager.Instance.currentExperience += GameManager.Instance.pendingXP;
+
+                // --- NOWOŒÆ: U¿ywamy nowej funkcji, ¿eby œmieræ te¿ mog³a daæ Level Up! ---
+                if (GameManager.Instance.pendingXP > 0)
+                {
+                    PlayerDataManager.Instance.AddExperience(GameManager.Instance.pendingXP);
+                }
 
                 if (GameManager.Instance.pendingGold > 0 || GameManager.Instance.pendingXP > 0)
                 {
@@ -476,8 +499,10 @@ public class BattleManager : MonoBehaviour
                     if (summaryRewardsText != null) summaryRewardsText.text = "Niestety, wracasz z pustymi rêkami...";
                 }
 
+                PlayerDataManager.Instance.deathCount++;
                 GameManager.Instance.pendingGold = 0;
                 GameManager.Instance.pendingXP = 0;
+                GameManager.Instance.pendingGems = 0;
                 GameManager.Instance.currentTournamentIndex = 0;
             }
             else

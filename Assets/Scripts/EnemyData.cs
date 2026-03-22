@@ -40,4 +40,9 @@ public class EnemyData : ScriptableObject
     [Header("Nagrody za pokonanie")]
     public int goldReward = 0;
     public int expReward = 0;
+
+    [Header("Nagrody Specjalne (Gemy)")]
+    public int gemRewardAmount = 0; // Ile gemów zrzuci (np. 10, 20)
+    [Range(0, 100)]
+    public float gemRewardChance = 0f; // Szansa na drop (np. 10%, 100%)
 }

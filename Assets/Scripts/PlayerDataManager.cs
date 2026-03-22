@@ -16,7 +16,12 @@ public class PlayerDataManager : MonoBehaviour
     [Header("Doœwiadczenie i Poziom")]
     public int currentLevel = 1;
     public int currentExperience = 0;
-    public int availableSkillPoints = 2;
+    public int experienceToNextLevel = 100;
+    public int deathCount = 0;
+
+    [Header("Punkty do Rozdania")]
+    public int availableSkillPoints = 2; 
+    public int availableStatPoints = 5;
 
     [Header("Podstawowe Statystyki (Zale¿ne od Klasy i Poziomu)")]
     public int baseMaxHP = 230;
@@ -88,18 +93,91 @@ public class PlayerDataManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    // Ta funkcja w przysz³oœci obs³u¿y wybór klasy w Menu G³ównym!
-    /*
-    public void InitializeClass(ClassData chosenClass)
+    // Tê funkcjê wywo³uje TournamentManager po klikniêciu "Wycofaj siê"
+    public void AddExperience(int amount)
     {
-        baseStrength = chosenClass.startStrength;
-        // ... itd ...
-        unlockedSkills.Clear();
-        foreach(var startSkill in chosenClass.startingSkills)
+        // Jeœli mamy maksymalny poziom, ignorujemy expa
+        if (currentLevel >= 35) return;
+
+        currentExperience += amount;
+        Debug.Log($"Zdobyto {amount} punktów doœwiadczenia!");
+
+        // Magiczna pêtla: Dzia³a dopóki mamy doœæ expa na kolejny poziom i nie dobiliœmy do 35 lvl
+        while (currentExperience >= GetRequiredExpForNextLevel() && currentLevel < 35)
         {
-            unlockedSkills.Add(new PlayerSkillSaveData { skill = startSkill, currentLevel = 1 });
+            LevelUp();
+        }
+
+        // Blokada po wbiciu max levela
+        if (currentLevel >= 35)
+        {
+            currentLevel = 35;
+            currentExperience = 0;
         }
     }
-    */
+
+    private void LevelUp()
+    {
+        // Najpierw "p³acimy" expem za ten poziom
+        currentExperience -= GetRequiredExpForNextLevel();
+
+        // Wbijamy poziom
+        currentLevel++;
+
+        // --- NAGRODY ZA LEVEL ---
+        availableSkillPoints += 2;
+        availableStatPoints += 5;
+
+        Debug.Log($"<color=cyan>AWANS! Osi¹gniêto {currentLevel} poziom postaci! Przyznano 2 pkt umiejêtnoœci i 5 pkt statystyk.</color>");
+    }
+
+    // --- TABELA DOŒWIADCZENIA ---
+    // Indeks 0 to koszt przejœcia z 1 na 2 poziom, Indeks 1 to z 2 na 3, itd.
+    private readonly int[] expTable = new int[]
+    {
+        10,   // Lvl 1 -> 2
+        20,   // Lvl 2 -> 3
+        30,   // Lvl 3 -> 4
+        60,   // Lvl 4 -> 5
+        90,   // 5 -> 6
+        120,   // 6 -> 7
+        240,  // 7 -> 8
+        360,  // 8 -> 9
+        390,  // 9 -> 10
+        780,  // 10 -> 11
+        1170,  // 11 -> 12
+        1200,  // 12 -> 13
+        2400,  // 13 -> 14
+        3600,  // 14 -> 15
+        3600,  // 15 -> 16
+        3600,  // 16 -> 17
+        3600,  // 17 -> 18
+        4000, // 18 -> 19
+        8000, // 19 -> 20
+        12000, // 20 -> 21
+        12000, // 21 -> 22
+        12000, // 22 -> 23
+        12000, // 23 -> 24
+        12000, // 24 -> 25
+        15000, // 25 -> 26
+        30000, // 26 -> 27
+        45000, // 27 -> 28
+        45000, // 28 -> 29
+        45000, // 29 -> 30
+        45000, // 30 -> 31
+        45000, // 31 -> 32
+        45000, // 32 -> 33
+        45000, // 33 -> 34
+        45000  // 34 -> 35
+    };
+
+    public int GetRequiredExpForNextLevel()
+    {
+        if (currentLevel >= 35) return 999999; // Zabezpieczenie dla Max Levela
+
+        // currentLevel = 1 pobierze indeks 0 (czyli 100)
+        return expTable[currentLevel - 1];
+    }
+
+
 }

@@ -39,5 +39,7 @@ MonoBehaviour:
     currentLevel: 1
     isUnlocked: 0
   aiBrain: {fileID: 11400000, guid: 764b876cf1fbd0c4cbd3ae03d091d4c7, type: 2}
-  goldReward: 0
-  expReward: 0
+  goldReward: 160
+  expReward: 390
+  gemRewardAmount: 1
+  gemRewardChance: 3
