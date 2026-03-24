@@ -19,9 +19,34 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void Setup(EquipmentItemData data)
     {
         itemData = data;
+        
+        // Zabezpieczenie przed brakiem komponentu Image
+        if (image == null) image = GetComponent<Image>();
+
         if (image != null && itemData != null)
         {
-            image.sprite = itemData.icon; 
+            if (itemData.icon != null) 
+            {
+                image.sprite = itemData.icon; 
+                image.color = Color.white; // Wymuszenie 100% widoczności
+            }
+            else 
+            {
+                // Próba ratunku: jeśli ikona jest null, spróbuj załadować ją z nazwy
+                if (!string.IsNullOrEmpty(itemData.iconName))
+                {
+                    itemData.icon = Resources.Load<Sprite>("BlacksmithShop/" + itemData.iconName);
+                    if (itemData.icon != null)
+                    {
+                        image.sprite = itemData.icon;
+                        image.color = Color.white;
+                        return; // Udało się uratować
+                    }
+                }
+                
+                // Jeśli definitywnie nie ma ikony - ukrywamy kwadrat
+                image.color = new Color(1f, 1f, 1f, 0f); 
+            }
         }
     }
 

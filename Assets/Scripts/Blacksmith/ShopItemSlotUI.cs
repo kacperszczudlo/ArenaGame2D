@@ -13,7 +13,7 @@ public class ShopItemSlotUI : MonoBehaviour
     private void Awake()
     {
         nameText = transform.Find("NameAndTier_Container/ItemText")?.GetComponent<TMP_Text>();
-        iconImage = transform.Find("Icon_Border/Icon")?.GetComponent<Image>();
+        iconImage = transform.Find("ItemIcon")?.GetComponent<Image>();
         greenStatsText = transform.Find("Stats_Container/Bonus")?.GetComponent<TMP_Text>();
         priceText = transform.Find("Buy_Container/Price")?.GetComponent<TMP_Text>();
         buyButton = transform.Find("Buy_Container/BuyBtn")?.GetComponent<Button>();
@@ -28,8 +28,14 @@ public class ShopItemSlotUI : MonoBehaviour
         }
         
         if (priceText != null) priceText.text = tier.price.ToString() + " g";
-        if (iconImage != null && category.icon != null) iconImage.sprite = category.icon;
-
+        if (iconImage != null) {
+            if (category.icon != null) {
+                iconImage.sprite = category.icon;
+                iconImage.color = new Color(1f, 1f, 1f, 1f);
+            } else {
+                iconImage.color = new Color(1f, 1f, 1f, 0f); // Ukryj kwadrat
+            }
+        }
         if (greenStatsText != null && category.stats != null) {
             greenStatsText.enableWordWrapping = false; 
             string allStats = "";
@@ -50,9 +56,10 @@ public class ShopItemSlotUI : MonoBehaviour
                 {
                     EquipmentItemData generatedItem = ScriptableObject.CreateInstance<EquipmentItemData>();
                     generatedItem.itemName = fullName;
-                    generatedItem.icon = category.icon;
                     generatedItem.iconName = category.iconName; 
-                    
+                    // TWARDE WCZYTANIE IKONY Z RESOURCES:
+                    generatedItem.icon = Resources.Load<Sprite>("BlacksmithShop/" + category.iconName);
+                                        
                     // Cena sprzedaży to połowa ceny zakupu
                     generatedItem.sellPrice = tier.price / 2; 
 
