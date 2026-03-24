@@ -52,15 +52,14 @@ public class ShopItemSlotUI : MonoBehaviour
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() => 
             {
-                if (shop.currentGold >= tier.price)
+                // SPRAWDZAMY ZŁOTO W GAMEMANAGERZE
+                if (GameManager.Instance != null && GameManager.Instance.globalGold >= tier.price)
                 {
                     EquipmentItemData generatedItem = ScriptableObject.CreateInstance<EquipmentItemData>();
                     generatedItem.itemName = fullName;
                     generatedItem.iconName = category.iconName; 
-                    // TWARDE WCZYTANIE IKONY Z RESOURCES:
                     generatedItem.icon = Resources.Load<Sprite>("BlacksmithShop/" + category.iconName);
-                                        
-                    // Cena sprzedaży to połowa ceny zakupu
+                    
                     generatedItem.sellPrice = tier.price / 2; 
 
                     switch(category.name.ToUpper())
@@ -83,12 +82,9 @@ public class ShopItemSlotUI : MonoBehaviour
                     
                     if (success)
                     {
-                        shop.currentGold -= tier.price;
+                        // WYDAJEMY ZŁOTO BEZPOŚREDNIO Z BANKU
+                        GameManager.Instance.SpendGold(tier.price);
                         shop.UpdateGoldUI(); 
-                        
-                        // Zapisz złoto od razu po zakupie
-                        PlayerPrefs.SetInt("PlayerGold", shop.currentGold);
-                        PlayerPrefs.Save();
                     }
                 }
             });

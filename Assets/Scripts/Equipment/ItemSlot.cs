@@ -49,14 +49,10 @@ public class ItemSlot : MonoBehaviour, IDropHandler
 
     private void UpdatePlayerStats(EquipmentItemData item, bool isEquipping)
     {
-        // Tutaj w przyszłości odwołasz się do PlayerDataManager
-        if (isEquipping) 
+        // Teraz po prostu mówimy kalkulatorowi: "Hej, coś się zmieniło, przelicz to od nowa!"
+        if (EquipmentStatsCalculator.Instance != null)
         {
-            Debug.Log($"[STATYSTYKI] ZAKŁADASZ sprzęt: {item.itemName}. Pora dodać buffy!");
-        }
-        else 
-        {
-            Debug.Log($"[STATYSTYKI] ZDEJMUJESZ sprzęt: {item.itemName}. Pora odjąć buffy!");
+            EquipmentStatsCalculator.Instance.RecalculateAllEquipmentStats();
         }
     }
 }

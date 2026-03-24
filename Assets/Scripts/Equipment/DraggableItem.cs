@@ -77,36 +77,30 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
 
     // --- SPRZEDAŻ (PRAWY KLIK) ---
+    // --- SPRZEDAŻ (PRAWY KLIK) ---
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             ItemSlot slot = transform.parent.GetComponent<ItemSlot>();
             
-            // Można sprzedać tylko item z plecaka (niezałożony na postać)
             if (slot != null && !slot.isEquippedSlot)
             {
-                // Dodajemy złoto do stanu
-                int currentGold = PlayerPrefs.GetInt("PlayerGold", 1500);
-                currentGold += itemData.sellPrice;
-                PlayerPrefs.SetInt("PlayerGold", currentGold);
-                PlayerPrefs.Save();
+                // WYSYŁAMY ZŁOTO DO GAMEMANAGERA
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.AddGold(itemData.sellPrice);
+                }
 
-                // Odświeżenie interfejsu sklepu "na żywo", jeśli jest otwarty
                 BlacksmithShopController shop = Object.FindFirstObjectByType<BlacksmithShopController>(FindObjectsInactive.Include);
                 if (shop != null) 
                 { 
-                    shop.currentGold = currentGold; 
                     shop.UpdateGoldUI(); 
                 }
-
-                Debug.Log($"[HANDEL] Sprzedano {itemData.itemName} za {itemData.sellPrice} g.");
                 
-                // Odpięcie obiektu od rodzica, żeby system zapisu go zignorował
                 transform.SetParent(null);
                 Destroy(gameObject);
                 
-                // Automatyczny zapis ekwipunku po wyrzuceniu przedmiotu
                 if(InventorySaveSystem.Instance != null)
                 {
                     InventorySaveSystem.Instance.SaveInventory();

@@ -4,10 +4,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [Header("Przejúcia miÍdzy scenami")]
+    [Header("PrzejÔøΩcia miÔøΩdzy scenami")]
     public GameObject currentPlayerPrefab;
     public EnemyData currentEnemyToFight;
-    public Vector3 lastMapPosition; // ZapamiÍta koordynaty X, Y, Z
+    public Vector3 lastMapPosition; // ZapamiÔøΩta koordynaty X, Y, Z
 
     [Header("Kontekst Walki")]
     public string sceneToLoadAfterBattle = "ArenaLobby";
@@ -19,8 +19,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Stan Turnieju")]
     public int currentTournamentIndex = 0;
-    public int pendingGold = 0; // Z≥oto w "wirtualnym worku" 
-    public int pendingXP = 0;   // Doúwiadczenie w "wirtualnym worku"
+    public int pendingGold = 0; // ZÔøΩoto w "wirtualnym worku" 
+    public int pendingXP = 0;   // DoÔøΩwiadczenie w "wirtualnym worku"
     public int pendingGems = 0;
 
     void Awake()
@@ -29,10 +29,35 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject); 
+            globalGold = PlayerPrefs.GetInt("GlobalGold", 1500);
+            tournamentGems = PlayerPrefs.GetInt("TournamentGems", 0);
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    // --- FUNKCJE EKONOMII (Dodane dla Kowala i Ekwipunku) ---
+    public void AddGold(int amount)
+    {
+        globalGold += amount;
+        PlayerPrefs.SetInt("GlobalGold", globalGold);
+        PlayerPrefs.Save();
+        Debug.Log($"[BANK] Dodano {amount} z≈Çota. Aktualny stan: {globalGold}");
+    }
+
+    public bool SpendGold(int amount)
+    {
+        if (globalGold >= amount)
+        {
+            globalGold -= amount;
+            PlayerPrefs.SetInt("GlobalGold", globalGold);
+            PlayerPrefs.Save();
+            Debug.Log($"[BANK] Wydano {amount} z≈Çota. Pozosta≈Ço: {globalGold}");
+            return true;
+        }
+        Debug.LogWarning("[BANK] Brak wystarczajƒÖcej ilo≈õci z≈Çota!");
+        return false;
     }
 }

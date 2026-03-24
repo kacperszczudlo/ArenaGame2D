@@ -11,7 +11,7 @@ using TMPro;
 public class BlacksmithShopController : MonoBehaviour 
 {
     [Header("Złoto i Ekonomia")]
-    public int currentGold = 1500; 
+    
 
     [Header("Podepnij z folderu Prefabs:")]
     public GameObject categoryPrefab;
@@ -32,6 +32,7 @@ public class BlacksmithShopController : MonoBehaviour
 
     private int currentTierIndex = 0;
     private ItemCategory currentCategory;
+
 
     void Awake() 
     {
@@ -62,28 +63,27 @@ public class BlacksmithShopController : MonoBehaviour
     }
 
     void Start() { 
-        // Wczytujemy zapisane złoto po włączeniu gry (domyślnie 1500)
-        currentGold = PlayerPrefs.GetInt("PlayerGold", 1500); 
         ShowCategories(); 
         GenerateCategories(); 
         UpdateGoldUI();
     }
 
     public void UpdateGoldUI() {
-        if (goldTxt != null) goldTxt.text = "ZŁOTO: " + currentGold;
-    }
-
-    public void ShowCategories() {
-        if (catView != null) catView.SetActive(true); 
-        if (itmView != null) itmView.SetActive(false);
-        transform.Find("Header_Panel/Back_Button")?.gameObject.SetActive(false);
+        if (goldTxt != null && GameManager.Instance != null) 
+        {
+            goldTxt.text = "ZŁOTO: " + GameManager.Instance.globalGold;
+        }
     }
 
     public void OpenShop() { 
         gameObject.SetActive(true); 
-        currentGold = PlayerPrefs.GetInt("PlayerGold", 1500); // Odśwież golda po otwarciu
         ShowCategories(); 
         UpdateGoldUI(); 
+    }
+    public void ShowCategories() {
+        if (catView != null) catView.SetActive(true); 
+        if (itmView != null) itmView.SetActive(false);
+        transform.Find("Header_Panel/Back_Button")?.gameObject.SetActive(false);
     }
     
     public void CloseShop() { gameObject.SetActive(false); }

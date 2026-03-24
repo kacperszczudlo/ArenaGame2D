@@ -111,7 +111,14 @@ public class InventorySaveSystem : MonoBehaviour
             {
                 Debug.LogWarning($"[WCZYTYWANIE BŁĄD] Nie znalazłem ukrytego slota o nazwie '{sItem.slotName}'!");
             }
+        } // <--- Koniec głównej pętli foreach
+        
+        // --- NOWY KOD: Podliczanie statystyk po całkowitym załadowaniu ekwipunku ---
+        if (EquipmentStatsCalculator.Instance != null)
+        {
+            EquipmentStatsCalculator.Instance.RecalculateAllEquipmentStats();
         }
+
         Debug.Log($"[WCZYTYWANIE] Wczytano {loadData.savedItems.Count} przedmiotów z zapisu.");
     }
     
