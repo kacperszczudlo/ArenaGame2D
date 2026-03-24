@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))] 
-public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Dane (Wypełniane dynamicznie w grze)")]
     public EquipmentItemData itemData;
@@ -19,8 +19,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public void Setup(EquipmentItemData data)
     {
         itemData = data;
-        
-        // Zabezpieczenie przed brakiem komponentu Image
         if (image == null) image = GetComponent<Image>();
 
         if (image != null && itemData != null)
@@ -28,11 +26,10 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             if (itemData.icon != null) 
             {
                 image.sprite = itemData.icon; 
-                image.color = Color.white; // Wymuszenie 100% widoczności
+                image.color = Color.white; 
             }
             else 
             {
-                // Próba ratunku: jeśli ikona jest null, spróbuj załadować ją z nazwy
                 if (!string.IsNullOrEmpty(itemData.iconName))
                 {
                     itemData.icon = Resources.Load<Sprite>("BlacksmithShop/" + itemData.iconName);
@@ -40,11 +37,9 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                     {
                         image.sprite = itemData.icon;
                         image.color = Color.white;
-                        return; // Udało się uratować
+                        return;
                     }
                 }
-                
-                // Jeśli definitywnie nie ma ikony - ukrywamy kwadrat
                 image.color = new Color(1f, 1f, 1f, 0f); 
             }
         }
@@ -56,6 +51,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         if (image != null) image.raycastTarget = false;
+        
+        if (ItemTooltip.Instance != null) ItemTooltip.Instance.HideTooltip(); 
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -76,8 +73,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         rect.anchoredPosition = Vector2.zero; 
     }
 
-    // --- SPRZEDAŻ (PRAWY KLIK) ---
-    // --- SPRZEDAŻ (PRAWY KLIK) ---
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Right)
@@ -86,7 +81,6 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             
             if (slot != null && !slot.isEquippedSlot)
             {
-                // WYSYŁAMY ZŁOTO DO GAMEMANAGERA
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.AddGold(itemData.sellPrice);
@@ -110,6 +104,27 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             {
                 Debug.LogWarning("[HANDEL] Zdejmij przedmiot z postaci zanim go sprzedasz!");
             }
+        }
+    }
+
+    // --- POPRAWIONE FUNKCJE HOVER ---
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // SZPIEG 1: Sprawdzamy czy Unity w ogóle widzi, że najechaliśmy na przedmiot
+        Debug.Log($"[MYSZ] Najechano na przedmiot: {itemData.itemName}");
+
+        if (itemData != null && ItemTooltip.Instance != null)
+        {
+            ItemTooltip.Instance.ShowTooltip(itemData);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // Chowamy tooltip
+        if (ItemTooltip.Instance != null)
+        {
+            ItemTooltip.Instance.HideTooltip();
         }
     }
 }

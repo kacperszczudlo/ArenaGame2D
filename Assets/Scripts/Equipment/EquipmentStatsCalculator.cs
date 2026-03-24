@@ -70,5 +70,6 @@ public class EquipmentStatsCalculator : MonoBehaviour
         }
         
         Debug.Log($"[KALKULATOR] Podliczono nowy ekwipunek! Całkowita dodatkowa siła: {p.bonusStrength}, Pancerz fiz.: {p.bonusPhysicalArmor}");
+        if (PlayerStatsUI.Instance != null) PlayerStatsUI.Instance.UpdateStatsUI();
     }
 }
