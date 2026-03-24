@@ -9170,6 +9170,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
+      propertyPath: globalGold
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2363783279404089748, guid: 89eef89b8374497479804057ebea81b7, type: 3}
       propertyPath: currentPlayerPrefab
       value: 
       objectReference: {fileID: 5169767090919104140, guid: 878db1372efdcc24b878521734ac7f38, type: 3}

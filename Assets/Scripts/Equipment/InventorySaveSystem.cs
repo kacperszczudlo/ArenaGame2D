@@ -14,6 +14,8 @@ public class SavedItem
     public int b_Armor, b_Resist, w_Damage;
     public int b_Crit, b_Dodge;
     public float b_DmgMult, b_HitMult;
+
+    public int sellPrice;
 }
 
 [System.Serializable]
@@ -60,6 +62,8 @@ public class InventorySaveSystem : MonoBehaviour
             sItem.b_Crit = item.itemData.bonusCritChance; sItem.b_Dodge = item.itemData.bonusDodgeChance;
             sItem.b_DmgMult = item.itemData.bonusDamageMultiplier; sItem.b_HitMult = item.itemData.bonusHitChanceMultiplier;
 
+            sItem.sellPrice = item.itemData.sellPrice;
+
             saveData.savedItems.Add(sItem);
         }
 
@@ -95,6 +99,8 @@ public class InventorySaveSystem : MonoBehaviour
             restoredData.bonusPhysicalArmor = sItem.b_Armor; restoredData.bonusMagicResistance = sItem.b_Resist; restoredData.weaponDamage = sItem.w_Damage;
             restoredData.bonusCritChance = sItem.b_Crit; restoredData.bonusDodgeChance = sItem.b_Dodge;
             restoredData.bonusDamageMultiplier = sItem.b_DmgMult; restoredData.bonusHitChanceMultiplier = sItem.b_HitMult;
+
+            restoredData.sellPrice = sItem.sellPrice;
             
             // Ładowanie grafiki z folderu Resources
             restoredData.icon = Resources.Load<Sprite>("BlacksmithShop/" + sItem.iconName);
