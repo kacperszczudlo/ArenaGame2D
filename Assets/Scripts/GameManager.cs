@@ -31,6 +31,14 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject); 
             globalGold = PlayerPrefs.GetInt("GlobalGold", 1500);
             tournamentGems = PlayerPrefs.GetInt("TournamentGems", 0);
+        
+            if (PlayerPrefs.HasKey("PlayerPosX"))
+                {
+                    float x = PlayerPrefs.GetFloat("PlayerPosX");
+                    float y = PlayerPrefs.GetFloat("PlayerPosY");
+                    float z = PlayerPrefs.GetFloat("PlayerPosZ");
+                    lastMapPosition = new Vector3(x, y, z);
+                }
         }
         else
         {
@@ -59,5 +67,18 @@ public class GameManager : MonoBehaviour
         }
         Debug.LogWarning("[BANK] Brak wystarczającej ilości złota!");
         return false;
+    }
+
+    public void SavePlayerPosition(Vector3 currentPosition)
+    {
+        lastMapPosition = currentPosition;
+        
+        // Rozbijamy pozycję na X, Y, Z i zapisujemy na dysku
+        PlayerPrefs.SetFloat("PlayerPosX", currentPosition.x);
+        PlayerPrefs.SetFloat("PlayerPosY", currentPosition.y);
+        PlayerPrefs.SetFloat("PlayerPosZ", currentPosition.z);
+        PlayerPrefs.Save();
+        
+        Debug.Log($"[MAPA] Zapisano pozycję gracza: {currentPosition}");
     }
 }
