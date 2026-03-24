@@ -35,7 +35,6 @@ public class BlacksmithShopController : MonoBehaviour
 
     void Awake() 
     {
-        // --- Automatyczne szukanie głównych widoków ---
         Transform cv = transform.Find("Categories_View");
         if (cv != null) { catView = cv.gameObject; catGrid = cv.Find("Category_Grid"); }
         
@@ -44,7 +43,6 @@ public class BlacksmithShopController : MonoBehaviour
         
         goldTxt = transform.Find("Header_Panel/Gold_Container/Gold_Text")?.GetComponent<TMP_Text>();
 
-        // --- Automatyczne podpinanie przycisków ---
         Transform backBtn = transform.Find("Header_Panel/Back_Button");
         if (backBtn != null) backBtn.GetComponent<Button>().onClick.AddListener(ShowCategories);
 
@@ -64,6 +62,8 @@ public class BlacksmithShopController : MonoBehaviour
     }
 
     void Start() { 
+        // Wczytujemy zapisane złoto po włączeniu gry (domyślnie 1500)
+        currentGold = PlayerPrefs.GetInt("PlayerGold", 1500); 
         ShowCategories(); 
         GenerateCategories(); 
         UpdateGoldUI();
@@ -79,7 +79,13 @@ public class BlacksmithShopController : MonoBehaviour
         transform.Find("Header_Panel/Back_Button")?.gameObject.SetActive(false);
     }
 
-    public void OpenShop() { gameObject.SetActive(true); ShowCategories(); UpdateGoldUI(); }
+    public void OpenShop() { 
+        gameObject.SetActive(true); 
+        currentGold = PlayerPrefs.GetInt("PlayerGold", 1500); // Odśwież golda po otwarciu
+        ShowCategories(); 
+        UpdateGoldUI(); 
+    }
+    
     public void CloseShop() { gameObject.SetActive(false); }
 
     void GenerateCategories() {

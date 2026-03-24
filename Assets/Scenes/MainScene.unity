@@ -26912,7 +26912,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 650296120}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1355590177}
+        m_TargetAssemblyTypeName: InventoryFilter, Assembly-CSharp
+        m_MethodName: FilterByCategory
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Bizuteria
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &650296120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51890,7 +51902,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1353629491}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1355590177}
+        m_TargetAssemblyTypeName: InventoryFilter, Assembly-CSharp
+        m_MethodName: FilterByCategory
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Wszystko
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1353629491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51942,6 +51966,7 @@ GameObject:
   - component: {fileID: 1355590175}
   - component: {fileID: 1355590174}
   - component: {fileID: 1355590173}
+  - component: {fileID: 1355590177}
   m_Layer: 5
   m_Name: Tabs_Container
   m_TagString: Untagged
@@ -52057,6 +52082,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355590171}
   m_CullTransparentMesh: 1
+--- !u!114 &1355590177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355590171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d80857c25cc752fd6b3a00923038e38d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryFilter
+  gridInventory: {fileID: 153859975}
 --- !u!1 &1357144476
 GameObject:
   m_ObjectHideFlags: 0
@@ -52138,7 +52176,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1357144479}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1355590177}
+        m_TargetAssemblyTypeName: InventoryFilter, Assembly-CSharp
+        m_MethodName: FilterByCategory
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Bron
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1357144479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56802,7 +56852,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1720158665}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1355590177}
+        m_TargetAssemblyTypeName: InventoryFilter, Assembly-CSharp
+        m_MethodName: FilterByCategory
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Pancerz
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1720158665
 MonoBehaviour:
   m_ObjectHideFlags: 0

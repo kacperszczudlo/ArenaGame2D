@@ -14,16 +14,26 @@ public class ItemSlot : MonoBehaviour, IDropHandler
 
         if (draggableItem != null)
         {
-            // Weryfikacja typu
             if (allowedType == ItemType.Any || draggableItem.itemData.itemType == allowedType)
             {
-                // Weryfikacja zajętości
                 if (transform.childCount == 0)
                 {
+                    ItemSlot oldSlot = draggableItem.parentAfterDrag.GetComponent<ItemSlot>();
+                    
+                    // Jeśli zdjęliśmy przedmiot z ciała - odejmujemy statystyki
+                    if (oldSlot != null && oldSlot.isEquippedSlot) 
+                    {
+                        UpdatePlayerStats(draggableItem.itemData, false);
+                    }
+
                     draggableItem.parentAfterDrag = transform;
                     Debug.Log($"[EKWIPUNEK] Sukces! Umieszczono {draggableItem.itemData.itemName} w slocie: {gameObject.name}");
                     
-                    UpdatePlayerStats(draggableItem.itemData, isEquippedSlot);
+                    // Jeśli założyliśmy nowy przedmiot na ciało - dodajemy statystyki
+                    if (this.isEquippedSlot)
+                    {
+                        UpdatePlayerStats(draggableItem.itemData, true);
+                    }
                 }
                 else
                 {
@@ -39,8 +49,14 @@ public class ItemSlot : MonoBehaviour, IDropHandler
 
     private void UpdatePlayerStats(EquipmentItemData item, bool isEquipping)
     {
-        // To zaimplementujemy w następnym kroku z udziałem Twojego PlayerDataManagera!
-        if (isEquipping) Debug.Log($"Doliczam bonusy ze sprzętu: {item.itemName}");
-        else Debug.Log($"Odejmuję bonusy ze sprzętu: {item.itemName}");
+        // Tutaj w przyszłości odwołasz się do PlayerDataManager
+        if (isEquipping) 
+        {
+            Debug.Log($"[STATYSTYKI] ZAKŁADASZ sprzęt: {item.itemName}. Pora dodać buffy!");
+        }
+        else 
+        {
+            Debug.Log($"[STATYSTYKI] ZDEJMUJESZ sprzęt: {item.itemName}. Pora odjąć buffy!");
+        }
     }
 }

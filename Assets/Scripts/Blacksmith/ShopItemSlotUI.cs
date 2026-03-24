@@ -51,9 +51,11 @@ public class ShopItemSlotUI : MonoBehaviour
                     EquipmentItemData generatedItem = ScriptableObject.CreateInstance<EquipmentItemData>();
                     generatedItem.itemName = fullName;
                     generatedItem.icon = category.icon;
-                    generatedItem.iconName = category.iconName; // <--- [DODAJ TĘ LINIJKĘ TUTAJ]
+                    generatedItem.iconName = category.iconName; 
+                    
+                    // Cena sprzedaży to połowa ceny zakupu
+                    generatedItem.sellPrice = tier.price / 2; 
 
-                    // --- AKTUALIZACJA: PEŁNE ROZPOZNAWANIE PRZEDMIOTÓW ---
                     switch(category.name.ToUpper())
                     {
                         case "BROŃ": generatedItem.itemType = ItemType.Weapon; break;
@@ -76,6 +78,10 @@ public class ShopItemSlotUI : MonoBehaviour
                     {
                         shop.currentGold -= tier.price;
                         shop.UpdateGoldUI(); 
+                        
+                        // Zapisz złoto od razu po zakupie
+                        PlayerPrefs.SetInt("PlayerGold", shop.currentGold);
+                        PlayerPrefs.Save();
                     }
                 }
             });
