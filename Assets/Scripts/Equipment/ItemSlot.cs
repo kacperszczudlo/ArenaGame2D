@@ -18,21 +18,25 @@ public class ItemSlot : MonoBehaviour, IDropHandler
             {
                 if (transform.childCount == 0)
                 {
-                    ItemSlot oldSlot = draggableItem.parentAfterDrag.GetComponent<ItemSlot>();
-                    
-                    // Jeśli zdjęliśmy przedmiot z ciała - odejmujemy statystyki
-                    if (oldSlot != null && oldSlot.isEquippedSlot) 
-                    {
-                        UpdatePlayerStats(draggableItem.itemData, false);
-                    }
-
                     draggableItem.parentAfterDrag = transform;
+                    
+                    // --- KLUCZOWA ZMIANA ---
+                    // Zmuszamy przedmiot do fizycznego wejścia w nowe okienko JUŻ TERAZ, 
+                    // zanim kalkulator zacznie skanować ekwipunek!
+                    draggableItem.transform.SetParent(transform, false);
+
                     Debug.Log($"[EKWIPUNEK] Sukces! Umieszczono {draggableItem.itemData.itemName} w slocie: {gameObject.name}");
                     
-                    // Jeśli założyliśmy nowy przedmiot na ciało - dodajemy statystyki
-                    if (this.isEquippedSlot)
+                    // Skoro zmieniliśmy układ (z plecaka na ciało lub odwrotnie), zmuszamy do przeliczenia całości
+                    if (EquipmentStatsCalculator.Instance != null)
                     {
-                        UpdatePlayerStats(draggableItem.itemData, true);
+                        EquipmentStatsCalculator.Instance.RecalculateAllEquipmentStats();
+                    }
+
+                    // Automatycznie zapisujemy stan ekwipunku, żeby zmiana została na stałe
+                    if (InventorySaveSystem.Instance != null)
+                    {
+                        InventorySaveSystem.Instance.SaveInventory();
                     }
                 }
                 else
@@ -44,15 +48,6 @@ public class ItemSlot : MonoBehaviour, IDropHandler
             {
                 Debug.LogWarning($"[EKWIPUNEK] Odmowa! Próbujesz włożyć przedmiot typu '{draggableItem.itemData.itemType}' do slotu przeznaczonego wyłącznie na '{allowedType}'.");
             }
-        }
-    }
-
-    private void UpdatePlayerStats(EquipmentItemData item, bool isEquipping)
-    {
-        // Teraz po prostu mówimy kalkulatorowi: "Hej, coś się zmieniło, przelicz to od nowa!"
-        if (EquipmentStatsCalculator.Instance != null)
-        {
-            EquipmentStatsCalculator.Instance.RecalculateAllEquipmentStats();
         }
     }
 }

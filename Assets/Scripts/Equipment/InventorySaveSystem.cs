@@ -8,6 +8,12 @@ public class SavedItem
     public int itemType;
     public string iconName;
     public string slotName; 
+
+    public int b_HP, b_Mana, b_Stamina;
+    public int b_Str, b_Agi, b_Know, b_Pow;
+    public int b_Armor, b_Resist, w_Damage;
+    public int b_Crit, b_Dodge;
+    public float b_DmgMult, b_HitMult;
 }
 
 [System.Serializable]
@@ -48,6 +54,12 @@ public class InventorySaveSystem : MonoBehaviour
             sItem.iconName = item.itemData.iconName;
             sItem.slotName = item.transform.parent.name; 
 
+            sItem.b_HP = item.itemData.bonusMaxHP; sItem.b_Mana = item.itemData.bonusMaxMana; sItem.b_Stamina = item.itemData.bonusMaxStamina;
+            sItem.b_Str = item.itemData.bonusStrength; sItem.b_Agi = item.itemData.bonusAgility; sItem.b_Know = item.itemData.bonusKnowledge; sItem.b_Pow = item.itemData.bonusPower;
+            sItem.b_Armor = item.itemData.bonusPhysicalArmor; sItem.b_Resist = item.itemData.bonusMagicResistance; sItem.w_Damage = item.itemData.weaponDamage;
+            sItem.b_Crit = item.itemData.bonusCritChance; sItem.b_Dodge = item.itemData.bonusDodgeChance;
+            sItem.b_DmgMult = item.itemData.bonusDamageMultiplier; sItem.b_HitMult = item.itemData.bonusHitChanceMultiplier;
+
             saveData.savedItems.Add(sItem);
         }
 
@@ -77,6 +89,12 @@ public class InventorySaveSystem : MonoBehaviour
             restoredData.itemName = sItem.itemName;
             restoredData.itemType = (ItemType)sItem.itemType;
             restoredData.iconName = sItem.iconName;
+
+            restoredData.bonusMaxHP = sItem.b_HP; restoredData.bonusMaxMana = sItem.b_Mana; restoredData.bonusMaxStamina = sItem.b_Stamina;
+            restoredData.bonusStrength = sItem.b_Str; restoredData.bonusAgility = sItem.b_Agi; restoredData.bonusKnowledge = sItem.b_Know; restoredData.bonusPower = sItem.b_Pow;
+            restoredData.bonusPhysicalArmor = sItem.b_Armor; restoredData.bonusMagicResistance = sItem.b_Resist; restoredData.weaponDamage = sItem.w_Damage;
+            restoredData.bonusCritChance = sItem.b_Crit; restoredData.bonusDodgeChance = sItem.b_Dodge;
+            restoredData.bonusDamageMultiplier = sItem.b_DmgMult; restoredData.bonusHitChanceMultiplier = sItem.b_HitMult;
             
             // Ładowanie grafiki z folderu Resources
             restoredData.icon = Resources.Load<Sprite>("BlacksmithShop/" + sItem.iconName);

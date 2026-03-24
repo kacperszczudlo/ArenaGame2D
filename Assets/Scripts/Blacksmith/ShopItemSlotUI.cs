@@ -78,8 +78,30 @@ public class ShopItemSlotUI : MonoBehaviour
                         default: generatedItem.itemType = ItemType.Any; break;
                     }
 
-                    bool success = InventoryManager.Instance.AddItemToInventory(generatedItem);
-                    
+                    // Wstrzykujemy statystyki od kowala prosto do pliku przedmiotu!
+                    for(int i = 0; i < category.stats.Length; i++) {
+                        int val = Mathf.RoundToInt((tier.level * 10) * variant.multiplier / (i + 1));
+                        
+                        switch (category.stats[i].ToUpper()) {
+                            case "PANCERZ": generatedItem.bonusPhysicalArmor += val; break;
+                            case "PUNKTY ŻYCIA": generatedItem.bonusMaxHP += val; break;
+                            case "OBRAŻENIA": generatedItem.weaponDamage += val; break;
+                            case "SIŁA": generatedItem.bonusStrength += val; break;
+                            case "MANA": generatedItem.bonusMaxMana += val; break;
+                            case "WYTRZYMAŁOŚĆ": generatedItem.bonusMaxStamina += val; break;
+                            case "ODPORNOŚĆ": generatedItem.bonusMagicResistance += val; break;
+                            case "KRYT": generatedItem.bonusCritChance += val; break;
+                            case "UNIK": generatedItem.bonusDodgeChance += val; break;
+                            case "INTELIGENCJA": 
+                            case "WIEDZA": generatedItem.bonusKnowledge += val; break;
+                            case "ZWINNOŚĆ":
+                            case "MOBILNOŚĆ":
+                            case "SZYBKOŚĆ":
+                            case "SZYBKOŚĆ ATAKU": generatedItem.bonusAgility += val; break;
+                        }
+                    }
+
+                    bool success = InventoryManager.Instance.AddItemToInventory(generatedItem);                    
                     if (success)
                     {
                         // WYDAJEMY ZŁOTO BEZPOŚREDNIO Z BANKU
