@@ -16,7 +16,7 @@ public class EquipmentItemData : ScriptableObject
     
     [Header("Ekonomia")]
     public int sellPrice; 
-    public int requiredLevel = 1;
+    // Usunięto zduplikowany requiredLevel stąd
 
     [Header("Statystyki (Zgodne z PlayerDataManager)")]
     public int bonusMaxHP;
@@ -39,4 +39,9 @@ public class EquipmentItemData : ScriptableObject
     public int bonusDodgeChance;
     public float bonusDamageMultiplier; 
     public float bonusHitChanceMultiplier;
+
+    [Header("Wymagania do założenia")]
+    public int requiredLevel;
+    public int requiredStrength;
+    public int requiredAgility;
 }

@@ -93,6 +93,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 }
                 
                 transform.SetParent(null);
+                if (ItemTooltip.Instance != null) ItemTooltip.Instance.HideTooltip();
+                
                 Destroy(gameObject);
                 
                 if(InventorySaveSystem.Instance != null)

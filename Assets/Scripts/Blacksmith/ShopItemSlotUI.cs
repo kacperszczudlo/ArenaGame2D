@@ -4,10 +4,8 @@ using TMPro;
 
 public class ShopItemSlotUI : MonoBehaviour 
 {
-    private TMP_Text nameText;       
-    private TMP_Text priceText;      
+    private TMP_Text nameText, priceText, greenStatsText;      
     private Image iconImage;         
-    private TMP_Text greenStatsText; 
     private Button buyButton;
 
     private void Awake()
@@ -19,58 +17,108 @@ public class ShopItemSlotUI : MonoBehaviour
         buyButton = transform.Find("Buy_Container/BuyBtn")?.GetComponent<Button>();
     }
 
-    public void Setup(string fullName, ItemTier tier, ItemCategory category, ItemVariant variant, BlacksmithShopController shop) 
+    public void Setup(ItemCategory category, ShopTier tier, int variantIndex, string suffix, BlacksmithShopController shop) 
     {
+        string fullName = $"{category.name} {suffix.ToUpper()}";
+
         if (nameText != null) { 
-            nameText.enableWordWrapping = false; 
-            nameText.text = fullName + "\n<color=#b3b3b3><size=70%>TIER: " + tier.name + "</size></color>"; 
-            nameText.color = tier.color; 
+            nameText.textWrappingMode = TextWrappingModes.NoWrap; 
+            // Skalujemy wymaganą statystykę: Lvl 35 to wymóg 50 Siły/Zwinności (współczynnik 1.42)
+            int reqStat = Mathf.RoundToInt(tier.level * 1.428f);
+            string reqTxt = variantIndex == 2 ? $"Wymaga: {reqStat} Zręczności" : $"Wymaga: {reqStat} Siły";
+            nameText.text = fullName + $"\n<color=#b3b3b3><size=70%>LVL: {tier.level} | {reqTxt}</size></color>"; 
         }
         
         if (priceText != null) priceText.text = tier.price.ToString() + " g";
+        
         if (iconImage != null) {
-            if (category.icon != null) {
-                iconImage.sprite = category.icon;
-                iconImage.color = new Color(1f, 1f, 1f, 1f);
-            } else {
-                iconImage.color = new Color(1f, 1f, 1f, 0f); // Ukryj kwadrat
-            }
+            if (category.icon != null) { iconImage.sprite = category.icon; iconImage.color = Color.white; } 
+            else iconImage.color = new Color(1f, 1f, 1f, 0f);
         }
-        if (greenStatsText != null && category.stats != null) {
-            greenStatsText.enableWordWrapping = false; 
+
+        // --- WYLICZANIE STATYSTYK BAZOWYCH ---
+        int armorFiz = 0, armorMag = 0, dmg = 0;
+        bool isArmorType = (category.name == "HEŁM" || category.name == "ZBROJA" || category.name == "SPODNIE" || category.name == "BUTY");
+        
+        if (isArmorType) { armorFiz = tier.maxArmor; armorMag = tier.maxArmor; }
+        if (category.name == "BROŃ") { dmg = tier.weaponDamage; }
+
+        // --- WYLICZANIE WARIANTU (Tylko 1 statystyka bonusowa na item!) ---
+        int hp = 0, str = 0, agi = 0, sta = 0, mana = 0;
+        switch (variantIndex) {
+            case 0: hp = tier.maxStats * 10; break;     // "Życia"
+            case 1: str = tier.maxStats; break;         // "Siły"
+            case 2: agi = tier.maxStats; break;         // "Zwinności"
+            case 3: sta = tier.maxStats * 10; break;    // "Kondycji"
+            case 4: mana = tier.maxStats * 10; break;   // "Many"
+        }
+
+        // --- BUDOWANIE TEKSTU DLA GRACZA ---
+        if (greenStatsText != null) {
+            greenStatsText.textWrappingMode = TextWrappingModes.NoWrap; 
             string allStats = "";
-            for(int i = 0; i < category.stats.Length; i++) {
-                int val = Mathf.RoundToInt((tier.level * 10) * variant.multiplier / (i + 1));
-                allStats += $"+{val} {category.stats[i]}\n";
-            }
+            if (dmg > 0) allStats += $"+{dmg} Obrażeń\n";
+            if (armorFiz > 0) allStats += $"+{armorFiz} Pancerza Fiz/Mag\n";
+            if (hp > 0) allStats += $"+{hp} Punkty Życia\n";
+            if (str > 0) allStats += $"+{str} Siły\n";
+            if (agi > 0) allStats += $"+{agi} Zręczności\n";
+            if (sta > 0) allStats += $"+{sta} Kondycji\n";
+            if (mana > 0) allStats += $"+{mana} Many\n";
+            
             greenStatsText.text = allStats;
             greenStatsText.color = new Color(0.2f, 0.8f, 0.2f); 
         }
 
         if (buyButton != null) 
         {
+            if (PlayerDataManager.Instance != null && PlayerDataManager.Instance.currentLevel < tier.level)
+            {
+                buyButton.interactable = false; // Wyszarzamy przycisk
+                if (priceText != null) priceText.text = $"<color=red>LVL {tier.level}</color>";
+            }
+            else
+            {
+                buyButton.interactable = true; // Pozwalamy kupić
+                if (priceText != null) priceText.text = tier.price.ToString() + " g";
+            }
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() => 
             {
-                // SPRAWDZAMY ZŁOTO W GAMEMANAGERZE
+                if (PlayerDataManager.Instance != null && PlayerDataManager.Instance.currentLevel < tier.level) return;
+
                 if (GameManager.Instance != null && GameManager.Instance.globalGold >= tier.price)
                 {
                     EquipmentItemData generatedItem = ScriptableObject.CreateInstance<EquipmentItemData>();
                     generatedItem.itemName = fullName;
                     generatedItem.iconName = category.iconName; 
                     generatedItem.icon = Resources.Load<Sprite>("BlacksmithShop/" + category.iconName);
-                    
                     generatedItem.sellPrice = tier.price / 2; 
+                    generatedItem.requiredLevel = tier.level;
+                    
+                    // Wymagania
+                    if (variantIndex == 2) generatedItem.requiredAgility = Mathf.RoundToInt(tier.level * 1.428f);
+                    else generatedItem.requiredStrength = Mathf.RoundToInt(tier.level * 1.428f);
 
-                    switch(category.name.ToUpper())
-                    {
+                    // Pancerz i Broń
+                    generatedItem.bonusPhysicalArmor = armorFiz;
+                    generatedItem.bonusMagicResistance = armorMag;
+                    generatedItem.weaponDamage = dmg;
+
+                    // Warianty
+                    generatedItem.bonusMaxHP = hp;
+                    generatedItem.bonusStrength = str;
+                    generatedItem.bonusAgility = agi;
+                    generatedItem.bonusMaxStamina = sta;
+                    generatedItem.bonusMaxMana = mana;
+
+                    // Typ itemu
+                    switch(category.name.ToUpper()) {
                         case "BROŃ": generatedItem.itemType = ItemType.Weapon; break;
                         case "HEŁM": generatedItem.itemType = ItemType.Helmet; break;
                         case "ZBROJA": generatedItem.itemType = ItemType.Armor; break;
                         case "SPODNIE": generatedItem.itemType = ItemType.Pants; break;
                         case "BUTY": generatedItem.itemType = ItemType.Boots; break;
-                        case "PIERŚCIEŃ OBR":
-                        case "PIERŚCIEŃ ATK": generatedItem.itemType = ItemType.Ring; break;
+                        case "PIERŚCIEŃ": generatedItem.itemType = ItemType.Ring; break;
                         case "RĘKAWICZKI": generatedItem.itemType = ItemType.Gloves; break;
                         case "PASEK": generatedItem.itemType = ItemType.Belt; break;
                         case "PELERYNA": generatedItem.itemType = ItemType.Cape; break;
@@ -78,33 +126,7 @@ public class ShopItemSlotUI : MonoBehaviour
                         default: generatedItem.itemType = ItemType.Any; break;
                     }
 
-                    // Wstrzykujemy statystyki od kowala prosto do pliku przedmiotu!
-                    for(int i = 0; i < category.stats.Length; i++) {
-                        int val = Mathf.RoundToInt((tier.level * 10) * variant.multiplier / (i + 1));
-                        
-                        switch (category.stats[i].ToUpper()) {
-                            case "PANCERZ": generatedItem.bonusPhysicalArmor += val; break;
-                            case "PUNKTY ŻYCIA": generatedItem.bonusMaxHP += val; break;
-                            case "OBRAŻENIA": generatedItem.weaponDamage += val; break;
-                            case "SIŁA": generatedItem.bonusStrength += val; break;
-                            case "MANA": generatedItem.bonusMaxMana += val; break;
-                            case "WYTRZYMAŁOŚĆ": generatedItem.bonusMaxStamina += val; break;
-                            case "ODPORNOŚĆ": generatedItem.bonusMagicResistance += val; break;
-                            case "KRYT": generatedItem.bonusCritChance += val; break;
-                            case "UNIK": generatedItem.bonusDodgeChance += val; break;
-                            case "INTELIGENCJA": 
-                            case "WIEDZA": generatedItem.bonusKnowledge += val; break;
-                            case "ZWINNOŚĆ":
-                            case "MOBILNOŚĆ":
-                            case "SZYBKOŚĆ":
-                            case "SZYBKOŚĆ ATAKU": generatedItem.bonusAgility += val; break;
-                        }
-                    }
-
-                    bool success = InventoryManager.Instance.AddItemToInventory(generatedItem);                    
-                    if (success)
-                    {
-                        // WYDAJEMY ZŁOTO BEZPOŚREDNIO Z BANKU
+                    if (InventoryManager.Instance.AddItemToInventory(generatedItem)) {
                         GameManager.Instance.SpendGold(tier.price);
                         shop.UpdateGoldUI(); 
                     }

@@ -4,31 +4,32 @@ public class PlayerPositionTracker : MonoBehaviour
 {
     private void Start()
     {
-        // 1. Kiedy postać pojawia się na scenie, pyta GameManagera o zapisaną pozycję
-        if (GameManager.Instance != null && PlayerPrefs.HasKey("PlayerPosX"))
+        // Jeśli GameManager ma zapisaną pozycję (inną niż 0,0,0), teleportuj tam gracza
+        if (GameManager.Instance != null && GameManager.Instance.lastMapPosition != Vector3.zero)
         {
             transform.position = GameManager.Instance.lastMapPosition;
-            Debug.Log($"[MAPA] Wczytano i przeniesiono gracza na pozycję: {transform.position}");
+            Debug.Log($"[MAPA] Wczytano pozycję: {transform.position}");
         }
     }
 
-    // 2. Automatyczny zapis pozycji podczas wyłączania gry
-    private void OnApplicationQuit()
+    private void Update()
     {
-        SaveCurrentPosition();
-    }
-
-    // 3. Automatyczny zapis pozycji, gdy np. przechodzisz do innej sceny (do walki)
-    private void OnDestroy()
-    {
-        SaveCurrentPosition();
-    }
-
-    private void SaveCurrentPosition()
-    {
+        // Na bieżąco aktualizujemy pozycję w GameManagerze
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.SavePlayerPosition(transform.position);
+            GameManager.Instance.lastMapPosition = transform.position;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Przy zamykaniu gry lub zmianie sceny zapisujemy ostatecznie do PlayerPrefs
+        if (GameManager.Instance != null)
+        {
+            PlayerPrefs.SetFloat("PlayerPosX", transform.position.x);
+            PlayerPrefs.SetFloat("PlayerPosY", transform.position.y);
+            PlayerPrefs.SetFloat("PlayerPosZ", transform.position.z);
+            PlayerPrefs.Save();
         }
     }
 }

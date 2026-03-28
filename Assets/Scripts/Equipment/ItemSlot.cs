@@ -18,22 +18,31 @@ public class ItemSlot : MonoBehaviour, IDropHandler
             {
                 if (transform.childCount == 0)
                 {
+                    // --- NOWA BLOKADA STATYSTYK (Tylko przy zakładaniu na ciało) ---
+                    if (this.isEquippedSlot && PlayerDataManager.Instance != null)
+                    {
+                        int pStr = PlayerDataManager.Instance.baseStrength;
+                        int pAgi = PlayerDataManager.Instance.baseAgility;
+                        int reqStr = draggableItem.itemData.requiredStrength;
+                        int reqAgi = draggableItem.itemData.requiredAgility;
+
+                        if (pStr < reqStr || pAgi < reqAgi)
+                        {
+                            Debug.LogWarning($"[BLOKADA] Brakuje statystyk! Wymagane: Siła {reqStr}, Zręczność {reqAgi}. Twoje (Bazowe): Siła {pStr}, Zręczność {pAgi}.");
+                            return; // Przerywamy operację - item automatycznie wróci na swoje stare miejsce!
+                        }
+                    }
+
                     draggableItem.parentAfterDrag = transform;
-                    
-                    // --- KLUCZOWA ZMIANA ---
-                    // Zmuszamy przedmiot do fizycznego wejścia w nowe okienko JUŻ TERAZ, 
-                    // zanim kalkulator zacznie skanować ekwipunek!
                     draggableItem.transform.SetParent(transform, false);
 
                     Debug.Log($"[EKWIPUNEK] Sukces! Umieszczono {draggableItem.itemData.itemName} w slocie: {gameObject.name}");
                     
-                    // Skoro zmieniliśmy układ (z plecaka na ciało lub odwrotnie), zmuszamy do przeliczenia całości
                     if (EquipmentStatsCalculator.Instance != null)
                     {
                         EquipmentStatsCalculator.Instance.RecalculateAllEquipmentStats();
                     }
 
-                    // Automatycznie zapisujemy stan ekwipunku, żeby zmiana została na stałe
                     if (InventorySaveSystem.Instance != null)
                     {
                         InventorySaveSystem.Instance.SaveInventory();
@@ -41,12 +50,12 @@ public class ItemSlot : MonoBehaviour, IDropHandler
                 }
                 else
                 {
-                    Debug.LogWarning($"[EKWIPUNEK] Odmowa! Slot {gameObject.name} jest już zajęty przez inny przedmiot.");
+                    Debug.LogWarning($"[EKWIPUNEK] Odmowa! Slot {gameObject.name} jest już zajęty.");
                 }
             }
             else
             {
-                Debug.LogWarning($"[EKWIPUNEK] Odmowa! Próbujesz włożyć przedmiot typu '{draggableItem.itemData.itemType}' do slotu przeznaczonego wyłącznie na '{allowedType}'.");
+                Debug.LogWarning($"[EKWIPUNEK] Odmowa! Zły typ przedmiotu.");
             }
         }
     }
