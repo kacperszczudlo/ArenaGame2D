@@ -15,16 +15,6 @@ public class Movement : MonoBehaviour
 
         m_body2d.gravityScale = 0f;
         m_animator.SetBool("Grounded", true);
-
-        // --- NOWOŒÆ: Powrót na zapisan¹ pozycjê przed aren¹! ---
-        if (GameManager.Instance != null && GameManager.Instance.lastMapPosition != Vector3.zero)
-        {
-            // Teleportujemy gracza pod drzwi
-            transform.position = GameManager.Instance.lastMapPosition;
-
-            // Resetujemy koordynaty, ¿eby przy przechodzeniu miêdzy innymi scenami nie teleportowa³o nas losowo
-            GameManager.Instance.lastMapPosition = Vector3.zero;
-        }
     }
 
     void Update()

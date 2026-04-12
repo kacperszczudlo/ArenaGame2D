@@ -4,6 +4,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    private bool isPositionTrackingLocked = false;
+
     [Header("Przej�cia mi�dzy scenami")]
     public GameObject currentPlayerPrefab;
     public EnemyData currentEnemyToFight;
@@ -80,5 +82,24 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
         
         Debug.Log($"[MAPA] Zapisano pozycję gracza: {currentPosition}");
+    }
+
+    public void SetArenaReturnPosition(Vector3 safePosition)
+    {
+        // Blokujemy śledzenie, żeby tracker nie nadpisał offsetu tuż przed zmianą sceny.
+        isPositionTrackingLocked = true;
+        lastMapPosition = safePosition;
+
+        Debug.Log($"[MAPA] Ustawiono pozycję powrotu z areny: {safePosition}");
+    }
+
+    public bool CanTrackPlayerPosition()
+    {
+        return !isPositionTrackingLocked;
+    }
+
+    public void UnlockPlayerPositionTracking()
+    {
+        isPositionTrackingLocked = false;
     }
 }

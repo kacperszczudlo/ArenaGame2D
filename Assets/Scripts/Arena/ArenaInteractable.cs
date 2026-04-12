@@ -3,25 +3,27 @@ using UnityEngine.SceneManagement;
 
 public class ArenaInteractable : MonoBehaviour
 {
-    [Header("Ustawienia Wejœcia")]
-    [Tooltip("Wpisz tu dok³adn¹ nazwê sceny, do której idziemy")]
+    [Header("Ustawienia Wejï¿½cia")]
+    [Tooltip("Wpisz tu dokï¿½adnï¿½ nazwï¿½ sceny, do ktï¿½rej idziemy")]
     public string arenaLobbySceneName = "ArenaLobby";
+
+    [Header("Pozycja Powrotu")]
+    [Tooltip("Offset pozycji gracza po powrocie z areny, aby uniknï¿½ï¿½ ponownego triggera")]
+    public Vector3 returnPositionOffset = new Vector3(0f, -2f, 0f);
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Sprawdzamy, czy to gracz wszed³ w strefê
+        // Sprawdzamy, czy to gracz wszedï¿½ w strefï¿½
         if (collision.CompareTag("Player"))
         {
-            // 1. Zapamiêtujemy pozycjê gracza w GameManagerze, ale z OFFSETEM
+            // 1. Zapamiï¿½tujemy pozycjï¿½ gracza z offsetem do bezpiecznego powrotu
             if (GameManager.Instance != null)
             {
-                // Zapisujemy pozycjê gracza, ale odejmujemy 2 od osi Y 
-                Vector3 safePosition = collision.transform.position + new Vector3(0f, -2f, 0f);
-
-                GameManager.Instance.lastMapPosition = safePosition;
+                Vector3 safePosition = collision.transform.position + returnPositionOffset;
+                GameManager.Instance.SetArenaReturnPosition(safePosition);
             }
 
-            // 2. £adujemy scenê z turniejem
+            // 2. ï¿½adujemy scenï¿½ z turniejem
             SceneManager.LoadScene(arenaLobbySceneName);
         }
     }

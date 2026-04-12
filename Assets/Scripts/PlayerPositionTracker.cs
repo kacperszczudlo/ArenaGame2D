@@ -10,12 +10,18 @@ public class PlayerPositionTracker : MonoBehaviour
             transform.position = GameManager.Instance.lastMapPosition;
             Debug.Log($"[MAPA] Wczytano pozycję: {transform.position}");
         }
+
+        // Po ustawieniu pozycji startowej ponownie zezwalamy na śledzenie.
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UnlockPlayerPositionTracking();
+        }
     }
 
     private void Update()
     {
-        // Na bieżąco aktualizujemy pozycję w GameManagerze
-        if (GameManager.Instance != null)
+        // Na bieżąco aktualizujemy pozycję w GameManagerze, o ile nie trwa przejście arenowe.
+        if (GameManager.Instance != null && GameManager.Instance.CanTrackPlayerPosition())
         {
             GameManager.Instance.lastMapPosition = transform.position;
         }
