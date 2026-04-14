@@ -4,7 +4,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    private bool isPositionTrackingLocked = false;
+    private bool hasPendingArenaReturnPosition = false;
+    private Vector3 pendingArenaReturnPosition = Vector3.zero;
 
     [Header("Przej�cia mi�dzy scenami")]
     public GameObject currentPlayerPrefab;
@@ -86,20 +87,31 @@ public class GameManager : MonoBehaviour
 
     public void SetArenaReturnPosition(Vector3 safePosition)
     {
-        // Blokujemy śledzenie, żeby tracker nie nadpisał offsetu tuż przed zmianą sceny.
-        isPositionTrackingLocked = true;
-        lastMapPosition = safePosition;
+        hasPendingArenaReturnPosition = true;
+        pendingArenaReturnPosition = safePosition;
+
+        // Trwale zapisujemy offset od razu, żeby po zamknięciu gry pozycja nie zniknęła.
+        SavePlayerPosition(safePosition);
 
         Debug.Log($"[MAPA] Ustawiono pozycję powrotu z areny: {safePosition}");
     }
 
-    public bool CanTrackPlayerPosition()
+    public bool TryConsumeArenaReturnPosition(out Vector3 returnPosition)
     {
-        return !isPositionTrackingLocked;
+        if (!hasPendingArenaReturnPosition)
+        {
+            returnPosition = Vector3.zero;
+            return false;
+        }
+
+        returnPosition = pendingArenaReturnPosition;
+        pendingArenaReturnPosition = Vector3.zero;
+        hasPendingArenaReturnPosition = false;
+        return true;
     }
 
-    public void UnlockPlayerPositionTracking()
+    public bool HasPendingArenaReturnPosition()
     {
-        isPositionTrackingLocked = false;
+        return hasPendingArenaReturnPosition;
     }
 }

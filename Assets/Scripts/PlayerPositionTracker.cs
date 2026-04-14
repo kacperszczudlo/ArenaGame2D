@@ -4,24 +4,31 @@ public class PlayerPositionTracker : MonoBehaviour
 {
     private void Start()
     {
-        // Jeśli GameManager ma zapisaną pozycję (inną niż 0,0,0), teleportuj tam gracza
-        if (GameManager.Instance != null && GameManager.Instance.lastMapPosition != Vector3.zero)
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
+        // Priorytet: jednorazowa pozycja powrotu z areny (z offsetem).
+        if (GameManager.Instance.TryConsumeArenaReturnPosition(out Vector3 arenaReturnPosition))
+        {
+            transform.position = arenaReturnPosition;
+            Debug.Log($"[MAPA] Wczytano pozycję powrotu z areny: {transform.position}");
+        }
+        // Fallback: standardowa zapisana pozycja.
+        else if (GameManager.Instance.lastMapPosition != Vector3.zero)
         {
             transform.position = GameManager.Instance.lastMapPosition;
             Debug.Log($"[MAPA] Wczytano pozycję: {transform.position}");
         }
 
-        // Po ustawieniu pozycji startowej ponownie zezwalamy na śledzenie.
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.UnlockPlayerPositionTracking();
-        }
+        GameManager.Instance.lastMapPosition = transform.position;
     }
 
     private void Update()
     {
-        // Na bieżąco aktualizujemy pozycję w GameManagerze, o ile nie trwa przejście arenowe.
-        if (GameManager.Instance != null && GameManager.Instance.CanTrackPlayerPosition())
+        // Na bieżąco aktualizujemy pozycję w pamięci runtime.
+        if (GameManager.Instance != null)
         {
             GameManager.Instance.lastMapPosition = transform.position;
         }
@@ -29,13 +36,19 @@ public class PlayerPositionTracker : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Przy zamykaniu gry lub zmianie sceny zapisujemy ostatecznie do PlayerPrefs
-        if (GameManager.Instance != null)
+        SaveCurrentPositionIfPossible();
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveCurrentPositionIfPossible();
+    }
+
+    private void SaveCurrentPositionIfPossible()
+    {
+        if (GameManager.Instance != null && !GameManager.Instance.HasPendingArenaReturnPosition())
         {
-            PlayerPrefs.SetFloat("PlayerPosX", transform.position.x);
-            PlayerPrefs.SetFloat("PlayerPosY", transform.position.y);
-            PlayerPrefs.SetFloat("PlayerPosZ", transform.position.z);
-            PlayerPrefs.Save();
+            GameManager.Instance.SavePlayerPosition(transform.position);
         }
     }
 }
