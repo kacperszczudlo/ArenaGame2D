@@ -31,10 +31,10 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); 
-            globalGold = PlayerPrefs.GetInt("GlobalGold", 1500);
+            DontDestroyOnLoad(gameObject);
+            globalGold = PlayerPrefs.GetInt("GlobalGold", 100);
             tournamentGems = PlayerPrefs.GetInt("TournamentGems", 0);
-        
+
             if (PlayerPrefs.HasKey("PlayerPosX"))
                 {
                     float x = PlayerPrefs.GetFloat("PlayerPosX");
@@ -56,6 +56,13 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("GlobalGold", globalGold);
         PlayerPrefs.Save();
         Debug.Log($"[BANK] Dodano {amount} złota. Aktualny stan: {globalGold}");
+    }
+
+    public void AddGems(int amount)
+    {
+        tournamentGems += amount;
+        PlayerPrefs.SetInt("TournamentGems", tournamentGems);
+        PlayerPrefs.Save();
     }
 
     public bool SpendGold(int amount)

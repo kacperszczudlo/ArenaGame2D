@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
-
     [Header("Znaczniki (Miejsca na arenie)")]
     public Transform playerSpawnPoint;
     public Transform enemySpawnPoint;
@@ -134,7 +133,7 @@ public class BattleManager : MonoBehaviour
         if (defenseMeleeUI != null) player.defenseMeleePA = defenseMeleeUI.currentPA;
         if (defenseRangedUI != null) player.defenseRangedPA = defenseRangedUI.currentPA;
         if (defenseMentalUI != null) player.defenseMentalPA = defenseMentalUI.currentPA;
-        
+
 
         List<CombatAction> roundActions = new List<CombatAction>();
         int actionCounter = 0;
@@ -255,7 +254,7 @@ public class BattleManager : MonoBehaviour
                     float prepDelay = (action.actor == action.target) ? 0.05f : 0.4f;
                     yield return new WaitForSeconds(prepDelay);
 
-                    
+
 
                     // Tworzymy strza³ê na scenie
                     GameObject projGo = Instantiate(skillData.projectilePrefab);
@@ -429,7 +428,7 @@ public class BattleManager : MonoBehaviour
 
             if (GameManager.Instance.isTournamentBattle)
             {
-                // ZASADY TURNIEJU: £upy id¹ do sumy
+                // ZASADY TURNIEJU: £upy id¹ do worka ("pending")
                 int droppedGems = 0;
 
                 if (defeatedEnemy != null)
@@ -458,11 +457,18 @@ public class BattleManager : MonoBehaviour
             }
             else
             {
-                // ZASADY MAPY: £upy id¹ od razu do kieszeni
+                // ZASADY MAPY: £upy id¹ od razu do kieszeni! (TWARDY ZAPIS)
                 if (defeatedEnemy != null)
                 {
-                    GameManager.Instance.globalGold += defeatedEnemy.goldReward;
-                    
+                    // U¿ywamy AddGold ¿eby natychmiast zapisaæ do pliku!
+                    GameManager.Instance.AddGold(defeatedEnemy.goldReward);
+
+                    // Opcjonalnie: Jeœli na mapie te¿ chcesz dawaæ graczowi XP za zwyk³e moby, zrób to tak:
+                    // if (defeatedEnemy.level > PlayerDataManager.Instance.currentLevel)
+                    // {
+                    //     PlayerDataManager.Instance.AddExperience(defeatedEnemy.expReward);
+                    //     PlayerDataManager.Instance.SavePlayerData();
+                    // }
                 }
                 if (summaryRewardsText != null) summaryRewardsText.text = $"Zdobywasz:\nZ³oto: {defeatedEnemy?.goldReward}";
             }
@@ -473,24 +479,30 @@ public class BattleManager : MonoBehaviour
 
             if (GameManager.Instance.isTournamentBattle)
             {
-                // ZASADY TURNIEJU: Wrzucamy to co mieliœmy w worku do g³ównej puli i resetujemy turniej
-                GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
+                // ZASADY TURNIEJU: Wrzucamy to co mieliœmy w worku do g³ównej puli, zapisujemy i resetujemy!
+                GameManager.Instance.AddGold(GameManager.Instance.pendingGold);
+                GameManager.Instance.AddGems(GameManager.Instance.pendingGems);
 
                 if (GameManager.Instance.pendingXP > 0)
                 {
                     PlayerDataManager.Instance.AddExperience(GameManager.Instance.pendingXP);
                 }
 
-                if (GameManager.Instance.pendingGold > 0 || GameManager.Instance.pendingXP > 0)
+                // Dodajemy zgon i robimy twardy zapis wszystkiego!
+                PlayerDataManager.Instance.deathCount++;
+                PlayerDataManager.Instance.SavePlayerData();
+
+                // Wyœwietlamy ocala³e przedmioty
+                if (GameManager.Instance.pendingGold > 0 || GameManager.Instance.pendingXP > 0 || GameManager.Instance.pendingGems > 0)
                 {
-                    if (summaryRewardsText != null) summaryRewardsText.text = $"Podczas turnieju uda³o Ci siê zdobyæ:\nZ³oto: {GameManager.Instance.pendingGold}\nDoœwiadczenie: {GameManager.Instance.pendingXP}";
+                    string gemsString = GameManager.Instance.pendingGems > 0 ? $"\nGemy turniejowe: {GameManager.Instance.pendingGems}" : "";
+                    if (summaryRewardsText != null) summaryRewardsText.text = $"Z poprzednich walk uda³o Ci siê ocaliæ:\nZ³oto: {GameManager.Instance.pendingGold}\nDoœwiadczenie: {GameManager.Instance.pendingXP}{gemsString}";
                 }
                 else
                 {
                     if (summaryRewardsText != null) summaryRewardsText.text = "Niestety, wracasz z pustymi rêkami...";
                 }
 
-                PlayerDataManager.Instance.deathCount++;
                 GameManager.Instance.pendingGold = 0;
                 GameManager.Instance.pendingXP = 0;
                 GameManager.Instance.pendingGems = 0;
@@ -498,13 +510,17 @@ public class BattleManager : MonoBehaviour
             }
             else
             {
+                // Zwyk³a œmieræ na mapie (te¿ zapisujemy zgon!)
+                PlayerDataManager.Instance.deathCount++;
+                PlayerDataManager.Instance.SavePlayerData();
+
                 if (summaryRewardsText != null) summaryRewardsText.text = "Zgin¹³eœ na mapie! Zostajesz przeniesiony do bezpiecznego miejsca.";
             }
 
             GameManager.Instance.sceneToLoadAfterBattle = "MainScene";
         }
 
-       
+
     }
 
     public void OnClick_LeaveBattle()
@@ -549,7 +565,7 @@ public class BattleManager : MonoBehaviour
             if (toRemove > 0 && defenseRangedUI != null) { int drain = Mathf.Min(defenseRangedUI.currentPA, toRemove); defenseRangedUI.currentPA -= drain; toRemove -= drain; defenseRangedUI.UpdateVisuals(); }
             if (toRemove > 0 && defenseMeleeUI != null) { int drain = Mathf.Min(defenseMeleeUI.currentPA, toRemove); defenseMeleeUI.currentPA -= drain; toRemove -= drain; defenseMeleeUI.UpdateVisuals(); }
 
-            allocatedAP = effectiveMaxAP; 
+            allocatedAP = effectiveMaxAP;
         }
 
         // 4. Przypisujemy wolne punkty z powrotem do puli Gracza 

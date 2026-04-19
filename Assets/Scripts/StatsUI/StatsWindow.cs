@@ -77,9 +77,20 @@ public class StatsWindow : MonoBehaviour
         if (manaBtn != null) manaBtn.interactable = canUpgrade;
         if (stamBtn != null) stamBtn.interactable = canUpgrade;
 
-        int eqStr = 0, eqAgi = 0, eqPow = 0, eqKno = 0, eqHp = 0, eqMana = 0, eqStam = 0;
-        int eqArmorPhys = 0, eqArmorMag = 0;
+        // --- ZAMIAST ZER, CZYTAMY TWOJE BONUSY Z MENED¯ERA! ---
+        int eqStr = data.bonusStrength;
+        int eqAgi = data.bonusAgility;
+        int eqPow = data.bonusPower;
+        int eqKno = data.bonusKnowledge;
 
+        int eqHp = data.bonusMaxHP;
+        int eqMana = data.bonusMaxMana;
+        int eqStam = data.bonusMaxStamina;
+
+        int eqArmorPhys = data.bonusPhysicalArmor;
+        int eqArmorMag = data.bonusMagicResistance;
+
+        // Podpinamy do UI
         UpdateStatUI(data.baseStrength, eqStr, strBaseText, strTotalText);
         UpdateStatUI(data.baseAgility, eqAgi, agiBaseText, agiTotalText);
         UpdateStatUI(data.basePower, eqPow, powBaseText, powTotalText);
@@ -89,8 +100,9 @@ public class StatsWindow : MonoBehaviour
         UpdateStatUI(data.baseMaxMana, eqMana, manaBaseText, manaTotalText);
         UpdateStatUI(data.baseMaxStamina, eqStam, stamBaseText, stamTotalText);
 
-        UpdateStatUI(0, eqArmorPhys, null, physicalArmorTotalText);
-        UpdateStatUI(0, eqArmorMag, null, magicArmorTotalText);
+        // Pancerze czytaj¹ bazê gracza + bonus z ekwipunku
+        UpdateStatUI(data.basePhysicalArmor, eqArmorPhys, null, physicalArmorTotalText);
+        UpdateStatUI(data.baseMagicResistance, eqArmorMag, null, magicArmorTotalText);
     }
 
     private void UpdateStatUI(int baseValue, int eqBonus, TextMeshProUGUI baseText, TextMeshProUGUI totalText)
@@ -106,14 +118,77 @@ public class StatsWindow : MonoBehaviour
         }
     }
 
-    public void UpgradeStrength() { if (SpendPoint()) PlayerDataManager.Instance.baseStrength++; RefreshWindow(); }
-    public void UpgradeAgility() { if (SpendPoint()) PlayerDataManager.Instance.baseAgility++; RefreshWindow(); }
-    public void UpgradePower() { if (SpendPoint()) PlayerDataManager.Instance.basePower++; RefreshWindow(); }
-    public void UpgradeKnowledge() { if (SpendPoint()) PlayerDataManager.Instance.baseKnowledge++; RefreshWindow(); }
+    // --- FUNKCJE PODPINANE POD PRZYCISKI "+" ---
+    public void UpgradeStrength()
+    {
+        if (SpendPoint())
+        {
+            PlayerDataManager.Instance.baseStrength++;
+            PlayerDataManager.Instance.SavePlayerData(); // Zapis!
+        }
+        RefreshWindow();
+    }
 
-    public void UpgradeHP() { if (SpendPoint()) PlayerDataManager.Instance.baseMaxHP += 10; RefreshWindow(); }
-    public void UpgradeMana() { if (SpendPoint()) PlayerDataManager.Instance.baseMaxMana += 10; RefreshWindow(); }
-    public void UpgradeStamina() { if (SpendPoint()) PlayerDataManager.Instance.baseMaxStamina += 10; RefreshWindow(); }
+    public void UpgradeAgility()
+    {
+        if (SpendPoint())
+        {
+            PlayerDataManager.Instance.baseAgility++;
+            PlayerDataManager.Instance.SavePlayerData(); // Zapis!
+        }
+        RefreshWindow();
+    }
+
+    public void UpgradePower()
+    {
+        if (SpendPoint())
+        {
+            PlayerDataManager.Instance.basePower++;
+            PlayerDataManager.Instance.SavePlayerData(); // Zapis!
+        }
+        RefreshWindow();
+    }
+
+    public void UpgradeKnowledge()
+    {
+        if (SpendPoint())
+        {
+            PlayerDataManager.Instance.baseKnowledge++;
+            PlayerDataManager.Instance.SavePlayerData(); // Zapis!
+        }
+        RefreshWindow();
+    }
+
+    // Przeliczniki x10!
+    public void UpgradeHP()
+    {
+        if (SpendPoint())
+        {
+            PlayerDataManager.Instance.baseMaxHP += 10;
+            PlayerDataManager.Instance.SavePlayerData(); // Zapis!
+        }
+        RefreshWindow();
+    }
+
+    public void UpgradeMana()
+    {
+        if (SpendPoint())
+        {
+            PlayerDataManager.Instance.baseMaxMana += 10;
+            PlayerDataManager.Instance.SavePlayerData(); // Zapis!
+        }
+        RefreshWindow();
+    }
+
+    public void UpgradeStamina()
+    {
+        if (SpendPoint())
+        {
+            PlayerDataManager.Instance.baseMaxStamina += 10;
+            PlayerDataManager.Instance.SavePlayerData(); // Zapis!
+        }
+        RefreshWindow();
+    }
 
     private bool SpendPoint()
     {

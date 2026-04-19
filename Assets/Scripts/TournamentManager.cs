@@ -59,7 +59,6 @@ public class TournamentManager : MonoBehaviour
 
     void UpdatePendingRewardsUI()
     {
-        
         if (pendingRewardsText != null)
         {
             pendingRewardsText.text = $"Zebrane ³upy:\nZ³oto: {GameManager.Instance.pendingGold}\nExp: {GameManager.Instance.pendingXP}";
@@ -84,19 +83,20 @@ public class TournamentManager : MonoBehaviour
     // Podpinane pod przycisk "WYCOFAJ SIÊ / OPUŒÆ ARENÊ"
     public void OnClick_Retreat()
     {
-        GameManager.Instance.globalGold += GameManager.Instance.pendingGold;
-
-        GameManager.Instance.tournamentGems += GameManager.Instance.pendingGems;
+        // --- POPRAWKA: U¿ywamy twardego zapisu zamiast zwyk³ego "+=" ---
+        GameManager.Instance.AddGold(GameManager.Instance.pendingGold);
+        GameManager.Instance.AddGems(GameManager.Instance.pendingGems);
 
         if (GameManager.Instance.pendingXP > 0)
         {
             PlayerDataManager.Instance.AddExperience(GameManager.Instance.pendingXP);
+            PlayerDataManager.Instance.SavePlayerData(); // Dodatkowy twardy zapis z expem!
         }
 
         GameManager.Instance.currentTournamentIndex = 0;
         GameManager.Instance.pendingGold = 0;
         GameManager.Instance.pendingXP = 0;
-        GameManager.Instance.pendingGems = 0; 
+        GameManager.Instance.pendingGems = 0;
 
         SceneManager.LoadScene("MainScene");
     }

@@ -89,6 +89,7 @@ public class PlayerDataManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadPlayerData();
         }
         else
         {
@@ -182,6 +183,68 @@ public class PlayerDataManager : MonoBehaviour
 
         // currentLevel = 1 pobierze indeks 0 (czyli 100)
         return expTable[currentLevel - 1];
+    }
+
+
+    // --- SYSTEM ZAPISU I WCZYTYWANIA STATYSTYK ---
+
+    public void SavePlayerData()
+    {
+        PlayerPrefs.SetInt("PlayerLevel", currentLevel);
+        PlayerPrefs.SetInt("PlayerExp", currentExperience);
+        PlayerPrefs.SetInt("DeathCount", deathCount);
+        PlayerPrefs.SetInt("SkillPoints", availableSkillPoints);
+        PlayerPrefs.SetInt("StatPoints", availableStatPoints);
+
+        PlayerPrefs.SetInt("BaseHP", baseMaxHP);
+        PlayerPrefs.SetInt("BaseMana", baseMaxMana);
+        PlayerPrefs.SetInt("BaseStamina", baseMaxStamina);
+        PlayerPrefs.SetInt("BaseStr", baseStrength);
+        PlayerPrefs.SetInt("BaseAgi", baseAgility);
+        PlayerPrefs.SetInt("BaseKno", baseKnowledge);
+        PlayerPrefs.SetInt("BasePow", basePower);
+
+        // --- NOWOŒÆ: Zapisywanie listy umiejêtnoœci! ---
+        foreach (var savedSkill in unlockedSkills)
+        {
+            if (savedSkill.skill != null)
+            {
+                // Tworzymy unikalny klucz dla ka¿dego skilla, np. "SkillLvl_SzybkiCios"
+                PlayerPrefs.SetInt("SkillLvl_" + savedSkill.skill.name, savedSkill.currentLevel);
+            }
+        }
+
+        PlayerPrefs.Save();
+        Debug.Log("<color=green>[ZAPIS] Statystyki, poziom i UMIEJÊTNOŒCI zapisane!</color>");
+    }
+
+    public void LoadPlayerData()
+    {
+        currentLevel = PlayerPrefs.GetInt("PlayerLevel", currentLevel);
+        currentExperience = PlayerPrefs.GetInt("PlayerExp", currentExperience);
+        deathCount = PlayerPrefs.GetInt("DeathCount", deathCount);
+        availableSkillPoints = PlayerPrefs.GetInt("SkillPoints", availableSkillPoints);
+        availableStatPoints = PlayerPrefs.GetInt("StatPoints", availableStatPoints);
+
+        baseMaxHP = PlayerPrefs.GetInt("BaseHP", baseMaxHP);
+        baseMaxMana = PlayerPrefs.GetInt("BaseMana", baseMaxMana);
+        baseMaxStamina = PlayerPrefs.GetInt("BaseStamina", baseMaxStamina);
+        baseStrength = PlayerPrefs.GetInt("BaseStr", baseStrength);
+        baseAgility = PlayerPrefs.GetInt("BaseAgi", baseAgility);
+        baseKnowledge = PlayerPrefs.GetInt("BaseKno", baseKnowledge);
+        basePower = PlayerPrefs.GetInt("BasePow", basePower);
+
+        // --- NOWOŒÆ: Wczytywanie listy umiejêtnoœci! ---
+        foreach (var savedSkill in unlockedSkills)
+        {
+            if (savedSkill.skill != null)
+            {
+                // Jeœli znajdzie zapis, podmieni level. Jeœli nie, zostawi domyœlny z Inspektora
+                savedSkill.currentLevel = PlayerPrefs.GetInt("SkillLvl_" + savedSkill.skill.name, savedSkill.currentLevel);
+            }
+        }
+
+        Debug.Log("<color=yellow>[WCZYTYWANIE] Statystyki, poziom i UMIEJÊTNOŒCI za³adowane!</color>");
     }
 
 
