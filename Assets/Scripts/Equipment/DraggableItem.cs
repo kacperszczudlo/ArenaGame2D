@@ -5,6 +5,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))] 
 public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    [Header("UI Potwierdzenia")]
+    [SerializeField] private SellConfirmationUI sellConfirmationDialog;
+
     [Header("Dane (Wypełniane dynamicznie w grze)")]
     public EquipmentItemData itemData;
     
@@ -81,26 +84,20 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
             
             if (slot != null && !slot.isEquippedSlot)
             {
-                if (GameManager.Instance != null)
+                if (sellConfirmationDialog == null)
                 {
-                    GameManager.Instance.AddGold(itemData.sellPrice);
+                    sellConfirmationDialog = Object.FindFirstObjectByType<SellConfirmationUI>(FindObjectsInactive.Include);
                 }
 
-                BlacksmithShopController shop = Object.FindFirstObjectByType<BlacksmithShopController>(FindObjectsInactive.Include);
-                if (shop != null) 
-                { 
-                    shop.UpdateGoldUI(); 
-                }
-                
-                transform.SetParent(null);
-                if (ItemTooltip.Instance != null) ItemTooltip.Instance.HideTooltip();
-                
-                Destroy(gameObject);
-                
-                if(InventorySaveSystem.Instance != null)
+                if (sellConfirmationDialog == null)
                 {
-                    InventorySaveSystem.Instance.SaveInventory();
+                    Debug.LogError("[HANDEL] Brak SellConfirmationUI w scenie. Sprzedaż anulowana.");
+                    return;
                 }
+
+                string itemName = itemData != null ? itemData.itemName : gameObject.name;
+                int price = itemData != null ? itemData.sellPrice : 0;
+                sellConfirmationDialog.Show(itemName, price, SellCurrentItem);
             }
             else
             {
@@ -109,13 +106,42 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         }
     }
 
+    private void SellCurrentItem()
+    {
+        if (GameManager.Instance != null && itemData != null)
+        {
+            GameManager.Instance.AddGold(itemData.sellPrice);
+        }
+
+        BlacksmithShopController shop = Object.FindFirstObjectByType<BlacksmithShopController>(FindObjectsInactive.Include);
+        if (shop != null)
+        {
+            shop.UpdateGoldUI();
+        }
+
+        transform.SetParent(null);
+        if (ItemTooltip.Instance != null) ItemTooltip.Instance.HideTooltip();
+
+        Destroy(gameObject);
+
+        if (InventorySaveSystem.Instance != null)
+        {
+            InventorySaveSystem.Instance.SaveInventory();
+        }
+    }
+
     // --- POPRAWIONE FUNKCJE HOVER ---
     public void OnPointerEnter(PointerEventData eventData)
     {
         // SZPIEG 1: Sprawdzamy czy Unity w ogóle widzi, że najechaliśmy na przedmiot
+        if (itemData == null)
+        {
+            return;
+        }
+
         Debug.Log($"[MYSZ] Najechano na przedmiot: {itemData.itemName}");
 
-        if (itemData != null && ItemTooltip.Instance != null)
+        if (ItemTooltip.Instance != null)
         {
             ItemTooltip.Instance.ShowTooltip(itemData);
         }
