@@ -72,6 +72,26 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    public bool RemoveTournamentGems(int amount)
+    {
+        if (amount <= 0)
+        {
+            return false;
+        }
+
+        if (tournamentGems < amount)
+        {
+            Debug.LogWarning("[WYMIANA] Brak wystarczającej ilości gemów turniejowych.");
+            return false;
+        }
+
+        tournamentGems -= amount;
+        PlayerPrefs.SetInt("TournamentGems", tournamentGems);
+        PlayerPrefs.Save();
+        Debug.Log($"[WYMIANA] Zużyto {amount} gemów. Pozostało: {tournamentGems}");
+        return true;
+    }
+
     public void SavePlayerPosition(Vector3 currentPosition)
     {
         lastMapPosition = currentPosition;

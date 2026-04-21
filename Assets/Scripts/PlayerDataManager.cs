@@ -13,7 +13,7 @@ public class PlayerDataManager : MonoBehaviour
 {
     public static PlayerDataManager Instance { get; private set; }
 
-    [Header("Doœwiadczenie i Poziom")]
+    [Header("Doï¿½wiadczenie i Poziom")]
     public int currentLevel = 1;
     public int currentExperience = 0;
     public int experienceToNextLevel = 100;
@@ -26,7 +26,7 @@ public class PlayerDataManager : MonoBehaviour
     public bool hasUnseenSkillPoints = true;
     public bool hasUnseenStatPoints = true;
 
-    [Header("Podstawowe Statystyki (Zale¿ne od Klasy i Poziomu)")]
+    [Header("Podstawowe Statystyki (Zaleï¿½ne od Klasy i Poziomu)")]
     public int baseMaxHP = 230;
     public int baseMaxMana = 200;
     public int baseMaxStamina = 200;
@@ -40,7 +40,7 @@ public class PlayerDataManager : MonoBehaviour
     public int baseMagicResistance = 0;
     
 
-    [Header("Bonusy z Ekwipunku / Buffów")]
+    [Header("Bonusy z Ekwipunku / Buffï¿½w")]
     public int bonusMaxHP = 0;
     public int bonusMaxMana = 0;
     public int bonusMaxStamina = 0;
@@ -61,16 +61,16 @@ public class PlayerDataManager : MonoBehaviour
     public int baseDodgeChance = 0;
     public int bonusDodgeChance = 0;
 
-    public float bonusDamageMultiplier = 0f;    // Np. 0.2f oznacza +20% obra¿eñ z jakiegoœ itemu
-    public float bonusHitChanceMultiplier = 0f; // Np. 0.2f oznacza +20% celnoœci z jakiegos itemu
+    public float bonusDamageMultiplier = 0f;    // Np. 0.2f oznacza +20% obraï¿½eï¿½ z jakiegoï¿½ itemu
+    public float bonusHitChanceMultiplier = 0f; // Np. 0.2f oznacza +20% celnoï¿½ci z jakiegos itemu
 
-    // Zsumowane wartoœci:
+    // Zsumowane wartoï¿½ci:
     public int TotalDodgeChance => baseDodgeChance + bonusDodgeChance;
 
-    [Header("Odblokowane Umiejêtnoœci")]
+    [Header("Odblokowane Umiejï¿½tnoï¿½ci")]
     public List<PlayerSkillSaveData> unlockedSkills = new List<PlayerSkillSaveData>();
 
-    //ZSUMOWANE W£AŒCIWOŒCI (To z nich korzysta Kalkulator Walki)
+    //ZSUMOWANE Wï¿½Aï¿½CIWOï¿½CI (To z nich korzysta Kalkulator Walki)
     public int TotalMaxHP => baseMaxHP + bonusMaxHP;
     public int TotalMaxMana => baseMaxMana + bonusMaxMana;
     public int TotalMaxStamina => baseMaxStamina + bonusMaxStamina;
@@ -95,16 +95,16 @@ public class PlayerDataManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Tê funkcjê wywo³uje TournamentManager po klikniêciu "Wycofaj siê"
+    // Tï¿½ funkcjï¿½ wywoï¿½uje TournamentManager po klikniï¿½ciu "Wycofaj siï¿½"
     public void AddExperience(int amount)
     {
-        // Jeœli mamy maksymalny poziom, ignorujemy expa
+        // Jeï¿½li mamy maksymalny poziom, ignorujemy expa
         if (currentLevel >= 35) return;
 
         currentExperience += amount;
-        Debug.Log($"Zdobyto {amount} punktów doœwiadczenia!");
+        Debug.Log($"Zdobyto {amount} punktï¿½w doï¿½wiadczenia!");
 
-        // pêtla: Dzia³a dopóki mamy doœæ expa na kolejny poziom i nie dobiliœmy do 35 lvl
+        // pï¿½tla: Dziaï¿½a dopï¿½ki mamy doï¿½ï¿½ expa na kolejny poziom i nie dobiliï¿½my do 35 lvl
         while (currentExperience >= GetRequiredExpForNextLevel() && currentLevel < 35)
         {
             LevelUp();
@@ -120,7 +120,7 @@ public class PlayerDataManager : MonoBehaviour
 
     private void LevelUp()
     {
-        // Najpierw "p³acimy" expem za ten poziom
+        // Najpierw "pï¿½acimy" expem za ten poziom
         currentExperience -= GetRequiredExpForNextLevel();
 
         // Wbijamy poziom
@@ -133,11 +133,11 @@ public class PlayerDataManager : MonoBehaviour
         hasUnseenSkillPoints = true;
         hasUnseenStatPoints = true;
 
-        Debug.Log($"<color=cyan>AWANS! Osi¹gniêto {currentLevel} poziom postaci! Przyznano 2 pkt umiejêtnoœci i 5 pkt statystyk.</color>");
+        Debug.Log($"<color=cyan>AWANS! Osiï¿½gniï¿½to {currentLevel} poziom postaci! Przyznano 2 pkt umiejï¿½tnoï¿½ci i 5 pkt statystyk.</color>");
     }
 
-    //TABELA DOŒWIADCZENIA
-    // Indeks 0 to koszt przejœcia z 1 na 2 poziom, Indeks 1 to z 2 na 3, itd.
+    //TABELA DOï¿½WIADCZENIA
+    // Indeks 0 to koszt przejï¿½cia z 1 na 2 poziom, Indeks 1 to z 2 na 3, itd.
     private readonly int[] expTable = new int[]
     {
         10,   // Lvl 1 -> 2
@@ -182,6 +182,18 @@ public class PlayerDataManager : MonoBehaviour
 
         // currentLevel = 1 pobierze indeks 0 (czyli 100)
         return expTable[currentLevel - 1];
+    }
+
+    public void AddStatPoints(int amount)
+    {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        availableStatPoints += amount;
+        hasUnseenStatPoints = true;
+        Debug.Log($"[WYMIANA] Dodano {amount} punkt(Ã³w) statystyk. Aktualnie: {availableStatPoints}");
     }
 
 
