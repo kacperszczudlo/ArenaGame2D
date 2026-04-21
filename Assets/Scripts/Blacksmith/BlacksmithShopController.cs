@@ -104,6 +104,16 @@ public class BlacksmithShopController : MonoBehaviour
         if (nextTierButton != null) nextTierButton.interactable = (currentTierIndex < tiers.Count - 1);
     }
 
+    public int GetShopPrice(ShopTier tier)
+    {
+        if (tier == null)
+        {
+            return 0;
+        }
+
+        return Mathf.Max(1, Mathf.RoundToInt(tier.price / 2f));
+    }
+
     public void NextTier() { if (currentTierIndex < tiers.Count - 1) { currentTierIndex++; RefreshItemsList(); } }
     public void PreviousTier() { if (currentTierIndex > 0) { currentTierIndex--; RefreshItemsList(); } }
 

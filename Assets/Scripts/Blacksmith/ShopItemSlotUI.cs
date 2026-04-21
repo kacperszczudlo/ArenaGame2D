@@ -8,6 +8,8 @@ public class ShopItemSlotUI : MonoBehaviour
     private Image iconImage;         
     private Button buyButton;
 
+    private int displayedPrice;
+
     private void Awake()
     {
         nameText = transform.Find("NameAndTier_Container/ItemText")?.GetComponent<TMP_Text>();
@@ -30,6 +32,8 @@ public class ShopItemSlotUI : MonoBehaviour
         }
         
         if (priceText != null) priceText.text = tier.price.ToString() + " g";
+        displayedPrice = shop != null ? shop.GetShopPrice(tier) : Mathf.Max(1, Mathf.RoundToInt(tier.price / 2f));
+        if (priceText != null) priceText.text = displayedPrice.ToString() + " g";
         
         if (iconImage != null) {
             if (category.icon != null) { iconImage.sprite = category.icon; iconImage.color = Color.white; } 
@@ -86,13 +90,13 @@ public class ShopItemSlotUI : MonoBehaviour
             {
                 if (PlayerDataManager.Instance != null && PlayerDataManager.Instance.currentLevel < tier.level) return;
 
-                if (GameManager.Instance != null && GameManager.Instance.globalGold >= tier.price)
+                if (GameManager.Instance != null && GameManager.Instance.globalGold >= displayedPrice)
                 {
                     EquipmentItemData generatedItem = ScriptableObject.CreateInstance<EquipmentItemData>();
                     generatedItem.itemName = fullName;
                     generatedItem.iconName = category.iconName; 
                     generatedItem.icon = Resources.Load<Sprite>("BlacksmithShop/" + category.iconName);
-                    generatedItem.sellPrice = tier.price / 2; 
+                    generatedItem.sellPrice = Mathf.Max(1, Mathf.RoundToInt(displayedPrice / 2f)); 
                     generatedItem.requiredLevel = tier.level;
                     
                     // Wymagania
@@ -127,7 +131,7 @@ public class ShopItemSlotUI : MonoBehaviour
                     }
 
                     if (InventoryManager.Instance.AddItemToInventory(generatedItem)) {
-                        GameManager.Instance.SpendGold(tier.price);
+                        GameManager.Instance.SpendGold(displayedPrice);
                         shop.UpdateGoldUI(); 
                     }
                 }
