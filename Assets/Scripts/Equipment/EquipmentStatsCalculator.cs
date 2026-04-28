@@ -65,6 +65,37 @@ public class EquipmentStatsCalculator : MonoBehaviour
                     p.bonusDodgeChance += d.bonusDodgeChance;
                     p.bonusDamageMultiplier += d.bonusDamageMultiplier;
                     p.bonusHitChanceMultiplier += d.bonusHitChanceMultiplier;
+
+                    // Apply per-item upgrade points (if any)
+                    if (item.upgradePoints != null)
+                    {
+                        // index mapping: 0=Brak,1=HP,2=Str,3=Agi,4=Sta,5=Mana,6=PhysArmor,7=MagRes,8=WeapDmg,9=Crit,10=Dodge,11=DmgMult,12=HitMult
+                        int pts = 0;
+                        // HP
+                        if (item.upgradePoints.Count > 1) { pts = item.upgradePoints[1]; p.bonusMaxHP += pts * 10; }
+                        // Strength
+                        if (item.upgradePoints.Count > 2) { pts = item.upgradePoints[2]; p.bonusStrength += pts; }
+                        // Agility
+                        if (item.upgradePoints.Count > 3) { pts = item.upgradePoints[3]; p.bonusAgility += pts; }
+                        // Stamina
+                        if (item.upgradePoints.Count > 4) { pts = item.upgradePoints[4]; p.bonusMaxStamina += pts * 10; }
+                        // Mana
+                        if (item.upgradePoints.Count > 5) { pts = item.upgradePoints[5]; p.bonusMaxMana += pts * 10; }
+                        // Physical Armor
+                        if (item.upgradePoints.Count > 6) { pts = item.upgradePoints[6]; p.bonusPhysicalArmor += pts; }
+                        // Magic Resist
+                        if (item.upgradePoints.Count > 7) { pts = item.upgradePoints[7]; p.bonusMagicResistance += pts; }
+                        // Weapon Damage
+                        if (item.upgradePoints.Count > 8) { pts = item.upgradePoints[8]; p.weaponDamage += pts; }
+                        // Crit Chance
+                        if (item.upgradePoints.Count > 9) { pts = item.upgradePoints[9]; p.bonusCritChance += pts; }
+                        // Dodge Chance
+                        if (item.upgradePoints.Count > 10) { pts = item.upgradePoints[10]; p.bonusDodgeChance += pts; }
+                        // Damage Multiplier
+                        if (item.upgradePoints.Count > 11) { pts = item.upgradePoints[11]; p.bonusDamageMultiplier += pts * 0.05f; }
+                        // Hit Chance Multiplier
+                        if (item.upgradePoints.Count > 12) { pts = item.upgradePoints[12]; p.bonusHitChanceMultiplier += pts * 0.05f; }
+                    }
                 }
             }
         }

@@ -47,6 +47,8 @@ public class ItemSlot : MonoBehaviour, IDropHandler
                     {
                         InventorySaveSystem.Instance.SaveInventory();
                     }
+                    // Refresh mirrors in upgrade window so visuals stay in sync
+                    if (UpgradeManager.Instance != null) UpgradeManager.Instance.RefreshMirrors();
                 }
                 else
                 {

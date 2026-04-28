@@ -7,7 +7,7 @@ public class SavedItem
     public string itemName;
     public int itemType;
     public string iconName;
-    public string slotName; 
+    public string slotName; // full hierarchy path of the parent slot
 
     public int b_HP, b_Mana, b_Stamina;
     public int b_Str, b_Agi, b_Know, b_Pow;
@@ -16,6 +16,8 @@ public class SavedItem
     public float b_DmgMult, b_HitMult;
 
     public int sellPrice;
+    public int upgradeLevel; // per-instance upgrade level
+    public int[] upgradePoints;
 }
 
 [System.Serializable]
@@ -40,6 +42,22 @@ public class InventorySaveSystem : MonoBehaviour
         LoadInventory();
     }
 
+    private static string GetTransformPath(Transform target)
+    {
+        if (target == null) return string.Empty;
+
+        List<string> parts = new List<string>();
+        Transform current = target;
+        while (current != null)
+        {
+            parts.Add(current.name);
+            current = current.parent;
+        }
+
+        parts.Reverse();
+        return string.Join("/", parts);
+    }
+
     public void SaveInventory()
     {
         InventorySaveData saveData = new InventorySaveData();
@@ -48,13 +66,23 @@ public class InventorySaveSystem : MonoBehaviour
 
         foreach (DraggableItem item in allItems)
         {
+            // skip mirror visuals (they are not real inventory items)
+            if (item == null || item.isMirror) continue;
             if (item.itemData == null || item.transform.parent == null) continue;
+
+            // Only save items that are inside a real ItemSlot.
+            // Upgrade window drop zones are not part of the persistent inventory state.
+            ItemSlot parentSlot = item.transform.parent.GetComponent<ItemSlot>();
+            if (parentSlot == null)
+            {
+                continue;
+            }
 
             SavedItem sItem = new SavedItem();
             sItem.itemName = item.itemData.itemName;
             sItem.itemType = (int)item.itemData.itemType;
             sItem.iconName = item.itemData.iconName;
-            sItem.slotName = item.transform.parent.name; 
+            sItem.slotName = GetTransformPath(item.transform.parent); 
 
             sItem.b_HP = item.itemData.bonusMaxHP; sItem.b_Mana = item.itemData.bonusMaxMana; sItem.b_Stamina = item.itemData.bonusMaxStamina;
             sItem.b_Str = item.itemData.bonusStrength; sItem.b_Agi = item.itemData.bonusAgility; sItem.b_Know = item.itemData.bonusKnowledge; sItem.b_Pow = item.itemData.bonusPower;
@@ -63,6 +91,8 @@ public class InventorySaveSystem : MonoBehaviour
             sItem.b_DmgMult = item.itemData.bonusDamageMultiplier; sItem.b_HitMult = item.itemData.bonusHitChanceMultiplier;
 
             sItem.sellPrice = item.itemData.sellPrice;
+            sItem.upgradeLevel = item.upgradeLevel;
+            sItem.upgradePoints = item.upgradePoints != null ? item.upgradePoints.ToArray() : null;
 
             saveData.savedItems.Add(sItem);
         }
@@ -101,6 +131,7 @@ public class InventorySaveSystem : MonoBehaviour
             restoredData.bonusDamageMultiplier = sItem.b_DmgMult; restoredData.bonusHitChanceMultiplier = sItem.b_HitMult;
 
             restoredData.sellPrice = sItem.sellPrice;
+            // create instance will get upgrade level applied to spawned DraggableItem
             
             // Ładowanie grafiki z folderu Resources
             restoredData.icon = Resources.Load<Sprite>("BlacksmithShop/" + sItem.iconName);
@@ -109,7 +140,8 @@ public class InventorySaveSystem : MonoBehaviour
             ItemSlot targetSlot = null;
             foreach (ItemSlot slot in allSlotsOnScene)
             {
-                if (slot.gameObject.name == sItem.slotName)
+                string slotPath = GetTransformPath(slot.transform);
+                if (slotPath == sItem.slotName || slot.gameObject.name == sItem.slotName)
                 {
                     targetSlot = slot;
                     break;
@@ -129,7 +161,7 @@ public class InventorySaveSystem : MonoBehaviour
                 rect.anchoredPosition = Vector2.zero; 
 
                 DraggableItem dragLogic = spawnedItem.GetComponent<DraggableItem>();
-                if(dragLogic != null) dragLogic.Setup(restoredData);
+                if(dragLogic != null) { dragLogic.Setup(restoredData); dragLogic.upgradeLevel = sItem.upgradeLevel; if (sItem.upgradePoints != null) { dragLogic.upgradePoints = new System.Collections.Generic.List<int>(sItem.upgradePoints); } }
             }
             else
             {

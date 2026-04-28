@@ -10,7 +10,16 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     [Header("Dane (Wypełniane dynamicznie w grze)")]
     public EquipmentItemData itemData;
+    // Per-instance upgrade level (nie modyfikuje oryginalnego ScriptableObject)
+    public int upgradeLevel = 0;
+    // Per-stat upgrade allocations (index matches UpgradeManager dropdown)
+    public const int UPGRADE_STAT_COUNT = 13;
+    public System.Collections.Generic.List<int> upgradePoints = new System.Collections.Generic.List<int>(new int[UPGRADE_STAT_COUNT]);
     
+    // Mirror support: if this object is a visual mirror, forward drags to original
+    [HideInInspector] public bool isMirror = false;
+    [HideInInspector] public DraggableItem originalSource = null;
+
     [HideInInspector] public Transform parentAfterDrag;
     private Image image;
 
@@ -23,6 +32,23 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         itemData = data;
         if (image == null) image = GetComponent<Image>();
+
+        // Freshly spawned items must start with their own upgrade state.
+        // Loaded items restore their state right after Setup() in InventorySaveSystem.
+        upgradeLevel = 0;
+        if (upgradePoints == null) upgradePoints = new System.Collections.Generic.List<int>(new int[UPGRADE_STAT_COUNT]);
+        else
+        {
+            upgradePoints.Clear();
+            for (int i = 0; i < UPGRADE_STAT_COUNT; i++) upgradePoints.Add(0);
+        }
+
+        // Ensure upgradePoints list has expected length
+        if (upgradePoints.Count < UPGRADE_STAT_COUNT)
+        {
+            int need = UPGRADE_STAT_COUNT - upgradePoints.Count;
+            for (int i = 0; i < need; i++) upgradePoints.Add(0);
+        }
 
         if (image != null && itemData != null)
         {
@@ -50,21 +76,39 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (isMirror && originalSource != null)
+        {
+            ExecuteEvents.Execute(originalSource.gameObject, eventData, ExecuteEvents.beginDragHandler);
+            return;
+        }
+
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
         if (image != null) image.raycastTarget = false;
-        
+
         if (ItemTooltip.Instance != null) ItemTooltip.Instance.HideTooltip(); 
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (isMirror && originalSource != null)
+        {
+            ExecuteEvents.Execute(originalSource.gameObject, eventData, ExecuteEvents.dragHandler);
+            return;
+        }
+
         transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (isMirror && originalSource != null)
+        {
+            ExecuteEvents.Execute(originalSource.gameObject, eventData, ExecuteEvents.endDragHandler);
+            return;
+        }
+
         transform.SetParent(parentAfterDrag, false);
         if (image != null) image.raycastTarget = true;
 
@@ -143,7 +187,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
         if (ItemTooltip.Instance != null)
         {
-            ItemTooltip.Instance.ShowTooltip(itemData);
+            DraggableItem source = (isMirror && originalSource != null) ? originalSource : this;
+            ItemTooltip.Instance.ShowTooltip(itemData, source);
         }
     }
 

@@ -83,7 +83,7 @@ public class ShopItemSlotUI : MonoBehaviour
             else
             {
                 buyButton.interactable = true; // Pozwalamy kupić
-                if (priceText != null) priceText.text = tier.price.ToString() + " g";
+                if (priceText != null) priceText.text = displayedPrice.ToString() + " g";
             }
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() => 

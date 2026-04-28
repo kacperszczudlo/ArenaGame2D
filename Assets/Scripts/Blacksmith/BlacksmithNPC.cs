@@ -13,6 +13,10 @@ public class BlacksmithNPC : MonoBehaviour, IPointerClickHandler
 
     [Header("Sklep (Z Canvasa)")]
     public BlacksmithShopController shopController;
+
+    [Header("Okna Ekwipunku")]
+    public GameObject upgradeWindow;      // Lewe okno (Kowadło - Upgrade_Window)
+    public GameObject inventoryWindow;    // Prawe okno (Oryginalny Equipment_Window)
     
     [Header("Dymek nad postacią")]
     public GameObject chatBubble;
@@ -55,6 +59,10 @@ public class BlacksmithNPC : MonoBehaviour, IPointerClickHandler
     private void OpenUpgradeSystem()
     {
         CloseDialogue();
-        Debug.Log("[KOWAL] Otwieram menu ulepszania... (Jeszcze niezaimplementowane!)");
+
+        // Otwieramy TYLKO Upgrade_Window - zawiera on już Grid_Inventory z przedmiotami
+        if (upgradeWindow != null) upgradeWindow.SetActive(true);
+        
+        // Equipment_Window pozostaje zamknięty - wszystko co potrzebne jest już w Upgrade_Window!
     }
 }
