@@ -173,9 +173,49 @@ public class InventorySaveSystem : MonoBehaviour
         if (EquipmentStatsCalculator.Instance != null)
         {
             EquipmentStatsCalculator.Instance.RecalculateAllEquipmentStats();
+            Debug.Log("[WCZYTYWANIE] EquipmentStatsCalculator znaleziony - przeliczanie bonusów.");
+        }
+        else
+        {
+            // Fallback: Spróbuj znaleźć EquipmentStatsCalculator jeśli Singleton nie został jeszcze ustawiony
+            EquipmentStatsCalculator calc = FindFirstObjectByType<EquipmentStatsCalculator>();
+            if (calc != null)
+            {
+                calc.RecalculateAllEquipmentStats();
+                Debug.Log("[WCZYTYWANIE] EquipmentStatsCalculator znaleziony przez FindFirst - przeliczanie bonusów.");
+            }
+            else
+            {
+                Debug.LogWarning("[WCZYTYWANIE] EquipmentStatsCalculator NIE znaleziony! Bonusy mogą nie być przeliczone. Spróbuję ponownie za 1 frame.");
+                // Spróbuj jeszcze raz za frame'a
+                StartCoroutine(DeferredRecalculateStats());
+            }
         }
 
         Debug.Log($"[WCZYTYWANIE] Wczytano {loadData.savedItems.Count} przedmiotów z zapisu.");
+    }
+
+    private System.Collections.IEnumerator DeferredRecalculateStats()
+    {
+        yield return null; // Wait one frame
+        if (EquipmentStatsCalculator.Instance != null)
+        {
+            EquipmentStatsCalculator.Instance.RecalculateAllEquipmentStats();
+            Debug.Log("[WCZYTYWANIE] Deferred: EquipmentStatsCalculator znaleziony - przeliczanie bonusów.");
+        }
+        else
+        {
+            EquipmentStatsCalculator calc = FindFirstObjectByType<EquipmentStatsCalculator>();
+            if (calc != null)
+            {
+                calc.RecalculateAllEquipmentStats();
+                Debug.Log("[WCZYTYWANIE] Deferred: EquipmentStatsCalculator znaleziony przez FindFirst - przeliczanie bonusów.");
+            }
+            else
+            {
+                Debug.LogError("[WCZYTYWANIE] KRYTYCZNIE: EquipmentStatsCalculator nie istnieje na scenie!");
+            }
+        }
     }
     
     private void OnApplicationQuit()

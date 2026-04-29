@@ -19,8 +19,8 @@ public class UpgradeManager : MonoBehaviour
 
 	public static UpgradeManager Instance;
 
-	// mapping: original slot in source grid -> stored items (for restoring)
-	private Dictionary<Transform, List<DraggableItem>> originalSlotContents = new Dictionary<Transform, List<DraggableItem>>();
+	// mapping original draggable -> mirror GameObject in upgrade grid
+	private System.Collections.Generic.List<System.Tuple<DraggableItem, GameObject>> mirrorMappings = new System.Collections.Generic.List<System.Tuple<DraggableItem, GameObject>>();
 	private Transform runtimeSourceGrid;
 
 	private DraggableItem currentItem;
@@ -53,86 +53,58 @@ public class UpgradeManager : MonoBehaviour
 
 	private void OnDisable()
 	{
-		ReturnInventoryToOriginalSlots();
+		// destroy mirrors when closing
+		ClearMirrors();
 	}
 
 	private void SyncInventoryToUpgradeGrid()
 	{
-		// Nie tworzymy mirrorów - PRZESUNIEMY rzeczywiste przedmioty z Equipment_Window do Upgrade_Window
-		originalSlotContents.Clear();
-		
-		Debug.Log($"[Upgrade] SyncInventoryToUpgradeGrid START - InventoryManager: {(InventoryManager.Instance != null)}, upgradeInventoryGrid: {(upgradeInventoryGrid != null)}");
-		
-		// InventoryManager może być null na starcie - to normalne
-		if (upgradeInventoryGrid == null) { Debug.LogError("[Upgrade] BŁĄD: upgradeInventoryGrid jest NULL! Podepnij go w Inspectorze UpgradeManager!"); return; }
+		// create mirror visuals instead of moving originals
+		ClearMirrors();
+		if (InventoryManager.Instance == null || upgradeInventoryGrid == null) return;
 
 		runtimeSourceGrid = ResolveSourceInventoryGrid();
-		Debug.Log($"[Upgrade] runtimeSourceGrid resolved: {(runtimeSourceGrid != null ? runtimeSourceGrid.name : "NULL")}");
-		
-		if (runtimeSourceGrid == null)
+		Transform invGrid = runtimeSourceGrid;
+		if (invGrid == null)
 		{
-			Debug.LogError("[Upgrade] BŁĄD: Nie znaleziono sourceGrid! Sprawdź Grid_Inventory w Equipment_Window");
+			Debug.LogWarning("[Upgrade] Nie udało się ustalić źródłowego Grid_Inventory dla mirrorów.");
 			return;
 		}
 
-		ConsolidateAllItemsToSourceGrid(runtimeSourceGrid);
+		ConsolidateAllItemsToSourceGrid(invGrid);
 
-		// Zachowaj oryginalne pozycje przedmiotów
-		for (int i = 0; i < runtimeSourceGrid.childCount; i++)
+		int slotCount = Mathf.Min(invGrid.childCount, upgradeInventoryGrid.childCount);
+		for (int i = 0; i < slotCount; i++)
 		{
-			Transform sourceSlot = runtimeSourceGrid.GetChild(i);
-			List<DraggableItem> slotItems = new List<DraggableItem>();
-			
-			for (int j = sourceSlot.childCount - 1; j >= 0; j--)
+			Transform upSlot = upgradeInventoryGrid.GetChild(i);
+			Transform sourceSlot = invGrid.GetChild(i);
+			if (sourceSlot.childCount <= 0) continue;
+			DraggableItem original = sourceSlot.GetChild(0).GetComponent<DraggableItem>();
+			if (original == null || original.isMirror) continue;
+
+			GameObject mirror = Instantiate(InventoryManager.Instance.draggableItemPrefab, upSlot);
+			RectTransform rect = mirror.GetComponent<RectTransform>();
+			rect.localScale = Vector3.one;
+			rect.anchorMin = new Vector2(0, 0);
+			rect.anchorMax = new Vector2(1, 1);
+			rect.offsetMin = Vector2.zero;
+			rect.offsetMax = Vector2.zero;
+			rect.anchoredPosition = Vector2.zero;
+
+			DraggableItem mirrorLogic = mirror.GetComponent<DraggableItem>();
+			if (mirrorLogic != null)
 			{
-				DraggableItem item = sourceSlot.GetChild(j).GetComponent<DraggableItem>();
-				if (item != null && !item.isMirror)
-					slotItems.Add(item);
+				mirrorLogic.Setup(original.itemData);
+				mirrorLogic.isMirror = true;
+				mirrorLogic.originalSource = original;
+				mirrorLogic.upgradeLevel = original.upgradeLevel;
+				mirrorLogic.upgradePoints = (original.upgradePoints != null) ? new System.Collections.Generic.List<int>(original.upgradePoints) : new System.Collections.Generic.List<int>(new int[DraggableItem.UPGRADE_STAT_COUNT]);
 			}
-			
-			if (slotItems.Count > 0)
-				originalSlotContents[sourceSlot] = slotItems;
+
+			mirrorMappings.Add(new System.Tuple<DraggableItem, GameObject>(original, mirror));
 		}
 
-		// Przesuń przedmioty do Upgrade_Window
-		int totalMoved = 0;
-		Debug.Log($"[Upgrade] Przesuwam przedmioty: sourceGrid ma {runtimeSourceGrid.childCount} slotów, upgradeGrid ma {upgradeInventoryGrid.childCount} slotów");
-		
-		for (int i = 0; i < Mathf.Min(runtimeSourceGrid.childCount, upgradeInventoryGrid.childCount); i++)
-		{
-			Transform sourceSlot = runtimeSourceGrid.GetChild(i);
-			Transform upgradeSlot = upgradeInventoryGrid.GetChild(i);
-			
-			// Przesuń wszystkie przedmioty z sourceSlot do upgradeSlot
-			while (sourceSlot.childCount > 0)
-			{
-				Transform itemTransform = sourceSlot.GetChild(0);
-				DraggableItem item = itemTransform.GetComponent<DraggableItem>();
-				
-				if (item != null && !item.isMirror)
-				{
-					itemTransform.SetParent(upgradeSlot, false);
-					RectTransform rect = itemTransform.GetComponent<RectTransform>();
-					if (rect != null)
-					{
-						rect.localScale = Vector3.one;
-						rect.anchorMin = new Vector2(0, 0);
-						rect.anchorMax = new Vector2(1, 1);
-						rect.offsetMin = Vector2.zero;
-						rect.offsetMax = Vector2.zero;
-						rect.anchoredPosition = Vector2.zero;
-					}
-					totalMoved++;
-					Debug.Log($"[Upgrade] Przesunięty item: {item.itemData?.itemName} do slotu {i}");
-				}
-				else
-				{
-					break;
-				}
-			}
-		}
-
-		Debug.Log($"[Upgrade] SKOŃCZYŁEM - Przesunięto {totalMoved} przedmiotów do Upgrade_Window");
+		Debug.Log($"[Upgrade] Utworzono {mirrorMappings.Count} mirrorów itemów w oknie ulepszania.");
 	}
 
 	private Transform ResolveSourceInventoryGrid()
@@ -255,46 +227,63 @@ public class UpgradeManager : MonoBehaviour
 		return count;
 	}
 
-	private void ReturnInventoryToOriginalSlots()
+	private void ClearMirrors()
 	{
-		// Przywróć przedmioty do originalnych slotów w sourceGrid
-		if (runtimeSourceGrid == null) return;
-
-		foreach (var kvp in originalSlotContents)
+		for (int i = mirrorMappings.Count - 1; i >= 0; i--)
 		{
-			Transform originalSlot = kvp.Key;
-			List<DraggableItem> items = kvp.Value;
-			
-			foreach (var item in items)
-			{
-				if (item != null)
-				{
-					item.transform.SetParent(originalSlot, false);
-					RectTransform rect = item.GetComponent<RectTransform>();
-					if (rect != null)
-					{
-						rect.localScale = Vector3.one;
-						rect.anchorMin = new Vector2(0, 0);
-						rect.anchorMax = new Vector2(1, 1);
-						rect.offsetMin = Vector2.zero;
-						rect.offsetMax = Vector2.zero;
-						rect.anchoredPosition = Vector2.zero;
-					}
-				}
-			}
+			var pair = mirrorMappings[i];
+			if (pair == null) continue;
+			GameObject mirrorObj = pair.Item2;
+			if (mirrorObj != null) Destroy(mirrorObj);
 		}
-		
-		originalSlotContents.Clear();
-		Debug.Log("[Upgrade] Przywrócono przedmioty do Equipment_Window.");
+		mirrorMappings.Clear();
 	}
-
-	// Nie używamy już mirrorów - usunięto ClearMirrors()
 
 	// called externally (e.g., ItemSlot.OnDrop) to refresh item visibility
 	public void RefreshMirrors()
 	{
-		// Nowy system: przedmioty są przesuniętymi rzeczywistymi obiektami, nie mirrorami
-		// Nic nie trzeba robić - przedmioty są zawsze w poprawnym miejscu
+		for (int i = mirrorMappings.Count - 1; i >= 0; i--)
+		{
+			var pair = mirrorMappings[i];
+			DraggableItem original = pair.Item1;
+			GameObject mirrorObj = pair.Item2;
+			if (original == null || mirrorObj == null)
+			{
+				if (mirrorObj != null) Destroy(mirrorObj);
+				mirrorMappings.RemoveAt(i);
+				continue;
+			}
+			// if original was moved out of its slot or removed, hide/destroy mirror
+			if (original.transform.parent == null || original.transform.parent.IsChildOf(upgradeInventoryGrid))
+			{
+				Destroy(mirrorObj);
+				mirrorMappings.RemoveAt(i);
+				continue;
+			}
+			// sync upgrade level/state
+			DraggableItem mirrorLogic = mirrorObj.GetComponent<DraggableItem>();
+			if (mirrorLogic != null)
+			{
+				mirrorLogic.upgradeLevel = original.upgradeLevel;
+				mirrorLogic.upgradePoints = (original.upgradePoints != null) ? new System.Collections.Generic.List<int>(original.upgradePoints) : new System.Collections.Generic.List<int>(new int[DraggableItem.UPGRADE_STAT_COUNT]);
+			}
+		}
+	}
+
+	public GameObject GetMirrorForOriginal(DraggableItem original)
+	{
+		if (original == null) return null;
+		foreach (var pair in mirrorMappings)
+		{
+			if (pair != null && pair.Item1 == original) return pair.Item2;
+		}
+		return null;
+	}
+
+	public void RegisterTemporaryMirror(DraggableItem original, GameObject mirror)
+	{
+		if (original == null || mirror == null) return;
+		mirrorMappings.Add(new System.Tuple<DraggableItem, GameObject>(original, mirror));
 	}
 
 	private void PopulateStatDropdown()

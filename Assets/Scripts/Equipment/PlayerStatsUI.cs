@@ -22,8 +22,11 @@ public class PlayerStatsUI : MonoBehaviour
 
     // Funkcja wbudowana w Unity - wywołuje się automatycznie, gdy otworzysz ekwipunek
     private void OnEnable()
-    {
-        UpdateStatsUI();
+    {        // Bezpiecznik: sprawdź czy bonusy są OK, jeśli nie - przywróć ze save
+        if (PlayerDataManager.Instance != null)
+        {
+            PlayerDataManager.Instance.RestoreBonusesIfZero();
+        }        UpdateStatsUI();
     }
 
     public void UpdateStatsUI()

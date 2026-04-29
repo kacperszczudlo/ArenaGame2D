@@ -216,18 +216,34 @@ public class PlayerDataManager : MonoBehaviour
         PlayerPrefs.SetInt("BaseKno", baseKnowledge);
         PlayerPrefs.SetInt("BasePow", basePower);
 
-        // --- NOWOŒÆ: Zapisywanie listy umiejêtnoœci! ---
+        // Save equipment bonuses
+        PlayerPrefs.SetInt("BonusHP", bonusMaxHP);
+        PlayerPrefs.SetInt("BonusMana", bonusMaxMana);
+        PlayerPrefs.SetInt("BonusStamina", bonusMaxStamina);
+        PlayerPrefs.SetInt("BonusStr", bonusStrength);
+        PlayerPrefs.SetInt("BonusAgi", bonusAgility);
+        PlayerPrefs.SetInt("BonusKno", bonusKnowledge);
+        PlayerPrefs.SetInt("BonusPow", bonusPower);
+        PlayerPrefs.SetInt("BonusPhysArm", bonusPhysicalArmor);
+        PlayerPrefs.SetInt("BonusMagRes", bonusMagicResistance);
+        PlayerPrefs.SetInt("WeaponDmg", weaponDamage);
+        PlayerPrefs.SetInt("BonusCrit", bonusCritChance);
+        PlayerPrefs.SetInt("BonusDodge", bonusDodgeChance);
+        PlayerPrefs.SetFloat("BonusDmgMult", bonusDamageMultiplier);
+        PlayerPrefs.SetFloat("BonusHitMult", bonusHitChanceMultiplier);
+
+        // --- NOWOï¿½ï¿½: Zapisywanie listy umiejï¿½tnoï¿½ci! ---
         foreach (var savedSkill in unlockedSkills)
         {
             if (savedSkill.skill != null)
             {
-                // Tworzymy unikalny klucz dla ka¿dego skilla, np. "SkillLvl_SzybkiCios"
+                // Tworzymy unikalny klucz dla kaï¿½dego skilla, np. "SkillLvl_SzybkiCios"
                 PlayerPrefs.SetInt("SkillLvl_" + savedSkill.skill.name, savedSkill.currentLevel);
             }
         }
 
         PlayerPrefs.Save();
-        Debug.Log("<color=green>[ZAPIS] Statystyki, poziom i UMIEJÊTNOŒCI zapisane!</color>");
+        Debug.Log("<color=green>[ZAPIS] Statystyki, poziom, UMIEJï¿½TNOï¿½CI i BONUSY z ekwipunku zapisane! Bonus HP: " + bonusMaxHP + ", Bonus Str: " + bonusStrength + "</color>");
     }
 
     public void LoadPlayerData()
@@ -246,17 +262,66 @@ public class PlayerDataManager : MonoBehaviour
         baseKnowledge = PlayerPrefs.GetInt("BaseKno", baseKnowledge);
         basePower = PlayerPrefs.GetInt("BasePow", basePower);
 
-        // --- NOWOŒÆ: Wczytywanie listy umiejêtnoœci! ---
+        // Load equipment bonuses
+        bonusMaxHP = PlayerPrefs.GetInt("BonusHP", bonusMaxHP);
+        bonusMaxMana = PlayerPrefs.GetInt("BonusMana", bonusMaxMana);
+        bonusMaxStamina = PlayerPrefs.GetInt("BonusStamina", bonusMaxStamina);
+        bonusStrength = PlayerPrefs.GetInt("BonusStr", bonusStrength);
+        bonusAgility = PlayerPrefs.GetInt("BonusAgi", bonusAgility);
+        bonusKnowledge = PlayerPrefs.GetInt("BonusKno", bonusKnowledge);
+        bonusPower = PlayerPrefs.GetInt("BonusPow", bonusPower);
+        bonusPhysicalArmor = PlayerPrefs.GetInt("BonusPhysArm", bonusPhysicalArmor);
+        bonusMagicResistance = PlayerPrefs.GetInt("BonusMagRes", bonusMagicResistance);
+        weaponDamage = PlayerPrefs.GetInt("WeaponDmg", weaponDamage);
+        bonusCritChance = PlayerPrefs.GetInt("BonusCrit", bonusCritChance);
+        bonusDodgeChance = PlayerPrefs.GetInt("BonusDodge", bonusDodgeChance);
+        bonusDamageMultiplier = PlayerPrefs.GetFloat("BonusDmgMult", bonusDamageMultiplier);
+        bonusHitChanceMultiplier = PlayerPrefs.GetFloat("BonusHitMult", bonusHitChanceMultiplier);
+
+        // --- NOWOï¿½ï¿½: Wczytywanie listy umiejï¿½tnoï¿½ci! ---
         foreach (var savedSkill in unlockedSkills)
         {
             if (savedSkill.skill != null)
             {
-                // Jeœli znajdzie zapis, podmieni level. Jeœli nie, zostawi domyœlny z Inspektora
+                // Jeï¿½li znajdzie zapis, podmieni level. Jeï¿½li nie, zostawi domyï¿½lny z Inspektora
                 savedSkill.currentLevel = PlayerPrefs.GetInt("SkillLvl_" + savedSkill.skill.name, savedSkill.currentLevel);
             }
         }
 
-        Debug.Log("<color=yellow>[WCZYTYWANIE] Statystyki, poziom i UMIEJÊTNOŒCI za³adowane!</color>");
+        Debug.Log("<color=yellow>[WCZYTYWANIE] Statystyki, poziom, UMIEJï¿½TNOï¿½CI i BONUSY z ekwipunku zaï¿½adowane! Bonus HP: " + bonusMaxHP + ", Bonus Str: " + bonusStrength + "</color>");
+    }
+
+    private void OnApplicationQuit()
+    {
+        SavePlayerData();
+    }
+
+    public void RestoreBonusesIfZero()
+    {
+        // Bezpiecznik: jeÅ›li bonusy sÄ… zerowe ale w save mamy wartoÅ›ci, przywrÃ³Ä‡ je
+        // (moÅ¼e siÄ™ zdarzyÄ‡ jeÅ›li EquipmentStatsCalculator siÄ™ nie inicjalizuje)
+        if (bonusMaxHP == 0 && bonusStrength == 0 && bonusAgility == 0)
+        {
+            int savedHP = PlayerPrefs.GetInt("BonusHP", 0);
+            if (savedHP > 0)
+            {
+                bonusMaxHP = savedHP;
+                bonusMaxMana = PlayerPrefs.GetInt("BonusMana", 0);
+                bonusMaxStamina = PlayerPrefs.GetInt("BonusStamina", 0);
+                bonusStrength = PlayerPrefs.GetInt("BonusStr", 0);
+                bonusAgility = PlayerPrefs.GetInt("BonusAgi", 0);
+                bonusKnowledge = PlayerPrefs.GetInt("BonusKno", 0);
+                bonusPower = PlayerPrefs.GetInt("BonusPow", 0);
+                bonusPhysicalArmor = PlayerPrefs.GetInt("BonusPhysArm", 0);
+                bonusMagicResistance = PlayerPrefs.GetInt("BonusMagRes", 0);
+                weaponDamage = PlayerPrefs.GetInt("WeaponDmg", 0);
+                bonusCritChance = PlayerPrefs.GetInt("BonusCrit", 0);
+                bonusDodgeChance = PlayerPrefs.GetInt("BonusDodge", 0);
+                bonusDamageMultiplier = PlayerPrefs.GetFloat("BonusDmgMult", 0f);
+                bonusHitChanceMultiplier = PlayerPrefs.GetFloat("BonusHitMult", 0f);
+                Debug.Log("<color=orange>[BEZPIECZNIK] PrzywrÃ³cono bonusy ze save! HP: " + bonusMaxHP + ", Str: " + bonusStrength + "</color>");
+            }
+        }
     }
 
 

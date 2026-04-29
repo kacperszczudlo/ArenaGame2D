@@ -20,6 +20,10 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [HideInInspector] public bool isMirror = false;
     [HideInInspector] public DraggableItem originalSource = null;
 
+    // When true, this original item is being dragged visually by a mirror.
+    // Original should skip moving its own transform while this is set.
+    [HideInInspector] public bool isDraggedExternally = false;
+
     [HideInInspector] public Transform parentAfterDrag;
     private Image image;
 
@@ -78,7 +82,24 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (isMirror && originalSource != null)
         {
+            // Mark original so it doesn't move its transform when receiving drag events
+            originalSource.isDraggedExternally = true;
+
+            // Prepare visual mirror for dragging
+            parentAfterDrag = transform.parent;
+            transform.SetParent(transform.root);
+            transform.SetAsLastSibling();
+            if (image != null) image.raycastTarget = false;
+
+            // Forward drag event to original so internal state (if any) updates
             ExecuteEvents.Execute(originalSource.gameObject, eventData, ExecuteEvents.beginDragHandler);
+            return;
+        }
+
+        // If this original is being dragged externally by a mirror, skip moving it here
+        if (isDraggedExternally)
+        {
+            parentAfterDrag = transform.parent;
             return;
         }
 
@@ -94,7 +115,15 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (isMirror && originalSource != null)
         {
+            // forward logic to original, but move the mirror visual so player sees it
             ExecuteEvents.Execute(originalSource.gameObject, eventData, ExecuteEvents.dragHandler);
+            transform.position = Input.mousePosition;
+            return;
+        }
+
+        if (isDraggedExternally)
+        {
+            // original should not follow mouse when dragged by mirror
             return;
         }
 
@@ -105,19 +134,41 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (isMirror && originalSource != null)
         {
+            // forward end-drag to original so it can finalize logic
             ExecuteEvents.Execute(originalSource.gameObject, eventData, ExecuteEvents.endDragHandler);
+
+            // release original external-drag flag
+            originalSource.isDraggedExternally = false;
+
+            // restore mirror visual to its parent (visual placement is handled by UpgradeDropZone or caller)
+            transform.SetParent(parentAfterDrag, false);
+            if (image != null) image.raycastTarget = true;
+
+            RectTransform rect = GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0, 0);
+            rect.anchorMax = new Vector2(1, 1);
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            rect.anchoredPosition = Vector2.zero;
+            return;
+        }
+
+        if (isDraggedExternally)
+        {
+            // If original received end-drag forwarded, do nothing here
+            isDraggedExternally = false;
             return;
         }
 
         transform.SetParent(parentAfterDrag, false);
         if (image != null) image.raycastTarget = true;
 
-        RectTransform rect = GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0, 0); 
-        rect.anchorMax = new Vector2(1, 1); 
-        rect.offsetMin = Vector2.zero; 
-        rect.offsetMax = Vector2.zero;
-        rect.anchoredPosition = Vector2.zero; 
+        RectTransform rectNormal = GetComponent<RectTransform>();
+        rectNormal.anchorMin = new Vector2(0, 0);
+        rectNormal.anchorMax = new Vector2(1, 1);
+        rectNormal.offsetMin = Vector2.zero;
+        rectNormal.offsetMax = Vector2.zero;
+        rectNormal.anchoredPosition = Vector2.zero;
     }
 
     public void OnPointerClick(PointerEventData eventData)
