@@ -250,16 +250,19 @@ public class AbilitiesWindow : MonoBehaviour
 
             if (PlayerDataManager.Instance.availableSkillPoints >= totalCost && hasLevel)
             {
-                // Odejmujemy wszystkie potrzebne pnkty z puli
+                // Odejmujemy wszystkie potrzebne punkty z puli
                 PlayerDataManager.Instance.availableSkillPoints -= totalCost;
 
                 // Awansujemy skill OD RAZU na docelowy poziom!
                 selectedSkill.currentLevel = currentPreviewLevel;
                 selectedSkill.isUnlocked = true;
 
-                // Zapisujemy nowy poziom do g³ównego sejwaa gry
+                // Zapisujemy nowy poziom do g³ównego sejwa gry
                 var savedData = PlayerDataManager.Instance.unlockedSkills.Find(s => s.skill == selectedSkill.data);
                 if (savedData != null) savedData.currentLevel = selectedSkill.currentLevel;
+
+                // --- NOWOŒÆ: Twardy zapis do pliku po wydaniu punktów! ---
+                PlayerDataManager.Instance.SavePlayerData();
 
                 // Po awansie automatycznie podgl¹damy kolejny level (jeœli nie dobiliœmy do maxa)
                 if (currentPreviewLevel < selectedSkill.data.progression.Count)
