@@ -35,6 +35,8 @@ public class UpgradeManager : MonoBehaviour
 		if (dropZone != null) dropZone.manager = this;
 		if (btnDoUpgrade != null) btnDoUpgrade.onClick.AddListener(TryUpgrade);
 		PopulateStatDropdown();
+		if (statSelectDropdown != null)
+			statSelectDropdown.onValueChanged.AddListener(_ => UpdateUI());
 	}
 
 	public void OpenWindow()
@@ -43,18 +45,23 @@ public class UpgradeManager : MonoBehaviour
 		SyncInventoryToUpgradeGrid();
 		RefreshMirrors();
 		UpdateGoldUI();
+		UpdateUI();
 	}
 
 	private void OnEnable()
 	{
+		currentItem = null;
 		SyncInventoryToUpgradeGrid();
 		UpdateGoldUI();
+		UpdateUI();
 	}
 
 	private void OnDisable()
 	{
 		// destroy mirrors when closing
 		ClearMirrors();
+		currentItem = null;
+		if (dropZone != null) dropZone.placedItem = null;
 	}
 
 	private void SyncInventoryToUpgradeGrid()
@@ -323,34 +330,105 @@ public class UpgradeManager : MonoBehaviour
 		UpdateUI();
 	}
 
+	private bool IsItemMirrorOnDropZone(DraggableItem original)
+	{
+		if (dropZone == null || original == null) return false;
+		for (int i = 0; i < dropZone.transform.childCount; i++)
+		{
+			var d = dropZone.transform.GetChild(i).GetComponent<DraggableItem>();
+			if (d != null && d.isMirror && d.originalSource == original)
+				return true;
+		}
+		return false;
+	}
+
+	private bool CanAttemptUpgrade(out string blockReason)
+	{
+		blockReason = null;
+		if (GameManager.Instance == null)
+		{
+			blockReason = "brak systemu ekonomii";
+			return false;
+		}
+		if (dropZone == null || currentItem == null)
+		{
+			blockReason = "brak przedmiotu na kowadle";
+			return false;
+		}
+		if (dropZone.placedItem != currentItem || !IsItemMirrorOnDropZone(currentItem))
+		{
+			blockReason = "przedmiot musi być na kowadle";
+			return false;
+		}
+		int statIndex = statSelectDropdown != null ? statSelectDropdown.value : 0;
+		if (statIndex <= 0 || statIndex >= DraggableItem.UPGRADE_STAT_COUNT)
+		{
+			blockReason = "wybierz statystykę do ulepszenia";
+			return false;
+		}
+		currentItem.EnsureUpgradePointsList();
+		int tier = DraggableItem.SumAllocatedUpgradePoints(currentItem);
+		int cost = 100 + tier * 200;
+		if (GameManager.Instance.globalGold < cost)
+		{
+			blockReason = "niewystarczające złoto";
+			return false;
+		}
+		return true;
+	}
+
 	public void UpdateUI()
 	{
-		if (currentItem == null)
+		currentItem?.EnsureUpgradePointsList();
+		if (currentItem == null || dropZone == null || dropZone.placedItem != currentItem || !IsItemMirrorOnDropZone(currentItem))
 		{
+			if (currentItem != null && (dropZone == null || dropZone.placedItem != currentItem || !IsItemMirrorOnDropZone(currentItem)))
+				currentItem = null;
+
 			if (textChance != null) textChance.text = "-";
 			if (textCost != null) textCost.text = "-";
 			if (btnDoUpgrade != null) btnDoUpgrade.interactable = false;
 			return;
 		}
 
-		// Example calculation (replace with your real formula later)
-		int level = currentItem.upgradeLevel;
-		int chance = Mathf.Clamp(100 - level * 7, 5, 100);
-		int cost = 100 + level * 200;
-		Debug.Log($"[Upgrade] Item: {currentItem.itemData?.itemName} | itemLevel={level} | chance={chance}%");
+		int statIndex = statSelectDropdown != null ? statSelectDropdown.value : 0;
+		int tier = DraggableItem.SumAllocatedUpgradePoints(currentItem);
+		int chance = Mathf.Clamp(100 - tier * 7, 5, 100);
+		int cost = 100 + tier * 200;
+		Debug.Log($"[Upgrade] Item: {currentItem.itemData?.itemName} | ulepszeń(stat)={tier} | szansa={chance}%");
 
 		if (textChance != null) textChance.text = $"Szansa: {chance}%";
 		if (textCost != null) textCost.text = $"Koszt: {cost} zł";
-		if (btnDoUpgrade != null) btnDoUpgrade.interactable = true;
+		bool canUpgrade = GameManager.Instance != null
+		                  && statIndex > 0 && statIndex < DraggableItem.UPGRADE_STAT_COUNT
+		                  && GameManager.Instance.globalGold >= cost;
+		if (btnDoUpgrade != null) btnDoUpgrade.interactable = canUpgrade;
 	}
 
 	public void TryUpgrade()
 	{
-		if (currentItem == null) return;
-		if (currentItem.isMirror && currentItem.originalSource != null) currentItem = currentItem.originalSource;
+		if (currentItem != null && currentItem.isMirror && currentItem.originalSource != null)
+			currentItem = currentItem.originalSource;
 
-		int level = currentItem.upgradeLevel;
-		int chance = Mathf.Clamp(100 - level * 7, 5, 100);
+		if (!CanAttemptUpgrade(out string reason))
+		{
+			Debug.Log($"[Upgrade] Próba odrzucona: {reason}.");
+			return;
+		}
+
+		currentItem.EnsureUpgradePointsList();
+		int tier = DraggableItem.SumAllocatedUpgradePoints(currentItem);
+		int chance = Mathf.Clamp(100 - tier * 7, 5, 100);
+		int cost = 100 + tier * 200;
+
+		if (GameManager.Instance == null || !GameManager.Instance.SpendGold(cost))
+		{
+			Debug.Log("[Upgrade] Nie można pobrać kosztu (brak złota).");
+			UpdateUI();
+			return;
+		}
+
+		UpdateGoldUI();
 
 		int roll = Random.Range(1, 101);
 		bool success = roll <= chance;
@@ -358,32 +436,22 @@ public class UpgradeManager : MonoBehaviour
 
 		if (success)
 		{
-			// Apply upgrade to selected stat
 			int statIndex = statSelectDropdown != null ? statSelectDropdown.value : 0;
-			if (statIndex > 0 && statIndex < DraggableItem.UPGRADE_STAT_COUNT)
+			if (statIndex <= 0 || statIndex >= DraggableItem.UPGRADE_STAT_COUNT)
 			{
-				// ensure list length
-				if (currentItem.upgradePoints == null) currentItem.upgradePoints = new System.Collections.Generic.List<int>(new int[DraggableItem.UPGRADE_STAT_COUNT]);
-				if (currentItem.upgradePoints.Count < DraggableItem.UPGRADE_STAT_COUNT)
-				{
-					int need = DraggableItem.UPGRADE_STAT_COUNT - currentItem.upgradePoints.Count;
-					for (int i = 0; i < need; i++) currentItem.upgradePoints.Add(0);
-				}
-				currentItem.upgradePoints[statIndex]++;
-				currentItem.upgradeLevel++;
-				Debug.Log($"[Upgrade] Sukces! Stat index {statIndex} +1. Poziom: {currentItem.upgradeLevel}");
+				if (GameManager.Instance != null) GameManager.Instance.AddGold(cost);
+				UpdateGoldUI();
+				Debug.LogError("[Upgrade] Niespójny stan — zwracam złoto.");
+				return;
 			}
-			else
-			{
-				// fallback: just increment total level
-				currentItem.upgradeLevel++;
-				Debug.Log($"[Upgrade] Sukces! Nowy poziom: {currentItem.upgradeLevel}");
-			}
+			currentItem.upgradePoints[statIndex]++;
+			currentItem.SyncUpgradeLevelFromAllocations();
+			Debug.Log($"[Upgrade] Sukces! Stat index {statIndex} +1. Łącznie ulepszeń: {currentItem.upgradeLevel}");
 		}
 		else
 		{
 			// Failure can burn the item permanently.
-			int burnChance = Mathf.Clamp(level * 5, 0, 85);
+			int burnChance = Mathf.Clamp(tier * 5, 0, 85);
 			bool burned = Random.Range(1, 101) <= burnChance;
 			if (burned)
 			{

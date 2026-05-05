@@ -15,6 +15,29 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     // Per-stat upgrade allocations (index matches UpgradeManager dropdown)
     public const int UPGRADE_STAT_COUNT = 13;
     public System.Collections.Generic.List<int> upgradePoints = new System.Collections.Generic.List<int>(new int[UPGRADE_STAT_COUNT]);
+
+    /// <summary>Użyte statystyki to indeksy 1 .. UPGRADE_STAT_COUNT-1 (0 = „Brak” w UI).</summary>
+    public static int SumAllocatedUpgradePoints(DraggableItem item)
+    {
+        if (item == null || item.upgradePoints == null) return 0;
+        int s = 0;
+        for (int i = 1; i < UPGRADE_STAT_COUNT && i < item.upgradePoints.Count; i++)
+            s += item.upgradePoints[i];
+        return s;
+    }
+
+    public void EnsureUpgradePointsList()
+    {
+        if (upgradePoints == null) upgradePoints = new System.Collections.Generic.List<int>();
+        while (upgradePoints.Count < UPGRADE_STAT_COUNT)
+            upgradePoints.Add(0);
+    }
+
+    public void SyncUpgradeLevelFromAllocations()
+    {
+        EnsureUpgradePointsList();
+        upgradeLevel = SumAllocatedUpgradePoints(this);
+    }
     
     // Mirror support: if this object is a visual mirror, forward drags to original
     [HideInInspector] public bool isMirror = false;

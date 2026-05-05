@@ -161,7 +161,21 @@ public class InventorySaveSystem : MonoBehaviour
                 rect.anchoredPosition = Vector2.zero; 
 
                 DraggableItem dragLogic = spawnedItem.GetComponent<DraggableItem>();
-                if(dragLogic != null) { dragLogic.Setup(restoredData); dragLogic.upgradeLevel = sItem.upgradeLevel; if (sItem.upgradePoints != null) { dragLogic.upgradePoints = new System.Collections.Generic.List<int>(sItem.upgradePoints); } }
+                if (dragLogic != null)
+                {
+                    dragLogic.Setup(restoredData);
+                    if (sItem.upgradePoints != null && sItem.upgradePoints.Length > 0)
+                    {
+                        dragLogic.upgradePoints = new System.Collections.Generic.List<int>(sItem.upgradePoints);
+                        dragLogic.EnsureUpgradePointsList();
+                    }
+                    else
+                    {
+                        dragLogic.EnsureUpgradePointsList();
+                    }
+                    // Poziom ulepszenia = suma konkretnych punktów w statystyki (trwałe ulepszenia).
+                    dragLogic.SyncUpgradeLevelFromAllocations();
+                }
             }
             else
             {
